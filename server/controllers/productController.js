@@ -1,7 +1,7 @@
-const Product = require('../models/Product');
+import Product from '../models/Product.js';
 
 // Create a new product
-exports.addProduct = async (req, res) => {
+const addProduct = async (req, res) => {
     const products = await Product.find({});
     const id = products.length ? products.slice(-1)[0].id + 1 : 1;
 
@@ -12,7 +12,7 @@ exports.addProduct = async (req, res) => {
 };
 
 // Update an existing product
-exports.updateProduct = async (req, res) => {
+const updateProduct = async (req, res) => {
     await Product.findOneAndUpdate(
         { id: req.params.id },
         { $set: req.body }
@@ -21,13 +21,13 @@ exports.updateProduct = async (req, res) => {
 };
 
 // Delete a product
-exports.deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res) => {
     await Product.findOneAndDelete({ id: req.params.id });
     res.json({ success: true });
 };
 
 // Get all products with sorting options
-exports.getAllProducts = async (req, res) => {
+const getAllProducts = async (req, res) => {
     const sortOption = req.query.sort || 'id-asc';
 
     const sortMap = {
@@ -42,13 +42,13 @@ exports.getAllProducts = async (req, res) => {
 };
 
 // Get a single product by ID
-exports.getProduct = async (req, res) => {
+const getProduct = async (req, res) => {
     const product = await Product.findOne({ id: req.params.id });
     res.send(product);
 };
 
 // Like a product
-exports.likeProduct = async (req, res) => {
+const likeProduct = async (req, res) => {
     try {
         const product = await Product.findOne({ id: req.params.id });
 
@@ -74,7 +74,7 @@ exports.likeProduct = async (req, res) => {
 };
 
 // Dislike a product
-exports.dislikeProduct = async (req, res) => {
+const dislikeProduct = async (req, res) => {
     try {
         const product = await Product.findOne({ id: req.params.id });
 
@@ -97,13 +97,25 @@ exports.dislikeProduct = async (req, res) => {
 };
 
 // Get new collection products
-exports.newCollection = async (req, res) => {
+const newCollection = async (req, res) => {
     const products = await Product.find({});
     res.send(products.slice(1).slice(-8));
 };
 
 // Get popular in women
-exports.popularWomen = async (req, res) => {
+const popularWomen = async (req, res) => {
     const products = await Product.find({ category: 'women' });
     res.send(products.slice(0, 4));
+};
+
+export { 
+    addProduct, 
+    updateProduct, 
+    deleteProduct, 
+    getAllProducts, 
+    getProduct, 
+    likeProduct, 
+    dislikeProduct, 
+    newCollection, 
+    popularWomen 
 };

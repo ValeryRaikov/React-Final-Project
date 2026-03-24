@@ -1,5 +1,7 @@
-const router = require('express').Router();
-const upload = require('../utils/multer');
+import { Router } from 'express';
+import upload from '../utils/multer.js';
+
+const router = Router();
 
 router.post('/upload', upload.single('product'), (req, res) => {
     res.json({
@@ -8,4 +10,4 @@ router.post('/upload', upload.single('product'), (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

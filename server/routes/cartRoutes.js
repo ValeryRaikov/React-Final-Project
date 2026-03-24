@@ -1,9 +1,11 @@
-const router = require('express').Router();
-const auth = require('../middleware/authMiddleware');
-const c = require('../controllers/cartController');
+import { Router } from 'express';
+import auth from '../middleware/authMiddleware.js';
+import * as c from '../controllers/cartController.js';
+
+const router = Router();
 
 router.post('/add-to-cart', auth, c.addToCart);
 router.post('/remove-from-cart', auth, c.removeFromCart);
 router.post('/get-cart', auth, c.getCart);
 
-module.exports = router;
+export default router;

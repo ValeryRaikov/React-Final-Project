@@ -1,7 +1,8 @@
-const auth = require('../middleware/authMiddleware');
+import { Router } from 'express';
+import auth from '../middleware/authMiddleware.js';
+import * as c from '../controllers/productController.js';
 
-const router = require('express').Router();
-const c = require('../controllers/productController');
+const router = Router();
 
 router.post('/add-product', c.addProduct);
 router.put('/update-product/:id', c.updateProduct);
@@ -16,4 +17,4 @@ router.post('/product/:id/dislike', auth, c.dislikeProduct);
 router.get('/new-collection', c.newCollection);
 router.get('/popular-in-women', c.popularWomen);
 
-module.exports = router;
+export default router;

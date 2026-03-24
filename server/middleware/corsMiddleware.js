@@ -1,7 +1,7 @@
-const cors = require('cors');
+import cors from 'cors';
 
 // CORS middleware configuration
-module.exports = cors({
+export default cors({
     origin: (origin, callback) => {
         // Parse allowed origins from environment variable
         const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:5174').split(',');

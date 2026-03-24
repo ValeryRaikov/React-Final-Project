@@ -1,9 +1,33 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import { isValidEmail, isValidPassword } from '../utils/validators.js';
 
 // User registration
-exports.signup = async (req, res) => {
-    const exists = await User.findOne({ email: req.body.email });
+const signup = async (req, res) => {
+    const { name, email, password, agree } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({
+            success: false,
+            errors: 'Name, email, and password are required'
+        });
+    }
+
+    if (!isValidEmail(email)) {
+        return res.status(400).json({
+            success: false,
+            errors: 'Invalid email format'
+        });
+    }
+
+    if (!isValidPassword(password)) {
+        return res.status(400).json({
+            success: false,
+            errors: 'Password must be at least 8 chars, include uppercase, lowercase, number, and special character'
+        });
+    }
+
+    const exists = await User.findOne({ email });
 
     if (exists) {
         return res.status(400).json({
@@ -31,7 +55,7 @@ exports.signup = async (req, res) => {
 };
 
 // User login
-exports.login = async (req, res) => {
+const login = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
@@ -52,3 +76,5 @@ exports.login = async (req, res) => {
 
     res.json({ success: true, token });
 };
+
+export { signup, login };

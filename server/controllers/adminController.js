@@ -1,35 +1,61 @@
-const Admin = require('../models/Admin');
+import Admin from '../models/Admin.js';
+import { isValidEmail, isValidPassword } from '../utils/validators.js';
 
 // Admin login
-exports.adminLogin = async (req, res) => {
+const adminLogin = async (req, res) => {
     const { email, password } = req.body;
 
-    try {
-        const admin = await Admin.findOne({ email });
-
-        if (!admin) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-        // Check if account is active
-        if (!admin.isActive) {
-            return res.status(403).json({ message: 'Account disabled' });
-        }
-
-        // Compare hashed password
-        const isMatch = await admin.matchPassword(password);
-
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-        return res.json({
-            message: 'Login successful',
-            token: 'admin-token' // (you can replace with JWT later)
+    if (!email || !password) {
+        return res.status(400).json({
+            success: false,
+            message: 'Email and password are required'
         });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
     }
+
+    if (!isValidEmail(email)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid email format'
+        });
+    }
+
+    if (!isValidPassword(password)) {
+        return res.status(400).json({
+            success: false,
+            errors: 'Password must be at least 8 chars, include uppercase, lowercase, number, and special character'
+        });
+    }
+
+    const admin = await Admin.findOne({ email: email.toLowerCase().trim() });
+
+    if (!admin) {
+        return res.status(401).json({
+            success: false,
+            message: 'Invalid credentials'
+        });
+    }
+
+    if (!admin.isActive) {
+        return res.status(403).json({
+            success: false,
+            message: 'Account disabled'
+        });
+    }
+
+    const isMatch = await admin.matchPassword(password);
+
+    if (!isMatch) {
+        return res.status(401).json({
+            success: false,
+            message: 'Invalid credentials'
+        });
+    }
+
+    res.json({
+        success: true,
+        message: 'Login successful',
+        token: 'admin-token'
+    });
 };
+
+export { adminLogin };

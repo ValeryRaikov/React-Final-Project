@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 // Middleware to fetch user from JWT token
-const fetchUser = (req, res, next) => {
+// This middleware will be used to protect routes that require authentication imported as 'auth' in route files
+export default function fetchUser(req, res, next) {
     const token = req.header('auth-token');
 
     if (!token) {
@@ -16,5 +17,3 @@ const fetchUser = (req, res, next) => {
         res.status(401).json({ error: 'Invalid token' });
     }
 };
-
-module.exports = fetchUser;

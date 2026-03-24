@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import { emailRegex, passwordRegex } from '../utils/regex.js';
 
 // Schema for User model in MongoDB 
 const UserSchema = new mongoose.Schema({
@@ -10,11 +11,13 @@ const UserSchema = new mongoose.Schema({
     email: { 
         type: String, 
         required: true,
-        unique: true 
+        unique: true,
+        match: [emailRegex, 'Invalid email format']
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        match: [passwordRegex, 'Invalid password format']
     },
     agree: {
         type: Boolean,
@@ -45,4 +48,4 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('User', UserSchema);
+export default mongoose.model('User', UserSchema);

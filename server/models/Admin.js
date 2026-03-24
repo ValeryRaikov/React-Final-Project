@@ -1,16 +1,19 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import { emailRegex, passwordRegex } from '../utils/regex.js';
 
 // Schema for Admin model in MongoDB
 const adminSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        match: [emailRegex, 'Invalid email format']
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        match: [passwordRegex, 'Invalid password format']
     },
     role: {
         type: String,
@@ -42,4 +45,4 @@ adminSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('Admin', adminSchema);
+export default mongoose.model('Admin', adminSchema);

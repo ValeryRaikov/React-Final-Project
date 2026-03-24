@@ -1,7 +1,7 @@
-const User = require('../models/User');
+import User from '../models/User.js';
 
 // Add an item to the cart
-exports.addToCart = async (req, res) => {
+const addToCart = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
 
@@ -32,7 +32,7 @@ exports.addToCart = async (req, res) => {
 };
 
 // Remove an item from the cart
-exports.removeFromCart = async (req, res) => {
+const removeFromCart = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
 
@@ -65,7 +65,7 @@ exports.removeFromCart = async (req, res) => {
 };
 
 // Get the current cart data
-exports.getCart = async (req, res) => {
+const getCart = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
 
@@ -85,3 +85,5 @@ exports.getCart = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 };
+
+export { addToCart, removeFromCart, getCart };

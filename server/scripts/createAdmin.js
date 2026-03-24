@@ -1,7 +1,9 @@
-const mongoose = require('mongoose');
-const Admin = require('../models/Admin');
-require('dotenv').config();
+import 'dotenv/config';
+import mongoose from 'mongoose';
+import Admin from '../models/Admin.js';
 
+// create the first superadmin manually using this script, then you can use the API to create more admins if needed
+// run this script with: node server/scripts/createAdmin.js
 const createAdmin = async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI);

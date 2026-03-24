@@ -1,21 +1,3 @@
-/*
-const admins = {
-    'admin1@gmail.com': 'admin_pass',
-    'admin2@gmail.com': 'admin_1234',
-};
-
-// Admin login
-exports.adminLogin = (req, res) => {
-    const { email, password } = req.body;
-
-    if (admins[email] === password) {
-        return res.json({ message: 'Login successful', token: 'admin-token' });
-    }
-
-    res.status(401).json({ message: 'Invalid credentials' });
-};
-*/
-
 const Admin = require('../models/Admin');
 
 // Admin login

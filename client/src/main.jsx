@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import AuthContextProvider from './context/AuthContext.jsx';
 import ShopContextProvider from './context/ShopContext.jsx';
+import NotificationContextProvider from "./context/NotificationContext.jsx";
 
 import App from './App.jsx'
 
@@ -12,7 +13,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <BrowserRouter>
             <AuthContextProvider>
                 <ShopContextProvider>
-                    <App />
+                    <NotificationContextProvider>
+                        <App />
+                    </NotificationContextProvider>
                 </ShopContextProvider>
             </AuthContextProvider>
         </BrowserRouter>

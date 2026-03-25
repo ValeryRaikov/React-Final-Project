@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNotification } from '../context/NotificationContext';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function useProductLikes(productId, isAuthenticated) {
+    const { addNotification } = useNotification();
+
     const [likes, setLikes] = useState(0);
     const [isliked, setIsLiked] = useState(false);
     const [error, setError] = useState(null);
@@ -26,6 +29,7 @@ export default function useProductLikes(productId, isAuthenticated) {
             } catch (err) {
                 console.error('Error fetching likes:', err);
                 setError('Failed to fetch likes');
+                addNotification('Failed to load likes', 'error');
             }
         })();
     }, [productId]);
@@ -33,6 +37,7 @@ export default function useProductLikes(productId, isAuthenticated) {
     const likeProduct = async () => {
         if (!isAuthenticated) {
             setError('Please log in to like the product.');
+            addNotification('Please log in to like the product', 'warning');
             return;
         }
 
@@ -40,11 +45,13 @@ export default function useProductLikes(productId, isAuthenticated) {
         if (!token) {
             setError('Authentication token not found. Please log in again.');
             console.error('Token is null or undefined in localStorage');
+            addNotification('Session expired. Please log in again', 'error');
             return;
         }
 
         if (isliked) {
             setError('You have already liked this product.');
+            addNotification('You already liked this product', 'warning');
             return;
         }
 
@@ -68,15 +75,18 @@ export default function useProductLikes(productId, isAuthenticated) {
             setLikes(result.likes);
             setIsLiked(true);
             setError(null);
+            addNotification('Product liked successfully', 'success');
         } catch (err) {
             console.error('Like error:', err);
             setError(err.message);
+            addNotification('Failed to like the product', 'error');
         }
     };
 
     const dislikeProduct = async () => {
         if (!isAuthenticated) {
             setError('Please log in to dislike the product.');
+            addNotification('Session expired. Please log in again', 'error');
             return;
         }
 
@@ -84,11 +94,13 @@ export default function useProductLikes(productId, isAuthenticated) {
         if (!token) {
             setError('Authentication token not found. Please log in again.');
             console.error('Token is null or undefined in localStorage');
+            addNotification('You have not liked this product yet', 'warning');
             return;
         }
 
         if (!isliked) {
             setError('You have not liked this product yet.');
+            addNotification('You have not liked this product yet', 'warning');
             return;
         }
 
@@ -112,9 +124,11 @@ export default function useProductLikes(productId, isAuthenticated) {
             setLikes(result.likes);
             setIsLiked(false);
             setError(null);
+            addNotification('Like removed', 'success');
         } catch (err) {
             console.error('Dislike error:', err);
             setError(err.message);
+            addNotification('Failed to remove like', 'error');
         }
     };
 

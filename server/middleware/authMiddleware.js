@@ -6,14 +6,16 @@ export default function fetchUser(req, res, next) {
     const token = req.header('auth-token');
 
     if (!token) {
-        return res.status(401).json({ error: 'No token' });
+        console.error('No auth-token found in request headers');
+        return res.status(401).json({ error: 'No token. Please log in first.' });
     }
 
     try {
         const data = jwt.verify(token, process.env.JWT_SECRET);
         req.user = data.user;
         next();
-    } catch {
-        res.status(401).json({ error: 'Invalid token' });
+    } catch (err) {
+        console.error('Token verification failed:', err.message);
+        res.status(401).json({ error: 'Invalid or expired token. Please log in again.' });
     }
 };

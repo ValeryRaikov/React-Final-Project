@@ -14,13 +14,17 @@ export default function useProductLikes(productId, isAuthenticated) {
 
                 if (!response.ok) {
                     setError('Failed to fetch product');
+                    return;
                 }
 
                 const result = await response.json();
 
-                setLikes(result.likes.length);
+                // Handle both cases: likes as array or as number
+                const likesCount = Array.isArray(result.likes) ? result.likes.length : result.likes;
+                setLikes(likesCount);
                 setError(null);
             } catch (err) {
+                console.error('Error fetching likes:', err);
                 setError('Failed to fetch likes');
             }
         })();
@@ -29,6 +33,13 @@ export default function useProductLikes(productId, isAuthenticated) {
     const likeProduct = async () => {
         if (!isAuthenticated) {
             setError('Please log in to like the product.');
+            return;
+        }
+
+        const token = localStorage.getItem('auth-token');
+        if (!token) {
+            setError('Authentication token not found. Please log in again.');
+            console.error('Token is null or undefined in localStorage');
             return;
         }
 
@@ -43,12 +54,13 @@ export default function useProductLikes(productId, isAuthenticated) {
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'auth-token': localStorage.getItem('auth-token'),
+                    'auth-token': token,
                 },
             });
 
             if (!response.ok) {
-                throw new Error('Failed to like the product');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to like the product');
             }
 
             const result = await response.json();
@@ -57,6 +69,7 @@ export default function useProductLikes(productId, isAuthenticated) {
             setIsLiked(true);
             setError(null);
         } catch (err) {
+            console.error('Like error:', err);
             setError(err.message);
         }
     };
@@ -64,6 +77,13 @@ export default function useProductLikes(productId, isAuthenticated) {
     const dislikeProduct = async () => {
         if (!isAuthenticated) {
             setError('Please log in to dislike the product.');
+            return;
+        }
+
+        const token = localStorage.getItem('auth-token');
+        if (!token) {
+            setError('Authentication token not found. Please log in again.');
+            console.error('Token is null or undefined in localStorage');
             return;
         }
 
@@ -78,12 +98,13 @@ export default function useProductLikes(productId, isAuthenticated) {
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'auth-token': localStorage.getItem('auth-token'),
+                    'auth-token': token,
                 },
             });
 
             if (!response.ok) {
-                throw new Error('Failed to dislike the product');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to dislike the product');
             }
 
             const result = await response.json();
@@ -92,6 +113,7 @@ export default function useProductLikes(productId, isAuthenticated) {
             setIsLiked(false);
             setError(null);
         } catch (err) {
+            console.error('Dislike error:', err);
             setError(err.message);
         }
     };
@@ -100,6 +122,7 @@ export default function useProductLikes(productId, isAuthenticated) {
         likes, 
         likeProduct, 
         dislikeProduct, 
-        error 
+        error,
+        isliked 
     };
 }

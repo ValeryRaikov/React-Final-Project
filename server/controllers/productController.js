@@ -5,7 +5,7 @@ const addProduct = async (req, res) => {
     const products = await Product.find({});
     const id = products.length ? products.slice(-1)[0].id + 1 : 1;
 
-    const product = new Product({ id, ...req.body });
+    const product = new Product({ id, ...req.body, likes: [] });
     await product.save();
 
     res.json({ success: true, name: req.body.name });
@@ -56,8 +56,8 @@ const likeProduct = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
-        // Prevent duplicate likes using toString() for comparison
-        const userIdStr = req.user.id.toString();
+        // Convert req.user.id to string for comparison
+        const userIdStr = String(req.user.id);
         const isAlreadyLiked = product.likes.some(id => id.toString() === userIdStr);
         
         if (!isAlreadyLiked) {
@@ -68,7 +68,7 @@ const likeProduct = async (req, res) => {
         res.json({ likes: product.likes.length });
 
     } catch (err) {
-        console.error(err);
+        console.error('Like product error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 };
@@ -82,8 +82,9 @@ const dislikeProduct = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
+        const userIdStr = String(req.user.id);
         product.likes = product.likes.filter(
-            userId => userId.toString() !== req.user.id
+            userId => userId.toString() !== userIdStr
         );
 
         await product.save();
@@ -91,7 +92,7 @@ const dislikeProduct = async (req, res) => {
         res.json({ likes: product.likes.length });
 
     } catch (err) {
-        console.error(err);
+        console.error('Dislike product error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 };

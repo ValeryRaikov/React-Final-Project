@@ -22,8 +22,7 @@ export default function useProductLikes(productId, isAuthenticated) {
 
                 const result = await response.json();
 
-                // Handle both cases: likes as array or as number
-                const likesCount = Array.isArray(result.likes) ? result.likes.length : result.likes;
+                const likesCount = result.likes.length;
                 setLikes(likesCount);
                 setError(null);
             } catch (err) {

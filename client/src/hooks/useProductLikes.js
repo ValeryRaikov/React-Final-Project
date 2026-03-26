@@ -41,9 +41,10 @@ export default function useProductLikes(productId, isAuthenticated) {
         }
 
         const token = localStorage.getItem('auth-token');
+
         if (!token) {
-            setError('Authentication token not found. Please log in again.');
             console.error('Token is null or undefined in localStorage');
+            setError('Authentication token not found. Please log in again.');
             addNotification('Session expired. Please log in again', 'error');
             return;
         }
@@ -90,10 +91,11 @@ export default function useProductLikes(productId, isAuthenticated) {
         }
 
         const token = localStorage.getItem('auth-token');
+
         if (!token) {
-            setError('Authentication token not found. Please log in again.');
             console.error('Token is null or undefined in localStorage');
-            addNotification('You have not liked this product yet', 'warning');
+            setError('Authentication token not found. Please log in again.');
+            addNotification('Authentication token not found. Please log in again.', 'warning');
             return;
         }
 

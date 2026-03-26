@@ -23,10 +23,17 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    cartData: {
-        type: Object,
-        default: {}
-    },
+    cartData: [{
+        productId: {
+            type: Number,
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: true,
+            default: 1
+        }
+    }],
     date: { 
         type: Date, 
         default: Date.now 

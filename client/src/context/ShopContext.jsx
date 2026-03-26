@@ -46,7 +46,13 @@ export default function ShopContextProvider(props) {
 
                         const getCartResult = await getCartResponse.json();
 
-                        setCartItems(getCartResult);
+                        const formattedCart = {};
+
+                        getCartResult.forEach(item => {
+                            formattedCart[item.productId] = item.quantity;
+                        });
+
+                        setCartItems(formattedCart);
                     } catch (err) {
                         console.error(err.message);
                     }
@@ -92,7 +98,12 @@ export default function ShopContextProvider(props) {
             return;
         }
 
-        setCartItems(prev => ({...prev, [itemId]: prev[itemId] + 1}));
+        // setCartItems(prev => ({...prev, [itemId]: prev[itemId] + 1}));
+
+        setCartItems(prev => ({
+            ...prev,
+            [itemId]: (prev[itemId] || 0) + 1
+        }));
 
         if (isAuthenticated) {
             try {
@@ -121,7 +132,12 @@ export default function ShopContextProvider(props) {
             return;
         }
 
-        setCartItems(prev => ({...prev, [itemId]: prev[itemId] - 1}));
+        // setCartItems(prev => ({...prev, [itemId]: prev[itemId] - 1}));
+
+        setCartItems(prev => ({
+            ...prev,
+            [itemId]: Math.max((prev[itemId] || 0) - 1, 0)
+        }));
 
         if (isAuthenticated) {
             try {

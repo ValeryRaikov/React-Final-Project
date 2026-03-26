@@ -3,17 +3,33 @@ import User from '../models/User.js';
 // Add an item to the cart
 const addToCart = async (req, res) => {
     try {
-        const { itemId } = req.body;
+        const user = await User.findById(req.user.id);
 
-        if (!itemId) {
-            return res.status(400).json({ error: 'itemId required' });
+        const itemId = Number(req.body.itemId);
+
+        if (!itemId || isNaN(itemId)) {
+            return res.status(400).json({ error: 'Invalid itemId' });
         }
 
-        await User.findByIdAndUpdate(
-            req.user.id,
-            { $inc: { [`cartData.${itemId}`]: 1 } },
-            { upsert: true }
+        if (!user.cartData) {
+            user.cartData = [];
+        }
+
+        // Check if product already exists in cart
+        const existingItem = user.cartData.find(
+            item => item.productId === itemId
         );
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            user.cartData.push({
+                productId: itemId,
+                quantity: 1
+            });
+        }
+
+        await user.save();
 
         res.send('Added to cart');
     } catch (err) {
@@ -27,31 +43,32 @@ const removeFromCart = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
 
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+        const itemId = Number(req.body.itemId);
+
+        if (!itemId || isNaN(itemId)) {
+            return res.status(400).json({ error: 'Invalid itemId' });
         }
 
-        // Initialize cartData if it doesn't exist
-        if (!user.cartData || typeof user.cartData !== 'object') {
-            user.cartData = {};
+        const itemIndex = user.cartData.findIndex(
+            item => item.productId === itemId
+        );
+
+        if (itemIndex === -1) {
+            return res.status(400).json({ error: 'Item not in cart' });
         }
 
-        const itemId = req.body.itemId;
-        
-        // Initialize item count if not present
-        if (!user.cartData[itemId]) {
-            user.cartData[itemId] = 0;
+        if (user.cartData[itemIndex].quantity > 1) {
+            user.cartData[itemIndex].quantity -= 1;
+        } else {
+            // Remove item completely if quantity = 1
+            user.cartData.splice(itemIndex, 1);
         }
 
-        if (user.cartData[itemId] > 0) {
-            user.cartData[itemId]--;
-        }
-
-        user.markModified('cartData');
         await user.save();
+
         res.send('Removed from cart');
     } catch (err) {
-        console.error('Remove from cart error:', err);
+        console.error(err);
         res.status(500).json({ error: 'Server error' });
     }
 };
@@ -61,19 +78,9 @@ const getCart = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
 
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        // Initialize cartData if it doesn't exist
-        if (!user.cartData || typeof user.cartData !== 'object') {
-            user.cartData = {};
-            await user.save();
-        }
-
-        res.json(user.cartData);
+        res.json(user.cartData || []);
     } catch (err) {
-        console.error('Get cart error:', err);
+        console.error(err);
         res.status(500).json({ error: 'Server error' });
     }
 };

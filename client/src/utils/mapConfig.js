@@ -1,4 +1,4 @@
-const GOOGLE_MAPS_API_KEY = 'AIzaSyClYsN87ZQkfQ3jxzBQuwsxLpZ_zGv89Ac';
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 export const mapOptions = {
     googleMapApiKey: GOOGLE_MAPS_API_KEY,

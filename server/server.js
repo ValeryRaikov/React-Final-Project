@@ -7,6 +7,7 @@ import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import promocodeRoutes from './routes/promocodeRoutes.js';
 
 const app = express();
 const port = process.env.PORT;
@@ -24,6 +25,7 @@ app.use('/', productRoutes);
 app.use('/', userRoutes);
 app.use('/', adminRoutes);
 app.use('/', cartRoutes);
+app.use('/', promocodeRoutes);
 
 // Root
 app.get('/', (req, res) => {

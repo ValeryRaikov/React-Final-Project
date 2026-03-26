@@ -3,30 +3,21 @@ import User from '../models/User.js';
 // Add an item to the cart
 const addToCart = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
+        const { itemId } = req.body;
 
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+        if (!itemId) {
+            return res.status(400).json({ error: 'itemId required' });
         }
 
-        // Initialize cartData if it doesn't exist
-        if (!user.cartData || typeof user.cartData !== 'object') {
-            user.cartData = {};
-        }
-
-        const itemId = req.body.itemId;
-        
-        // Initialize item count if not present
-        if (!user.cartData[itemId]) {
-            user.cartData[itemId] = 0;
-        }
-
-        user.cartData[itemId]++;
-        await user.save();
+        await User.findByIdAndUpdate(
+            req.user.id,
+            { $inc: { [`cartData.${itemId}`]: 1 } },
+            { upsert: true }
+        );
 
         res.send('Added to cart');
     } catch (err) {
-        console.error('Add to cart error:', err);
+        console.error(err);
         res.status(500).json({ error: 'Server error' });
     }
 };
@@ -56,6 +47,7 @@ const removeFromCart = async (req, res) => {
             user.cartData[itemId]--;
         }
 
+        user.markModified('cartData');
         await user.save();
         res.send('Removed from cart');
     } catch (err) {

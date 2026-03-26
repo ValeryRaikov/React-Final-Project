@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import { isValidEmail, isValidPassword } from '../utils/validators.js';
+import { isValidName, isValidEmail, isValidPassword } from '../utils/validators.js';
 
 // User registration
 const signup = async (req, res) => {
@@ -10,6 +10,13 @@ const signup = async (req, res) => {
         return res.status(400).json({
             success: false,
             errors: 'Name, email, and password are required'
+        });
+    }
+
+    if (!isValidName(name)) {
+        return res.status(400).json({
+            success: false,
+            errors: 'Invalid name format'
         });
     }
 

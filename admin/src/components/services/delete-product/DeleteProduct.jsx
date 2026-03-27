@@ -11,6 +11,8 @@ export default function DeleteProduct() {
     const { isAuthenticated } = useContext(AuthContext);
     const { productId } = useParams();
     const navigate = useNavigate();
+    const [offices, setOffices] = useState([]);
+    const [loadingOffices, setLoadingOffices] = useState(true);
     const [product, setProduct] = useState({
         name: '',
         image: '',
@@ -36,10 +38,19 @@ export default function DeleteProduct() {
 
                 const result = await response.json();
                 setProduct(result);
+
+                // Fetch offices
+                const officesResponse = await fetch(`${BASE_URL}/offices`);
+                const officesData = await officesResponse.json();
+                
+                if (officesData.success && officesData.data) {
+                    setOffices(officesData.data);
+                }
             } catch (err) {
                 setError(err.message);
             } finally {
                 setLoading(false);
+                setLoadingOffices(false);
             }
         })();
     }, [productId]);
@@ -119,6 +130,32 @@ export default function DeleteProduct() {
                             <option value="men">Men</option>
                             <option value="kids">Kids</option>
                         </select>
+                    </div>
+                    <div className="product-itemfield">
+                        <p>Available in Offices</p>
+                        {loadingOffices ? (
+                            <p>Loading offices...</p>
+                        ) : offices.length > 0 ? (
+                            <div className="offices-container">
+                                {offices.map((office) => (
+                                    <label key={office._id} className="office-checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            checked={office.isOpen}
+                                            readOnly
+                                        />
+                                        <div className="office-info">
+                                            <span className="office-name">{office.name}</span>
+                                            <span className={`office-status ${office.isOpen ? 'open' : 'closed'}`}>
+                                                {office.isOpen ? '✓ Open' : '✗ Closed (Not Available)'}
+                                            </span>
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No offices available</p>
+                        )}
                     </div>
                     <div className="product-itemfield">
                         <label htmlFor="file-input">

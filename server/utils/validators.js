@@ -1,6 +1,6 @@
 import { nameRegex, emailRegex, passwordRegex } from './regex.js';
 
-const isValidName = (name) => {
+export const isValidName = (name) => {
     return nameRegex.test(name);
 };
 

@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { useNotification } from '../../context/NotificationContext';
 
 import './Registration.css';
 
@@ -8,9 +9,10 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Registration() {
     const { handleLogin } = useContext(AuthContext);
+    const { addNotification } = useNotification();
 
     const navigate = useNavigate();
-    const [error, setError] = useState(null);
+    // const [error, setError] = useState(null);
     const [state, setState] = useState('Login');
     const [formData, setFormData] = useState({
         username: '',
@@ -30,22 +32,26 @@ export default function Registration() {
 
     const validateForm = () => {
         if (state === 'Sign Up' && formData.username.trim() === '') {
-            setError('Username is required');
+            // setError('Username is required');
+            addNotification('Username is required', 'error');
             return false;
         }
 
         if (formData.email.trim() === '') {
-            setError('Email is required');
+            // setError('Email is required');
+            addNotification('Email is required', 'error');
             return false;
         }
 
         if (formData.password.trim() === '') {
-            setError('Password is required');
+            // setError('Password is required');
+            addNotification('Password is required', 'error');
             return false;
         }
 
         if (!formData.agree) {
-            setError('You must agree to the terms of use & privacy policy.');
+            // setError('You must agree to the terms of use & privacy policy.');
+            addNotification('You must agree to the terms of use & privacy policy.', 'error');
             return false;
         }
 
@@ -69,6 +75,7 @@ export default function Registration() {
 
             if (!response.ok) {
                 const errorResponse = await response.json();
+                addNotification(errorResponse.errors || 'Login Error!', 'error');
                 throw new Error(errorResponse.errors || 'Login Error!');
             }
 
@@ -77,12 +84,15 @@ export default function Registration() {
             if (result.success) {
                 localStorage.setItem('auth-token', result.token);
                 handleLogin();
+                addNotification('Login successful', 'success');
                 navigate('/');
             } else {
-                setError(result.errors);
+                // setError(result.errors);
+                addNotification(result.errors, 'error');
             }
         } catch (err) {
-            setError(err.message);
+            // setError(err.message);
+            addNotification(err.message, 'error');
         }
     }
 
@@ -103,6 +113,7 @@ export default function Registration() {
 
             if (!response.ok) {
                 const errorResponse = await response.json();
+                addNotification(errorResponse.errors || 'SignUp Error!', 'error');
                 throw new Error(errorResponse.errors || 'SignUp Error!');
             }
 
@@ -111,12 +122,15 @@ export default function Registration() {
             if (result.success) {
                 localStorage.setItem('auth-token', result.token);
                 handleLogin();
+                addNotification('Sign up successful', 'success');
                 navigate('/');
             } else {
-                setError(result.errors);
+                // setError(result.errors);
+                addNotification(result.errors, 'error');
             }
         } catch (err) {
-            setError(err.message);
+            // setError(err.message);
+            addNotification(err.message, 'error');
         }
     }
 
@@ -125,10 +139,10 @@ export default function Registration() {
             <div className="registration-container">
                 <div className="registration-header-box">
                     <h1>{state}</h1>
-                    {error 
+                    {/* {error 
                         ? <p className="error-message">{error}</p> 
                         : <></>
-                    }
+                    } */}
                 </div>
                 <div className="registration-fields">
                     {state === 'Sign Up' 

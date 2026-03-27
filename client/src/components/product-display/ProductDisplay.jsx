@@ -21,7 +21,7 @@ export default function ProductDisplay({
         likes,
         likeProduct, 
         dislikeProduct, 
-        error,
+        // error,
     } = useProductLikes(id, isAuthenticated);
 
     return (
@@ -75,8 +75,10 @@ export default function ProductDisplay({
                     </div>
                 </div>
 
+                {/*
                 {error && <p className="error-message">{error}</p>}
-
+                */}
+            
                 <p className="likes">Total likes: <span>{likes}</span></p>
                 <p className="display-right-category"><span>Category: </span>{category} clothing</p>
                 <p className="display-right-category"><span>Tags: </span>{category} clothing</p>

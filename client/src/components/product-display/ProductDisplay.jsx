@@ -65,13 +65,17 @@ export default function ProductDisplay({
     // console.log('Available offices:', availableOffices);
 
     const handleAddToCart = () => {
-        if (!available) {
-            addNotification('This product is currently out of stock', 'error');
-            return;
-        }
+        if (isAuthenticated) {
+            if (!available) {
+                addNotification('This product is currently out of stock', 'error');
+                return;
+            }
 
-        addToCart(id);
-        addNotification('Product added to cart', 'success');
+            addToCart(id);
+            addNotification('Product added to cart', 'success');
+        } else {
+            addToCart(id);
+        }
     };
 
     return (

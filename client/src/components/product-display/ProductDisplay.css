@@ -144,17 +144,11 @@
 
 .offices-list {
     margin: 12px 0;
+    margin-left: auto;
     padding: 12px 14px;
     background-color: rgba(40, 167, 69, 0.08);
     border: 1px solid #d4edda;
     border-radius: 6px;
-}
-
-.offices-list-title {
-    margin: 0 0 8px 0;
-    font-size: 13px;
-    font-weight: 600;
-    color: #155724;
 }
 
 .offices-list ul {
@@ -162,12 +156,12 @@
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 6px;
 }
 
 .offices-list li {
-    font-size: 13px;
+    font-size: 14px;
     color: #155724;
     font-weight: 500;
     padding-left: 20px;

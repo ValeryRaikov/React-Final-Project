@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { ShopContext } from '../../context/ShopContext';
 import { AuthContext } from '../../context/AuthContext';
+import { useNotification } from '../../context/NotificationContext';
 import useProductLikes  from '../../hooks/useProductLikes';
 
 import './ProductDisplay.css';
@@ -21,6 +22,7 @@ export default function ProductDisplay({
 }) {
     const { addToCart } = useContext(ShopContext);
     const { isAuthenticated } = useContext(AuthContext);
+    const { addNotification } = useNotification();
     const { 
         likes,
         likeProduct, 
@@ -60,7 +62,17 @@ export default function ProductDisplay({
         return hasMatch;
     }) : [];
     
-    console.log('Available offices:', availableOffices);
+    // console.log('Available offices:', availableOffices);
+
+    const handleAddToCart = () => {
+        if (!available) {
+            addNotification('This product is currently out of stock', 'error');
+            return;
+        }
+
+        addToCart(id);
+        addNotification('Product added to cart', 'success');
+    };
 
     return (
         <div className="display">
@@ -132,7 +144,7 @@ export default function ProductDisplay({
                     </div>
                 </div>
                 <div className="display-right-btn-box">
-                <button className="add-btn" onClick={() => addToCart(id)}>Add to cart</button>
+                <button className="add-btn" onClick={() => handleAddToCart()}>Add to cart</button>
                     <div className="display-right-likes">
                         {isAuthenticated && 
                         <div className="likes-btn-box">

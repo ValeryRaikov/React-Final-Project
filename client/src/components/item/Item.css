@@ -8,6 +8,40 @@
     margin: 6px 0;
 }
 
+.item-image-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.item-availability {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    backdrop-filter: blur(5px);
+}
+
+.item-availability.in-stock {
+    background-color: rgba(40, 167, 69, 0.95);
+    color: #fff;
+}
+
+.item-availability.out-of-stock {
+    background-color: rgba(220, 53, 69, 0.95);
+    color: #fff;
+}
+
+.availability-icon {
+    font-size: 16px;
+    font-weight: 700;
+}
+
 .item-prices {
     display: flex;
     gap: 20px;

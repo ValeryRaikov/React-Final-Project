@@ -62,6 +62,123 @@
     color: #ff4141;
 }
 
+.display-availability {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    margin: 20px 0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.display-availability.in-stock {
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 2px solid #28a745;
+}
+
+.display-availability.out-of-stock {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 2px solid #dc3545;
+}
+
+.availability-badge-icon {
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.display-availability.in-stock .availability-badge-icon {
+    color: #28a745;
+}
+
+.display-availability.out-of-stock .availability-badge-icon {
+    color: #dc3545;
+}
+
+.availability-badge-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.availability-status {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.availability-status.out-of-stock-text {
+    color: #dc3545;
+}
+
+.availability-details {
+    margin: 0;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.85;
+}
+
+.display-availability.in-stock .availability-status {
+    color: #28a745;
+}
+
+.display-availability.in-stock .availability-details {
+    color: #155724;
+}
+
+.display-availability.out-of-stock .availability-status {
+    color: #dc3545;
+}
+
+.display-availability.out-of-stock .availability-details {
+    color: #721c24;
+}
+
+.offices-list {
+    margin: 12px 0;
+    padding: 12px 14px;
+    background-color: rgba(40, 167, 69, 0.08);
+    border: 1px solid #d4edda;
+    border-radius: 6px;
+}
+
+.offices-list-title {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #155724;
+}
+
+.offices-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.offices-list li {
+    font-size: 13px;
+    color: #155724;
+    font-weight: 500;
+    padding-left: 20px;
+    position: relative;
+}
+
+.offices-list li:before {
+    content: "•";
+    position: absolute;
+    left: 8px;
+    color: #28a745;
+    font-weight: bold;
+}
+
 .display-right-size h1 {
     margin-top: 40px;
     color: #656565;

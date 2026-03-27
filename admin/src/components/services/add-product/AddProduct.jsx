@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../../context/AuthContext';
 
 import Warning from '../../warning/Warning';
@@ -10,6 +10,9 @@ import upload_area from '../../assets/upload_area.svg';
 export default function AddProduct() {
     const { isAuthenticated } = useContext(AuthContext);
     const [image, setImage] = useState(null);
+    const [offices, setOffices] = useState([]);
+    const [selectedOffices, setSelectedOffices] = useState([]);
+    const [loadingOffices, setLoadingOffices] = useState(true);
     const [productDetails, setProductDetails] = useState({
         name: '',
         image: '',
@@ -20,6 +23,26 @@ export default function AddProduct() {
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    // Fetch offices on component mount
+    useEffect(() => {
+        const fetchOffices = async () => {
+            try {
+                const res = await fetch(`${BASE_URL}/offices`);
+                const data = await res.json();
+                
+                if (data.success && data.data) {
+                    setOffices(data.data);
+                }
+            } catch (err) {
+                console.error('Failed to fetch offices:', err);
+            } finally {
+                setLoadingOffices(false);
+            }
+        };
+
+        fetchOffices();
+    }, []);
 
     const imageHandler = (e) => {
         setImage(e.target.files[0]);
@@ -32,6 +55,16 @@ export default function AddProduct() {
         });
     };
 
+    const handleOfficeChange = (officeId) => {
+        setSelectedOffices((prev) => {
+            if (prev.includes(officeId)) {
+                return prev.filter(id => id !== officeId);
+            } else {
+                return [...prev, officeId];
+            }
+        });
+    };
+
     const clearForm = () => {
         setProductDetails({
             name: '',
@@ -41,6 +74,7 @@ export default function AddProduct() {
             oldPrice: '',
         });
         setImage(null);
+        setSelectedOffices([]);
     };
 
     const addProduct = async (e) => {
@@ -71,6 +105,7 @@ export default function AddProduct() {
             const product = {
                 ...productDetails,
                 image: uploadResult.imageUrl,
+                officeIds: selectedOffices,  // Add selected office IDs
             };
 
             const productResponse = await fetch(`${BASE_URL}/add-product`, {
@@ -150,6 +185,36 @@ export default function AddProduct() {
                             <option value="men">Men</option>
                             <option value="kids">Kids</option>
                         </select>
+                    </div>
+                    <div className="product-itemfield">
+                        <p>Available in Offices</p>
+                        {loadingOffices ? (
+                            <p>Loading offices...</p>
+                        ) : offices.length > 0 ? (
+                            <div className="offices-container">
+                                {offices.map((office) => (
+                                    <label 
+                                        key={office._id}
+                                        className={`office-checkbox-label ${!office.isOpen ? 'disabled' : ''}`}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedOffices.includes(office._id)}
+                                            onChange={() => office.isOpen && handleOfficeChange(office._id)}
+                                            disabled={!office.isOpen}
+                                        />
+                                        <div className="office-info">
+                                            <span className="office-name">{office.name}</span>
+                                            <span className={`office-status ${office.isOpen ? 'open' : 'closed'}`}>
+                                                {office.isOpen ? '✓ Open' : '✗ Closed (Not Available)'}
+                                            </span>
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No offices available</p>
+                        )}
                     </div>
                     <div className="product-itemfield">
                         <label htmlFor="file-input">

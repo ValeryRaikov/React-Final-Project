@@ -12,6 +12,9 @@ export default function EditProduct() {
     const { productId } = useParams(); 
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
+    const [offices, setOffices] = useState([]);
+    const [selectedOffices, setSelectedOffices] = useState([]);
+    const [loadingOffices, setLoadingOffices] = useState(true);
     const [product, setProduct] = useState({
         name: '',
         image: '',
@@ -29,19 +32,31 @@ export default function EditProduct() {
             setError(null);
 
             try {
-                const response = await fetch(`${BASE_URL}/product/${productId}`);
+                // Fetch offices
+                const officesResponse = await fetch(`${BASE_URL}/offices`);
+                const officesData = await officesResponse.json();
+                
+                if (officesData.success && officesData.data) {
+                    setOffices(officesData.data);
+                }
 
-                if (!response.ok) {
+                // Fetch product
+                const productResponse = await fetch(`${BASE_URL}/product/${productId}`);
+
+                if (!productResponse.ok) {
                     throw new Error(errMsg.fetchProduct);
                 }
 
-                const result = await response.json();
+                const result = await productResponse.json();
 
                 setProduct(result);
+                // Set selected offices from product data
+                setSelectedOffices(result.officeIds || []);
             } catch (err) {
                 setError(err.message);
             } finally {
                 setLoading(false);
+                setLoadingOffices(false);
             }
         })();
     }, [productId]);
@@ -75,7 +90,10 @@ export default function EditProduct() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(product),
+                body: JSON.stringify({
+                    ...product,
+                    officeIds: selectedOffices,  // Include selected offices
+                }),
             });
 
             if (!response.ok) {
@@ -100,7 +118,17 @@ export default function EditProduct() {
             ...prevProduct,
             [e.target.name]: e.target.value,
         }));
-    }
+    };
+
+    const handleOfficeChange = (officeId) => {
+        setSelectedOffices((prev) => {
+            if (prev.includes(officeId)) {
+                return prev.filter(id => id !== officeId);
+            } else {
+                return [...prev, officeId];
+            }
+        });
+    };
 
     return (
         <>
@@ -148,6 +176,36 @@ export default function EditProduct() {
                             <option value="men">Men</option>
                             <option value="kids">Kids</option>
                         </select>
+                    </div>
+                    <div className="product-itemfield">
+                        <p>Available in Offices</p>
+                        {loadingOffices ? (
+                            <p>Loading offices...</p>
+                        ) : offices.length > 0 ? (
+                            <div className="offices-container">
+                                {offices.map((office) => (
+                                    <label 
+                                        key={office._id}
+                                        className={`office-checkbox-label ${!office.isOpen ? 'disabled' : ''}`}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedOffices.includes(office._id)}
+                                            onChange={() => office.isOpen && handleOfficeChange(office._id)}
+                                            disabled={!office.isOpen}
+                                        />
+                                        <div className="office-info">
+                                            <span className="office-name">{office.name}</span>
+                                            <span className={`office-status ${office.isOpen ? 'open' : 'closed'}`}>
+                                                {office.isOpen ? '✓ Open' : '✗ Closed (Not Available)'}
+                                            </span>
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No offices available</p>
+                        )}
                     </div>
                     <div className="product-itemfield">
                         <label htmlFor="file-input">

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { ShopContext } from '../../context/ShopContext';
 import { AuthContext } from '../../context/AuthContext';
 import useProductLikes  from '../../hooks/useProductLikes';
@@ -7,6 +7,8 @@ import './ProductDisplay.css';
 import star_icon from '../assets/star_icon.png';
 import star_dull_icon from '../assets/star_dull_icon.png';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 export default function ProductDisplay({ 
     id,
     name,
@@ -14,6 +16,8 @@ export default function ProductDisplay({
     category,
     newPrice,
     oldPrice,
+    available,
+    officeIds,
 }) {
     const { addToCart } = useContext(ShopContext);
     const { isAuthenticated } = useContext(AuthContext);
@@ -23,6 +27,45 @@ export default function ProductDisplay({
         dislikeProduct, 
         // error,
     } = useProductLikes(id, isAuthenticated);
+
+    const [offices, setOffices] = useState([]);
+
+    useEffect(() => {
+        const fetchOffices = async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/offices`);
+                const data = await response.json();
+                console.log('Offices API response:', data, 'Type:', typeof data);
+                // Ensure data is an array, handle different API response structures
+                const officesArray = Array.isArray(data) ? data : (data.offices || []);
+                console.log('Offices array:', officesArray);
+                setOffices(officesArray);
+            } catch (error) {
+                console.error('Error fetching offices:', error);
+                setOffices([]);
+            }
+        };
+
+        fetchOffices();
+    }, []);
+
+    // Debug logging
+    console.log('Current officeIds:', officeIds, 'Type:', typeof officeIds);
+    console.log('Offices state:', offices);
+
+    // Get the office names for the available offices
+    // Convert IDs to strings for comparison since MongoDB ObjectIds might not match directly
+    const availableOffices = Array.isArray(offices) && officeIds && Array.isArray(officeIds) ? offices.filter(office => {
+        const officeIdStr = office._id?.toString();
+        const hasMatch = officeIds.some(id => {
+            const idStr = id?.toString?.() || String(id);
+            return idStr === officeIdStr;
+        });
+        console.log(`Office ${office.name} (${officeIdStr}): ${hasMatch}`);
+        return hasMatch;
+    }) : [];
+    
+    console.log('Available offices:', availableOffices);
 
     return (
         <div className="display">
@@ -51,6 +94,39 @@ export default function ProductDisplay({
                     <div className="display-right-price-old">${oldPrice}</div>
                     <div className="display-right-price-new">${newPrice}</div>
                 </div>
+                {isAuthenticated && (
+                    <div>
+                        <div className={`display-availability ${available ? 'in-stock' : 'out-of-stock'}`}>
+                            {available ? (
+                                <>
+                                    <span className="availability-badge-icon">✓</span>
+                                    <div className="availability-badge-content">
+                                        <p className="availability-status">In Stock</p>
+                                        <p className="availability-details">Available in {officeIds?.length || 0} shop{officeIds?.length !== 1 ? 's' : ''}</p>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <span className="availability-badge-icon">✕</span>
+                                    <div className="availability-badge-content">
+                                        <p className="availability-status out-of-stock-text">Out of Stock</p>
+                                        <p className="availability-details">Not available in any shop</p>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                        {available && availableOffices.length > 0 && (
+                            <div className="offices-list">
+                                <p className="offices-list-title">Available at:</p>
+                                <ul>
+                                    {availableOffices.map((office) => (
+                                        <li key={office._id}>{office.name}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                )}
                 <div className="display-right-description">
                     {`${name} is the perfect ${category} clothing for everyday. Made of fine materials and 100% cotton, our clothes are suitable for everyone. Now, don't miss the opportunity and get it for only ${newPrice}!`}
                 </div>

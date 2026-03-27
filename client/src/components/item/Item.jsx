@@ -8,10 +8,27 @@ export default function Item({
     image,
     newPrice,
     oldPrice,
+    available,
+    officeIds,
 }) {
     return (
         <div className="item">
-            <Link to={`/product/${id}`}><img src={image} alt="" /></Link>
+            <div className="item-image-wrapper">
+                <Link to={`/product/${id}`}><img src={image} alt="" /></Link>
+                <div className={`item-availability ${available ? 'in-stock' : 'out-of-stock'}`}>
+                    {available ? (
+                        <>
+                            <span className="availability-icon">✓</span>
+                            <span className="availability-text">{officeIds?.length || 0} shops</span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="availability-icon">✕</span>
+                            <span className="availability-text">Out of stock</span>
+                        </>
+                    )}
+                </div>
+            </div>
             <p>{name}</p>
             <div className="item-prices">
                 <div className="item-price-new">

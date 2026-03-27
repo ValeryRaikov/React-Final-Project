@@ -29,10 +29,15 @@ const ProductSchema = new mongoose.Schema({
     },
     available: { 
         type: Boolean, 
-        default: true 
+        default: true
     },
     likes: {
         type: [mongoose.Schema.Types.ObjectId],
+        default: []
+    },
+    officeIds: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Office',
         default: []
     }
 });

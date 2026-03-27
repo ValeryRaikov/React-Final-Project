@@ -5,7 +5,16 @@ const addProduct = async (req, res) => {
     const products = await Product.find({});
     const id = products.length ? products.slice(-1)[0].id + 1 : 1;
 
-    const product = new Product({ id, ...req.body, likes: [] });
+    const officeIds = req.body.officeIds || [];
+    
+    const product = new Product({ 
+        id, 
+        ...req.body, 
+        likes: [],
+        officeIds: officeIds,
+        // Automatically set available: true if any offices selected, false if none
+        available: officeIds.length > 0
+    });
     await product.save();
 
     res.json({ success: true, name: req.body.name });
@@ -13,9 +22,17 @@ const addProduct = async (req, res) => {
 
 // Update an existing product
 const updateProduct = async (req, res) => {
+    const officeIds = req.body.officeIds || [];
+    
+    const updateData = {
+        ...req.body,
+        // Automatically set available based on whether offices are selected
+        available: officeIds.length > 0
+    };
+    
     await Product.findOneAndUpdate(
         { id: req.params.id },
-        { $set: req.body }
+        { $set: updateData }
     );
     res.json({ success: true, name: req.body.name });
 };

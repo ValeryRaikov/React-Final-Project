@@ -9,6 +9,7 @@ export default function DescriptionBox({
     id,
     name,
     category,
+    subcategory,
     newPrice,
     oldPrice,
     available,
@@ -92,6 +93,7 @@ export default function DescriptionBox({
                             <>
                                 <p><span className="title">Product:</span> {name}</p>
                                 <p><span className="title">Category:</span> {category}</p>
+                                <p><span className="title">Subcategory:</span> {subcategory}</p>
                                 <p>
                                     <span className="title">Price:</span>
                                     <span className="old-price">${oldPrice}</span>

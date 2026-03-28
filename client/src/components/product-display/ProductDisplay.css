@@ -234,10 +234,10 @@
 }
 
 .likes-btn-box button {
-    width: 85px;
-    padding: 10px;
-    margin-bottom: 30px;
-    background-color: #ccc;
+    width: 100px;           
+    padding: 12px 20px;     
+    margin-bottom: 30px;    
+    background-color: #ff4141;
     color: #fff;
     text-shadow: 2px 2px 2px #000;
     border: none;

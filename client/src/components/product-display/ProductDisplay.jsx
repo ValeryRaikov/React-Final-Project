@@ -81,16 +81,52 @@ export default function ProductDisplay({
     return (
         <div className="display">
             <div className="display-left">
-                <div className="display-img-list">
-                    <img src={image} alt="" />
-                    <img src={image} alt="" />
-                    <img src={image} alt="" />
-                    <img src={image} alt="" />
+                <div className="display-left-top">
+                    <div className="display-img-list">
+                        <img src={image} alt="" />
+                        <img src={image} alt="" />
+                        <img src={image} alt="" />
+                        <img src={image} alt="" />
+                    </div>
+                    <div className="display-img-container">
+                        <div className="display-img">
+                            <img src={image} alt="" className="display-main-img" />
+                        </div>
+                    </div>
                 </div>
-                <div className="display-img">
-                    <img src={image} alt="" className="display-main-img" />
-                </div>
+
+                {isAuthenticated && (
+                    <div className={`display-availability ${available ? 'in-stock' : 'out-of-stock'}`}>
+                        {available ? (
+                            <>
+                                <span className="availability-badge-icon">✓</span>
+                                <div className="availability-badge-content">
+                                    <p className="availability-status">In Stock</p>
+                                    <p className="availability-details">
+                                        Available in {officeIds?.length || 0} shop{officeIds?.length !== 1 ? 's' : ''}
+                                    </p>
+                                </div>
+                                <div className="offices-list">
+                                    <ul>
+                                        {availableOffices.map((office) => (
+                                            <li key={office._id}>{office.name}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <span className="availability-badge-icon">✕</span>
+                                <div className="availability-badge-content">
+                                    <p className="availability-status out-of-stock-text">Out of Stock</p>
+                                    <p className="availability-details">Not available in any shop</p>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
+
             <div className="display-right">
                 <h1>{name}</h1>
                 <div className="display-right-stars">
@@ -105,36 +141,7 @@ export default function ProductDisplay({
                     <div className="display-right-price-old">${oldPrice}</div>
                     <div className="display-right-price-new">${newPrice}</div>
                 </div>
-                {isAuthenticated && (
-                    <div>
-                        <div className={`display-availability ${available ? 'in-stock' : 'out-of-stock'}`}>
-                            {available ? (
-                                <>
-                                    <span className="availability-badge-icon">✓</span>
-                                    <div className="availability-badge-content">
-                                        <p className="availability-status">In Stock</p>
-                                        <p className="availability-details">Available in {officeIds?.length || 0} shop{officeIds?.length !== 1 ? 's' : ''}</p>
-                                    </div>
-                                    <div className="offices-list">
-                                        <ul>
-                                            {availableOffices.map((office) => (
-                                                <li key={office._id}>{office.name}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <span className="availability-badge-icon">✕</span>
-                                    <div className="availability-badge-content">
-                                        <p className="availability-status out-of-stock-text">Out of Stock</p>
-                                        <p className="availability-details">Not available in any shop</p>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                )}
+
                 <div className="display-right-description">
                     {`${name} is the perfect ${category} clothing for everyday. Made of fine materials and 100% cotton, our clothes are suitable for everyone. Now, don't miss the opportunity and get it for only ${newPrice}!`}
                 </div>
@@ -148,21 +155,17 @@ export default function ProductDisplay({
                     </div>
                 </div>
                 <div className="display-right-btn-box">
-                <button className="add-btn" onClick={() => handleAddToCart()}>Add to cart</button>
+                    <button className="add-btn" onClick={() => handleAddToCart()}>Add to cart</button>
                     <div className="display-right-likes">
                         {isAuthenticated && 
-                        <div className="likes-btn-box">
-                            <button className="like-btn" onClick={likeProduct}>Like</button>
-                            <button className="dislike-btn" onClick={dislikeProduct}>Dislike</button>
-                        </div>
+                            <div className="likes-btn-box">
+                                <button className="like-btn" onClick={likeProduct}>Like</button>
+                                <button className="dislike-btn" onClick={dislikeProduct}>Dislike</button>
+                            </div>
                         }
                     </div>
                 </div>
 
-                {/*
-                {error && <p className="error-message">{error}</p>}
-                */}
-            
                 <p className="likes">Total likes: <span>{likes}</span></p>
                 <p className="display-right-category"><span>Category: </span>{category} clothing</p>
                 <p className="display-right-category"><span>Tags: </span>{category} clothing</p>

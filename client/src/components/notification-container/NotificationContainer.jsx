@@ -1,16 +1,18 @@
 import './NotificationContainer.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faExclamationTriangle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 export default function NotificationContainer({ notifications }) {
     const getIcon = (type) => {
         switch (type) {
             case 'success':
-                return '✔ ';
+                return faCheckCircle;
             case 'warning':
-                return '❗ ';
+                return faExclamationTriangle;
             case 'error':
-                return '❌ ';
+                return faTimesCircle;
             default:
-                return '';
+                return null;
         }
     };
 
@@ -19,7 +21,7 @@ export default function NotificationContainer({ notifications }) {
             {notifications.map(n => (
                 <div key={n.id} className={`notification ${n.type}`}>
                     <span className="notification-icon">
-                        {getIcon(n.type)}
+                        <FontAwesomeIcon icon={getIcon(n.type)} />
                     </span>
                     <span className="notification-message">
                         {n.message}

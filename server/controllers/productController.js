@@ -1,4 +1,5 @@
 import Product from '../models/Product.js';
+import User from '../models/User.js';
 
 // Create a new product
 const addProduct = async (req, res) => {
@@ -114,6 +115,77 @@ const dislikeProduct = async (req, res) => {
     }
 };
 
+// Add a comment to a product
+const addComment = async (req, res) => {
+    try {
+        const { text } = req.body;
+
+        if (!text || text.trim() === '') {
+            return res.status(400).json({ error: 'Comment cannot be empty' });
+        }
+
+        const product = await Product.findOne({ id: req.params.id });
+
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        // Fetch user from DB
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const newComment = {
+            user: user._id,
+            username: user.name,
+            text,
+        };
+
+        product.comments.push(newComment);
+        await product.save();
+
+        res.json({ success: true, comments: product.comments });
+
+    } catch (err) {
+        console.error('Add comment error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+// Delete a comment from a product
+const deleteComment = async (req, res) => {
+    try {
+        const { commentId } = req.params;
+
+        const product = await Product.findOne({ id: req.params.id });
+
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        const comment = product.comments.id(commentId);
+
+        if (!comment) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
+
+        if (comment.user.toString() !== req.user.id) {
+            return res.status(403).json({ error: 'Not authorized' });
+        }
+
+        comment.deleteOne();
+        await product.save();
+
+        res.json({ success: true, comments: product.comments });
+
+    } catch (err) {
+        console.error('Delete comment error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 // Get new collection products
 const newCollection = async (req, res) => {
     const products = await Product.find({});
@@ -134,6 +206,8 @@ export {
     getProduct, 
     likeProduct, 
     dislikeProduct, 
+    addComment,
+    deleteComment,
     newCollection, 
     popularWomen 
 };

@@ -14,6 +14,9 @@ router.get('/product/:id', c.getProduct);
 router.post('/product/:id/like', auth, c.likeProduct);
 router.post('/product/:id/dislike', auth, c.dislikeProduct);
 
+router.post('/product/:id/comment', auth, c.addComment);
+router.delete('/product/:id/comment/:commentId', auth, c.deleteComment);
+
 router.get('/new-collection', c.newCollection);
 router.get('/popular-in-women', c.popularWomen);
 

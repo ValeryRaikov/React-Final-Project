@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import CommentSchema from './Comment.js';
 
 // Schema for products in MongoDB
 const ProductSchema = new mongoose.Schema({
@@ -13,6 +14,12 @@ const ProductSchema = new mongoose.Schema({
     },
     category: { 
         type: String,
+        enum: ['men', 'women', 'kids'],
+        required: true
+    },
+    subcategory: {
+        type: String,
+        enum: ['shirts', 'pants', 'dresses', 'tops', 'jackets', 'shoes'],
         required: true
     },
     newPrice: { 
@@ -33,6 +40,10 @@ const ProductSchema = new mongoose.Schema({
     },
     likes: {
         type: [mongoose.Schema.Types.ObjectId],
+        default: []
+    },
+    comments: {
+        type: [CommentSchema],
         default: []
     },
     officeIds: {

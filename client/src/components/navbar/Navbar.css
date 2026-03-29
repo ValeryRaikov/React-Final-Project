@@ -92,3 +92,9 @@
     background-color: #ff0000;
     color: #fff;
 }
+
+.nav-profile-icon {
+    width: 30px;
+    margin-right: 15px;
+    cursor: pointer;
+}

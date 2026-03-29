@@ -6,10 +6,17 @@ import { isValidName, isValidEmail, isValidPassword } from '../utils/validators.
 const signup = async (req, res) => {
     const { name, email, password, agree } = req.body;
 
-    if (!email || !password) {
+    if (!name || !email || !password || agree === undefined) {
         return res.status(400).json({
             success: false,
-            errors: 'Name, email, and password are required'
+            errors: 'Name, email, password, and agreement are required'
+        });
+    }
+
+    if (!agree) {
+        return res.status(400).json({
+            success: false,
+            errors: 'You must agree to the terms and conditions'
         });
     }
 
@@ -43,18 +50,18 @@ const signup = async (req, res) => {
         });
     }
 
-    const cart = {};
-    for (let i = 0; i < 300; i++) cart[i] = 0;
-
     const user = new User({ 
-        ...req.body, 
-        cartData: cart 
+        name,
+        email,
+        password,
+        agree,
+        cartData: []
     });
 
     await user.save();
 
     const token = jwt.sign(
-        { user: { id: user.id, username: user.username } },
+        { user: { id: user.id, username: user.name } },
         process.env.JWT_SECRET
     );
 
@@ -77,11 +84,71 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-        { user: { id: user.id, username: user.username } },
+        { user: { id: user.id, username: user.name } },
         process.env.JWT_SECRET
     );
 
     res.json({ success: true, token });
 };
 
-export { signup, login };
+const getProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+
+        res.json({ success: true, user });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const changePassword = async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+
+        const user = await User.findById(req.user.id);
+
+        const isMatch = await user.matchPassword(oldPassword);
+
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Wrong current password' });
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        res.json({ success: true });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const deleteAccount = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        user.cartData = [];
+        await user.save();
+
+        await User.findByIdAndDelete(req.user.id);
+
+        res.json({ success: true });
+
+    } catch (err) {
+        console.error('Delete account error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+export { 
+    signup, 
+    login, 
+    getProfile, 
+    changePassword, 
+    deleteAccount 
+};

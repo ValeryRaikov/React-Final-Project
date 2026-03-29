@@ -7,6 +7,7 @@ import { ShopContext } from '../../context/ShopContext';
 import './Navbar.css';
 import logo from '../assets/logo.png';
 import cart_icon from '../assets/cart_icon.png';
+import profile_icon from '../assets/profile_icon.png';
 
 export default function Navbar() {
     const { isAuthenticated, handleLogout } = useContext(AuthContext);
@@ -68,6 +69,9 @@ export default function Navbar() {
                     <img src={cart_icon} alt="" />
                 </Link>
                 <div className="nav-cart-count">{getTotalCartItems()}</div>
+                <Link to="/profile">
+                    <img src={profile_icon} alt="profile" className="nav-profile-icon" />
+                </Link>
                 </>)}
             </div>
          </div>

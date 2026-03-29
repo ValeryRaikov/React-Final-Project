@@ -15,7 +15,7 @@ export default function Registration() {
     // const [error, setError] = useState(null);
     const [state, setState] = useState('Login');
     const [formData, setFormData] = useState({
-        username: '',
+        name: '',
         email: '',
         password: '',
         agree: false,
@@ -31,9 +31,9 @@ export default function Registration() {
     }
 
     const validateForm = () => {
-        if (state === 'Sign Up' && formData.username.trim() === '') {
-            // setError('Username is required');
-            addNotification('Username is required', 'error');
+        if (state === 'Sign Up' && formData.name.trim() === '') {
+            // setError('Name is required');
+            addNotification('Name is required', 'error');
             return false;
         }
 
@@ -148,9 +148,9 @@ export default function Registration() {
                     {state === 'Sign Up' 
                         ? <input 
                                 onChange={changeHandler}
-                                value={formData.username}
+                                value={formData.name}
                                 type="text" 
-                                name="username" 
+                                name="name" 
                                 placeholder="Your name" 
                             />
                         : <></>

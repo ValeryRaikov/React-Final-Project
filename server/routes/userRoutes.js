@@ -1,9 +1,14 @@
 import { Router } from 'express';
+import auth from '../middleware/authMiddleware.js';
 import * as c from '../controllers/userController.js';
 
 const router = Router();
 
 router.post('/signup', c.signup);
 router.post('/login', c.login);
+
+router.get('/profile', auth, c.getProfile);
+router.put('/change-password', auth, c.changePassword);
+router.delete('/delete-account', auth, c.deleteAccount);
 
 export default router;

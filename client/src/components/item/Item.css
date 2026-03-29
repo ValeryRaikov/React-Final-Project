@@ -8,6 +8,12 @@
     margin: 6px 0;
 }
 
+.item.out-of-stock-item img,
+.item.out-of-stock-item p,
+.item.out-of-stock-item .item-prices {
+    opacity: 0.5;
+}
+
 .item-image-wrapper {
     position: relative;
     width: 100%;

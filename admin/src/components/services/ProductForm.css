@@ -12,7 +12,7 @@
 
 .product-category-row {
     display: flex;
-    gap: 20px;
+    gap: 40px;
 }
 
 .product-category-row .product-itemfield {

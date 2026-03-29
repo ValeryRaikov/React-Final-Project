@@ -126,7 +126,7 @@ export default function Profile() {
                 <button onClick={handleChangePassword}>
                     Update Password
                 </button>
-
+                
                 <h3>Danger Zone</h3>
                 <button onClick={handleDeleteAccount}>
                     Delete Account

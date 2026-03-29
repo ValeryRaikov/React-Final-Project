@@ -69,6 +69,10 @@ const getProduct = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
+        if (!req.params.id || isNaN(req.params.id)) {
+            return res.status(400).json({ error: 'Invalid product id' });
+        }
+
         res.json(product);
 
     } catch (err) {

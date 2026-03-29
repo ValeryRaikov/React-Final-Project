@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNotification } from '../context/NotificationContext';
+import { jwtDecode } from 'jwt-decode';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -11,24 +12,42 @@ export default function useProductLikes(productId, isAuthenticated) {
     // const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!productId) 
+            return;
+
         (async () => {
             try {
                 const response = await fetch(`${BASE_URL}/product/${productId}`);
 
                 if (!response.ok) {
-                    // setError('Failed to fetch product');
                     addNotification('Failed to fetch product', 'error');
                     return;
                 }
 
                 const result = await response.json();
 
-                const likesCount = result.likes.length;
-                setLikes(likesCount);
-                // setError(null);
+                const likesArray = result.likes || [];
+                setLikes(likesArray.length);
+
+                const token = localStorage.getItem('auth-token');
+
+                if (token) {
+                    try {
+                        const decoded = jwtDecode(token);
+                        const userId = decoded.user.id;
+
+                        const hasLiked = likesArray.some(
+                            (id) => id.toString() === userId
+                        );
+
+                        setIsLiked(hasLiked);
+                    } catch (err) {
+                        console.error('Token decode error:', err);
+                    }
+                }
+
             } catch (err) {
                 console.error('Error fetching likes:', err);
-                // setError('Failed to fetch likes');
                 addNotification('Failed to load likes', 'error');
             }
         })();

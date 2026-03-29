@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, MarkerF, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 import { mapOptions } from '../../utils/mapConfig';
 import LoadingSpinner from '../loading-spinner/LoadingSpinner';
+
+import './Offices.css';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -16,7 +18,7 @@ const defaultCenter = {
 };
 
 function Offices() {
-     const { isLoaded } = useJsApiLoader({
+    const { isLoaded } = useJsApiLoader({
         id: mapOptions.googleMapApiKey,
         googleMapsApiKey: mapOptions.googleMapApiKey,
     });
@@ -24,6 +26,7 @@ function Offices() {
     const [map, setMap] = useState(null);
     const [offices, setOffices] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedOffice, setSelectedOffice] = useState(null); // NEW
 
     // Fetch offices from backend
     useEffect(() => {
@@ -55,7 +58,7 @@ function Offices() {
         fetchOffices();
     }, []);
 
-    // fit map bounds when offices load
+    // Fit map bounds when offices load
     useEffect(() => {
         if (map && offices.length > 0) {
             const bounds = new window.google.maps.LatLngBounds();
@@ -70,7 +73,6 @@ function Offices() {
         }
     }, [map, offices]);
 
-    // Fit map bounds based on offices
     const onLoad = useCallback((mapInstance) => {
         console.log('Map loaded, offices count:', offices.length);
         setMap(mapInstance);
@@ -97,6 +99,11 @@ function Offices() {
         setMap(null);
     }, []);
 
+    // Close InfoWindow when clicking on the map (optional)
+    const onMapClick = useCallback(() => {
+        if (selectedOffice) setSelectedOffice(null);
+    }, [selectedOffice]);
+
     if (!isLoaded || loading) {
         return (
             <div className="spinner-wrapper">
@@ -112,24 +119,43 @@ function Offices() {
             zoom={10}
             onLoad={onLoad}
             onUnmount={onUnmount}
+            onClick={onMapClick}  // NEW: close InfoWindow when clicking empty map area
         >
-        {offices && offices.length > 0 && offices.map((office) => (
-            <MarkerF
-                key={office._id}
-                position={{
-                    lat: Number(office.location.lat),
-                    lng: Number(office.location.lng),
-                }}
-                title={`${office.name} - ${office.isOpen ? 'Open' : 'Closed'}`}
-                icon={{
-                    url: office.isOpen
-                        ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-                        : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                    scaledSize: new window.google.maps.Size(32, 32),
-                }}
-                optimized={false}
-            />
-        ))}
+            {offices && offices.length > 0 && offices.map((office) => (
+                <MarkerF
+                    key={office._id}
+                    position={{
+                        lat: Number(office.location.lat),
+                        lng: Number(office.location.lng),
+                    }}
+                    title={`${office.name} - ${office.isOpen ? 'Open' : 'Closed'}`}
+                    icon={{
+                        url: office.isOpen
+                            ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                            : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                        scaledSize: new window.google.maps.Size(32, 32),
+                    }}
+                    onClick={() => setSelectedOffice(office)}  // NEW: open InfoWindow
+                    optimized={false}
+                />
+            ))}
+
+             {selectedOffice && (
+                <InfoWindow
+                    position={{
+                        lat: Number(selectedOffice.location.lat),
+                        lng: Number(selectedOffice.location.lng),
+                    }}
+                    onCloseClick={() => setSelectedOffice(null)}
+                >
+                    <div className="office-info-window">
+                        <div className="office-name">{selectedOffice.name}</div>
+                        <div className="office-status">
+                            {selectedOffice.isOpen ? '✅ Open' : '❌ Closed'}
+                        </div>
+                    </div>
+                </InfoWindow>
+            )}
         </GoogleMap>
     );
 }

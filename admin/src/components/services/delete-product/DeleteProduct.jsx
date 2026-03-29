@@ -17,6 +17,7 @@ export default function DeleteProduct() {
         name: '',
         image: '',
         category: '',
+        subcategory: '',
         newPrice: '',
         oldPrice: '',
     });
@@ -118,18 +119,36 @@ export default function DeleteProduct() {
                             />
                         </div>
                     </div>
-                    <div className="product-itemfield">
-                        <p>Product Category</p>
-                        <select
-                            value={product.category}
-                            name="category"
-                            className="product-selector"
-                            disabled
-                        >
-                            <option value="women">Women</option>
-                            <option value="men">Men</option>
-                            <option value="kids">Kids</option>
-                        </select>
+                    <div className="product-category-row">
+                        <div className="product-itemfield">
+                            <p>Product Category</p>
+                            <select
+                                value={product.category}
+                                name="category"
+                                className="product-selector"
+                                disabled
+                            >
+                                <option value="women">Women</option>
+                                <option value="men">Men</option>
+                                <option value="kids">Kids</option>
+                            </select>
+                        </div>
+                        <div className="product-itemfield">
+                            <p>Subcategory</p>
+                            <select
+                                value={product.subcategory}
+                                name="subcategory"
+                                className="product-selector"
+                                disabled
+                            >
+                                <option value="shirts">Shirts</option>
+                                <option value="pants">Pants</option>
+                                <option value="dresses">Dresses</option>
+                                <option value="tops">Tops</option>
+                                <option value="jackets">Jackets</option>
+                                <option value="shoes">Shoes</option>
+                            </select>
+                        </div>
                     </div>
                     <div className="product-itemfield">
                         <p>Available in Offices</p>

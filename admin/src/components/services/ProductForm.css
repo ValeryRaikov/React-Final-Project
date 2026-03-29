@@ -10,6 +10,15 @@
     border: 1px solid #c3c3c3;
 }
 
+.product-category-row {
+    display: flex;
+    gap: 20px;
+}
+
+.product-category-row .product-itemfield {
+    flex: 1;
+}
+
 .product-itemfield {
     width: 100%;
     color: #7b7b7b;

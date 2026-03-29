@@ -17,6 +17,7 @@ export default function AddProduct() {
         name: '',
         image: '',
         category: 'women',
+        subcategory: 'shirts',
         newPrice: '',
         oldPrice: '',
     });
@@ -70,6 +71,7 @@ export default function AddProduct() {
             name: '',
             image: '',
             category: 'women',
+            subcategory: 'shirts',
             newPrice: '',
             oldPrice: '',
         });
@@ -173,18 +175,36 @@ export default function AddProduct() {
                             />
                         </div>
                     </div>
-                    <div className="product-itemfield">
-                        <p>Product Category</p>
-                        <select
-                            value={productDetails.category}
-                            onChange={changeHandler}
-                            name="category"
-                            className="product-selector"
-                        >
-                            <option value="women">Women</option>
-                            <option value="men">Men</option>
-                            <option value="kids">Kids</option>
-                        </select>
+                    <div className="product-category-row">
+                        <div className="product-itemfield">
+                            <p>Product Category</p>
+                            <select
+                                value={productDetails.category}
+                                onChange={changeHandler}
+                                name="category"
+                                className="product-selector"
+                            >
+                                <option value="women">Women</option>
+                                <option value="men">Men</option>
+                                <option value="kids">Kids</option>
+                            </select>
+                        </div>
+                        <div className="product-itemfield">
+                            <p>Subcategory</p>
+                            <select
+                                value={productDetails.subcategory}
+                                onChange={changeHandler}
+                                name="subcategory"
+                                className="product-selector"
+                            >
+                                <option value="shirts">Shirts</option>
+                                <option value="pants">Pants</option>
+                                <option value="dresses">Dresses</option>
+                                <option value="tops">Tops</option>
+                                <option value="jackets">Jackets</option>
+                                <option value="shoes">Shoes</option>
+                            </select>
+                        </div>
                     </div>
                     <div className="product-itemfield">
                         <p>Available in Offices</p>

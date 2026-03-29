@@ -61,8 +61,20 @@ const getAllProducts = async (req, res) => {
 
 // Get a single product by ID
 const getProduct = async (req, res) => {
-    const product = await Product.findOne({ id: req.params.id });
-    res.send(product);
+    try {
+        const product = await Product.findOne({ id: req.params.id })
+            .populate('comments.user', 'username');
+
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        res.json(product);
+
+    } catch (err) {
+        console.error('Get product error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
 };
 
 // Like a product
@@ -130,6 +142,14 @@ const addComment = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
+        const alreadyCommented = product.comments.some(
+            c => c.user.toString() === req.user.id
+        );
+
+        if (alreadyCommented) {
+            return res.status(400).json({ error: 'You have already commented on this product.' });
+        }
+
         // Fetch user from DB
         const user = await User.findById(req.user.id);
 
@@ -141,6 +161,7 @@ const addComment = async (req, res) => {
             user: user._id,
             username: user.name,
             text,
+            createdAt: new Date(),
         };
 
         product.comments.push(newComment);

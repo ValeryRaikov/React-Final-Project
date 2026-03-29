@@ -118,11 +118,23 @@
     font-size: 16px;
 }
 
+.comment-user-info {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.comment-date {
+    font-size: 15px;
+    color: #777;
+}
+
 .delete-btn {
     background-color: transparent;
     border: none;
     color: #dc3545;
     cursor: pointer;
+    font-size: 15px;
     font-weight: 600;
 }
 

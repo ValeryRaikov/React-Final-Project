@@ -1,5 +1,7 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { jwtDecode } from 'jwt-decode';
+import { useNotification } from '../../context/NotificationContext';
 
 import './DescriptionBox.css';
 
@@ -16,16 +18,38 @@ export default function DescriptionBox({
     date,
     comments = [],
 }) {
-    // Remove user when fix is applied!
-    const { isAuthenticated, user } = useContext(AuthContext);
+    const { isAuthenticated } = useContext(AuthContext);
+    const { addNotification } = useNotification();
 
+    const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState('description');
     const [commentText, setCommentText] = useState('');
     const [localComments, setLocalComments] = useState(comments);
 
+    useEffect(() => {
+        const token = localStorage.getItem('auth-token');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+
+                setUser({
+                    id: decoded.user.id,
+                    username: decoded.user.name   
+                });
+            } catch (error) {
+                console.error('Invalid token', error);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        setLocalComments(comments);
+    }, [comments]);
+
     // Add comment
     const handleAddComment = async () => {
-        if (!commentText.trim()) return;
+        if (!commentText.trim()) 
+            return;
 
         try {
             const response = await fetch(`${BASE_URL}/product/${id}/comment`, {
@@ -42,9 +66,11 @@ export default function DescriptionBox({
             if (data.success) {
                 setLocalComments(data.comments);
                 setCommentText('');
+                addNotification('Comment added successfully', 'success');
             }
         } catch (err) {
             console.error('Add comment error:', err);
+            addNotification('Failed to add comment', 'error');
         }
     };
 
@@ -62,11 +88,26 @@ export default function DescriptionBox({
 
             if (data.success) {
                 setLocalComments(data.comments);
+                addNotification('Comment deleted successfully', 'success');
             }
         } catch (err) {
             console.error(err);
+            addNotification('Failed to delete comment', 'error');
         }
     };
+
+    const formatDate = (date) => {
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    };
+
+    const hasCommented = localComments.some(
+        c => c.user?.toString() === user?.id
+    );
 
     return (
         <div className="description-box">
@@ -117,11 +158,12 @@ export default function DescriptionBox({
                             <>
                                 <div className="comment-box">
                                     <textarea
-                                        value={commentText}
+                                        disabled={hasCommented}
+                                        value={hasCommented ? 'You already commented on this product.' : commentText}
                                         onChange={(e) => setCommentText(e.target.value)}
                                         placeholder="Write a comment..."
                                     />
-                                    <button onClick={handleAddComment}>
+                                    <button onClick={handleAddComment} disabled={hasCommented}>
                                         Add Comment
                                     </button>
                                 </div>
@@ -132,7 +174,12 @@ export default function DescriptionBox({
                                         localComments.map((c) => (
                                             <div key={c._id} className="comment-item">
                                                 <div className="comment-header">
-                                                    <strong>{c.username}</strong>
+                                                    <div className="comment-user-info">
+                                                        <strong>{c.username}</strong>
+                                                        <span className="comment-date">
+                                                            {formatDate(c.createdAt)}
+                                                        </span>
+                                                    </div>
                                                     {user && c.user === user.id && (
                                                         <button
                                                             className="delete-btn"

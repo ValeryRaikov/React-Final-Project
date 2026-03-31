@@ -1,3 +1,5 @@
+import 'dotenv/config';
+import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
 import { isValidEmail, isValidPassword } from '../utils/validators.js';
 
@@ -51,11 +53,36 @@ const adminLogin = async (req, res) => {
         });
     }
 
+    const token = jwt.sign(
+        { id: admin._id, email: admin.email, role: admin.role || 'admin' },
+        process.env.JWT_SECRET_ADMIN
+    );
+
     res.json({
         success: true,
         message: 'Login successful',
-        token: 'admin-token'
+        token,
+        user: {
+            id: admin._id,
+            name: admin.name,
+            email: admin.email,
+            role: admin.role || 'admin'
+        }
     });
 };
 
-export { adminLogin };
+const verifyToken = async (req, res) => {
+    const admin = req.user; 
+
+    res.json({
+        success: true,
+        user: {
+            id: admin._id,
+            name: admin.name,
+            email: admin.email,
+            role: admin.role
+        }
+    });
+};
+
+export { adminLogin, verifyToken };

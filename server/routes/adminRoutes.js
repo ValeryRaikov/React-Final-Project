@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { adminLogin } from '../controllers/adminController.js';
+import { adminLogin, verifyToken } from '../controllers/adminController.js';
+import { authenticateJWT } from '../middleware/adminAuthMiddleware.js';
 
 const router = Router();
 
 router.post('/admin-login', adminLogin);
+router.get('/admin-verify', authenticateJWT, verifyToken);
 
 export default router;

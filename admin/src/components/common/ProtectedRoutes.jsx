@@ -5,11 +5,10 @@ import { AuthContext } from "../../context/AuthContext";
 import Warning from "../warning/Warning";
 
 export default function ProtectedRoutes() {
-    const { isAuthenticated } = useContext(AuthContext);
+    const { isAuthenticated, loading } = useContext(AuthContext);
 
-    return (
-        isAuthenticated
-            ? <Outlet />
-            : <Warning />
-    );
+    if (loading) 
+        return null; 
+
+    return isAuthenticated ? <Outlet /> : <Warning />;
 }

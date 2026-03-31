@@ -1,16 +1,15 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { AuthContext } from '../../context/AuthContext';
+import { BASE_URL } from '../services/utils';
 
 import './Login.css';
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 export default function Login() {
     const navigate = useNavigate();
-    const { setIsAuthenticated } = useContext(AuthContext);
+    const { login } = useContext(AuthContext);          
     const [error, setError] = useState('');
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -35,33 +34,34 @@ export default function Login() {
             ...formData,
             [e.target.name]: e.target.value,
         });
-    }
+    };
 
     const submitHandler = async (e) => {
         e.preventDefault();
 
-        if(!validateForm()) {
+        if (!validateForm()) 
             return;
-        }
 
         try {
             const response = await fetch(`${BASE_URL}/admin-login`, {
                 method: 'POST',
                 headers: {
-                    Accept: 'application/form-data',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });
 
-            if (!response.ok) {
-                throw new Error('Login failed');
-            } 
+            const data = await response.json();          
 
-            setIsAuthenticated(true);
+            if (!data.success) {
+                throw new Error(data.message || data.errors || 'Login failed');
+            }
+
+            // Login successful – store token and user via context
+            login(data.token, data.user);
             navigate('/list-products');
         } catch (err) {
-            setError(err.message || 'Server error. Please try again later.');
+            setError(err.message);
         }
     };
 
@@ -72,10 +72,10 @@ export default function Login() {
             <form onSubmit={submitHandler}>
                 <div>
                     <label htmlFor="email">Email</label>
-                    <input 
-                        value={formData.email} 
-                        onChange={changeHandler} 
-                        type="email" 
+                    <input
+                        value={formData.email}
+                        onChange={changeHandler}
+                        type="email"
                         name="email"
                         placeholder='Enter email...'
                         required
@@ -83,17 +83,17 @@ export default function Login() {
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
-                    <input 
-                        value={formData.password} 
-                        onChange={changeHandler} 
-                        type="password" 
+                    <input
+                        value={formData.password}
+                        onChange={changeHandler}
+                        type="password"
                         name="password"
-                        placeholder="Enter passwrod..."
-                        required 
+                        placeholder="Enter password..."
+                        required
                     />
                 </div>
-                <button onClick={submitHandler}>Login</button>
+                <button type="submit">Login</button>
             </form>
         </div>
     );
-};
+}

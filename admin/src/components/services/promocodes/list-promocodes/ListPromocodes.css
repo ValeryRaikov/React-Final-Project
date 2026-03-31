@@ -1,6 +1,6 @@
 @import url('/styles/base.css');
 
-.list-product {
+.list-promocode {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -11,34 +11,50 @@
     border-radius: 6px;
 }
 
-.list-product-format-main {
+.list-promocode-format {
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 10px;
+    text-align: center;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.list-promocode-format:hover {
+    background-color: #f9f9f9;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.list-promocode-format-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 10px;
     text-align: center;
     width: 100%;
     padding: 20px 0;
     color: #454545;
     font-weight: 600;
+    border-bottom: 2px solid #ccc;
 }
 
-.list-product-all-products {
-    flex-grow: 1; 
+.list-promocode-all-items {
+    flex-grow: 1;
     width: 100%;
 }
 
-.list-product-format {
+.list-promocode-format {
     align-items: center;
     font-weight: 500;
 }
 
-.list-product-product-icon {
-    height: 85px;
-    border: 1px solid #ccc;;
-}
-
 .loading-message,
-.no-products-message {
+.no-items-message {
     font-size: 30px;
     font-weight: 600;
     text-align: center;
@@ -60,6 +76,10 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
+    text-decoration: none;
+    display: inline-block;
+    width: 80px;
+    text-align: center;
 }
 
 .edit-btn:hover {
@@ -71,12 +91,21 @@
     background-color: #ff0000;
     color: #fff;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 0;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    width: 80px;
+    text-align: center;
 }
 
 .delete-btn:hover {
     background-color: #940000;
+}
+
+.list-promocode-format .edit-btn,
+.list-promocode-format .delete-btn {
+    margin: 0 5px;
 }

@@ -1,11 +1,11 @@
 import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../context/AuthContext';
+import { AuthContext } from '../../../../context/AuthContext';
 
 import ListProductItem from '../list-product-item/ListProductItem';
-import Warning from '../../warning/Warning';
+import Warning from '../../../warning/Warning';
 
-import { errMsg, BASE_URL } from '../utils';
+import { errMsg, BASE_URL } from '../../utils';
 import '../ProductDisplay.css';
 
 export default function ListProduct() {

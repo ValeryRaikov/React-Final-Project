@@ -1,17 +1,19 @@
 import { useContext, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../context/AuthContext';
+import { AuthContext } from '../../../../context/AuthContext';
 
-import Warning from '../../warning/Warning';
-import { errMsg, BASE_URL } from '../utils';
+import Warning from '../../../warning/Warning';
+import { errMsg, BASE_URL } from '../../utils';
 
 import '../ProductForm.css';
 
-export default function DeleteProduct() {
+export default function EditProduct() {
     const { isAuthenticated } = useContext(AuthContext);
-    const { productId } = useParams();
+    const { productId } = useParams(); 
     const navigate = useNavigate();
+    const [image, setImage] = useState(null);
     const [offices, setOffices] = useState([]);
+    const [selectedOffices, setSelectedOffices] = useState([]);
     const [loadingOffices, setLoadingOffices] = useState(true);
     const [product, setProduct] = useState({
         name: '',
@@ -31,15 +33,6 @@ export default function DeleteProduct() {
             setError(null);
 
             try {
-                const response = await fetch(`${BASE_URL}/product/${productId}`);
-
-                if (!response.ok) {
-                    throw new Error(errMsg.fetchProduct);
-                }
-
-                const result = await response.json();
-                setProduct(result);
-
                 // Fetch offices
                 const officesResponse = await fetch(`${BASE_URL}/offices`);
                 const officesData = await officesResponse.json();
@@ -47,6 +40,19 @@ export default function DeleteProduct() {
                 if (officesData.success && officesData.data) {
                     setOffices(officesData.data);
                 }
+
+                // Fetch product
+                const productResponse = await fetch(`${BASE_URL}/product/${productId}`);
+
+                if (!productResponse.ok) {
+                    throw new Error(errMsg.fetchProduct);
+                }
+
+                const result = await productResponse.json();
+
+                setProduct(result);
+                // Set selected offices from product data
+                setSelectedOffices(result.officeIds || []);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -56,45 +62,87 @@ export default function DeleteProduct() {
         })();
     }, [productId]);
 
-    const deleteHandler = async (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
+
         setLoading(true);
         setError(null);
 
         try {
-            const response = await fetch(`${BASE_URL}/remove-product/${productId}`, {
-                method: 'DELETE',
+            if (image) {
+                const formData = new FormData();
+                formData.append('product', image);
+
+                const imageUploadResponse = await fetch(`${BASE_URL}/upload`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!imageUploadResponse.ok) {
+                    throw new Error('Failed to upload image.');
+                }
+
+                const imageUploadResult = await imageUploadResponse.json();
+                product.image = imageUploadResult.imageUrl;
+            }
+
+            const response = await fetch(`${BASE_URL}/update-product/${productId}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    ...product,
+                    officeIds: selectedOffices,  // Include selected offices
+                }),
             });
 
             if (!response.ok) {
-                throw new Error(errMsg.deleteProduct);
+                throw new Error(errMsg.updateProduct);
             }
 
-            setSuccessMessage('Product deleted successfully!');
+            setSuccessMessage('Product updated successfully!');
             navigate('/list-products');
         } catch (err) {
             setError(err.message || errMsg.unexpected);
         } finally {
             setLoading(false);
         }
+    }
+
+    const imageHandler = (e) => {
+        setImage(e.target.files[0]);
+    };
+
+    const changeHandler = async (e) => {
+        setProduct((prevProduct) => ({
+            ...prevProduct,
+            [e.target.name]: e.target.value,
+        }));
+    };
+
+    const handleOfficeChange = (officeId) => {
+        setSelectedOffices((prev) => {
+            if (prev.includes(officeId)) {
+                return prev.filter(id => id !== officeId);
+            } else {
+                return [...prev, officeId];
+            }
+        });
     };
 
     return (
         <>
             {!isAuthenticated 
                 ? <Warning />
-                : (<form className="product" onSubmit={deleteHandler}>
+                : (<form className="product" onSubmit={submitHandler}>
                     <div className="product-itemfield">
                         <p>Product name</p>
                         <input
                             value={product.name}
+                            onChange={changeHandler}
                             type="text"
                             name="name"
-                            placeholder="Type here..."
-                            disabled
                         />
                     </div>
                     <div className="product-price">
@@ -102,20 +150,18 @@ export default function DeleteProduct() {
                             <p>Price</p>
                             <input
                                 value={product.oldPrice}
-                                type="number"
+                                onChange={changeHandler}
+                                type="text"
                                 name="oldPrice"
-                                placeholder="Type here..."
-                                disabled
                             />
                         </div>
                         <div className="product-itemfield">
                             <p>Offer Price</p>
                             <input
                                 value={product.newPrice}
-                                type="number"
+                                onChange={changeHandler}
+                                type="text"
                                 name="newPrice"
-                                placeholder="Type here..."
-                                disabled
                             />
                         </div>
                     </div>
@@ -124,9 +170,9 @@ export default function DeleteProduct() {
                             <p>Product Category</p>
                             <select
                                 value={product.category}
+                                onChange={changeHandler}
                                 name="category"
                                 className="product-selector"
-                                disabled
                             >
                                 <option value="women">Women</option>
                                 <option value="men">Men</option>
@@ -137,9 +183,9 @@ export default function DeleteProduct() {
                             <p>Subcategory</p>
                             <select
                                 value={product.subcategory}
+                                onChange={changeHandler}
                                 name="subcategory"
                                 className="product-selector"
-                                disabled
                             >
                                 <option value="shirts">Shirts</option>
                                 <option value="pants">Pants</option>
@@ -157,11 +203,15 @@ export default function DeleteProduct() {
                         ) : offices.length > 0 ? (
                             <div className="offices-container">
                                 {offices.map((office) => (
-                                    <label key={office._id} className="office-checkbox-label">
+                                    <label 
+                                        key={office._id}
+                                        className={`office-checkbox-label ${!office.isOpen ? 'disabled' : ''}`}
+                                    >
                                         <input
                                             type="checkbox"
-                                            checked={office.isOpen}
-                                            readOnly
+                                            checked={selectedOffices.includes(office._id)}
+                                            onChange={() => office.isOpen && handleOfficeChange(office._id)}
+                                            disabled={!office.isOpen}
                                         />
                                         <div className="office-info">
                                             <span className="office-name">{office.name}</span>
@@ -179,20 +229,20 @@ export default function DeleteProduct() {
                     <div className="product-itemfield">
                         <label htmlFor="file-input">
                             <img
-                                src={product.image}
+                                src={image ? URL.createObjectURL(image) : product.image}
                                 alt="Product Thumbnail"
                                 className="product-thumbnail-img"
                             />
                         </label>
-                        <input type="file" name="image" id="file-input" hidden disabled />
+                        <input onChange={imageHandler} type="file" name="image" id="file-input" hidden />
                     </div>
                     <button 
-                        onClick={deleteHandler} 
+                        onClick={submitHandler} 
                         className="product-btn" 
-                        style={{backgroundColor: "#ff0000"}}
+                        style={{backgroundColor: "#0f7e09"}}
                         disabled={loading}
                     >
-                        {loading ? 'Removing...' : 'Remove'}
+                        {loading ? 'Editting...' : 'Edit'}
                     </button>
         
                     {error && <p className="error-message">{error}</p>}

@@ -1,19 +1,17 @@
 import { useContext, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../context/AuthContext';
+import { AuthContext } from '../../../../context/AuthContext';
 
-import Warning from '../../warning/Warning';
-import { errMsg, BASE_URL } from '../utils';
+import Warning from '../../../warning/Warning';
+import { errMsg, BASE_URL } from '../../utils';
 
 import '../ProductForm.css';
 
-export default function EditProduct() {
+export default function DeleteProduct() {
     const { isAuthenticated } = useContext(AuthContext);
-    const { productId } = useParams(); 
+    const { productId } = useParams();
     const navigate = useNavigate();
-    const [image, setImage] = useState(null);
     const [offices, setOffices] = useState([]);
-    const [selectedOffices, setSelectedOffices] = useState([]);
     const [loadingOffices, setLoadingOffices] = useState(true);
     const [product, setProduct] = useState({
         name: '',
@@ -33,6 +31,15 @@ export default function EditProduct() {
             setError(null);
 
             try {
+                const response = await fetch(`${BASE_URL}/product/${productId}`);
+
+                if (!response.ok) {
+                    throw new Error(errMsg.fetchProduct);
+                }
+
+                const result = await response.json();
+                setProduct(result);
+
                 // Fetch offices
                 const officesResponse = await fetch(`${BASE_URL}/offices`);
                 const officesData = await officesResponse.json();
@@ -40,19 +47,6 @@ export default function EditProduct() {
                 if (officesData.success && officesData.data) {
                     setOffices(officesData.data);
                 }
-
-                // Fetch product
-                const productResponse = await fetch(`${BASE_URL}/product/${productId}`);
-
-                if (!productResponse.ok) {
-                    throw new Error(errMsg.fetchProduct);
-                }
-
-                const result = await productResponse.json();
-
-                setProduct(result);
-                // Set selected offices from product data
-                setSelectedOffices(result.officeIds || []);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -62,87 +56,45 @@ export default function EditProduct() {
         })();
     }, [productId]);
 
-    const submitHandler = async (e) => {
+    const deleteHandler = async (e) => {
         e.preventDefault();
-
         setLoading(true);
         setError(null);
 
         try {
-            if (image) {
-                const formData = new FormData();
-                formData.append('product', image);
-
-                const imageUploadResponse = await fetch(`${BASE_URL}/upload`, {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!imageUploadResponse.ok) {
-                    throw new Error('Failed to upload image.');
-                }
-
-                const imageUploadResult = await imageUploadResponse.json();
-                product.image = imageUploadResult.imageUrl;
-            }
-
-            const response = await fetch(`${BASE_URL}/update-product/${productId}`, {
-                method: 'PUT',
+            const response = await fetch(`${BASE_URL}/remove-product/${productId}`, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    ...product,
-                    officeIds: selectedOffices,  // Include selected offices
-                }),
             });
 
             if (!response.ok) {
-                throw new Error(errMsg.updateProduct);
+                throw new Error(errMsg.deleteProduct);
             }
 
-            setSuccessMessage('Product updated successfully!');
+            setSuccessMessage('Product deleted successfully!');
             navigate('/list-products');
         } catch (err) {
             setError(err.message || errMsg.unexpected);
         } finally {
             setLoading(false);
         }
-    }
-
-    const imageHandler = (e) => {
-        setImage(e.target.files[0]);
-    };
-
-    const changeHandler = async (e) => {
-        setProduct((prevProduct) => ({
-            ...prevProduct,
-            [e.target.name]: e.target.value,
-        }));
-    };
-
-    const handleOfficeChange = (officeId) => {
-        setSelectedOffices((prev) => {
-            if (prev.includes(officeId)) {
-                return prev.filter(id => id !== officeId);
-            } else {
-                return [...prev, officeId];
-            }
-        });
     };
 
     return (
         <>
             {!isAuthenticated 
                 ? <Warning />
-                : (<form className="product" onSubmit={submitHandler}>
+                : (<form className="product" onSubmit={deleteHandler}>
                     <div className="product-itemfield">
                         <p>Product name</p>
                         <input
                             value={product.name}
-                            onChange={changeHandler}
                             type="text"
                             name="name"
+                            placeholder="Type here..."
+                            disabled
                         />
                     </div>
                     <div className="product-price">
@@ -150,18 +102,20 @@ export default function EditProduct() {
                             <p>Price</p>
                             <input
                                 value={product.oldPrice}
-                                onChange={changeHandler}
-                                type="text"
+                                type="number"
                                 name="oldPrice"
+                                placeholder="Type here..."
+                                disabled
                             />
                         </div>
                         <div className="product-itemfield">
                             <p>Offer Price</p>
                             <input
                                 value={product.newPrice}
-                                onChange={changeHandler}
-                                type="text"
+                                type="number"
                                 name="newPrice"
+                                placeholder="Type here..."
+                                disabled
                             />
                         </div>
                     </div>
@@ -170,9 +124,9 @@ export default function EditProduct() {
                             <p>Product Category</p>
                             <select
                                 value={product.category}
-                                onChange={changeHandler}
                                 name="category"
                                 className="product-selector"
+                                disabled
                             >
                                 <option value="women">Women</option>
                                 <option value="men">Men</option>
@@ -183,9 +137,9 @@ export default function EditProduct() {
                             <p>Subcategory</p>
                             <select
                                 value={product.subcategory}
-                                onChange={changeHandler}
                                 name="subcategory"
                                 className="product-selector"
+                                disabled
                             >
                                 <option value="shirts">Shirts</option>
                                 <option value="pants">Pants</option>
@@ -203,15 +157,11 @@ export default function EditProduct() {
                         ) : offices.length > 0 ? (
                             <div className="offices-container">
                                 {offices.map((office) => (
-                                    <label 
-                                        key={office._id}
-                                        className={`office-checkbox-label ${!office.isOpen ? 'disabled' : ''}`}
-                                    >
+                                    <label key={office._id} className="office-checkbox-label">
                                         <input
                                             type="checkbox"
-                                            checked={selectedOffices.includes(office._id)}
-                                            onChange={() => office.isOpen && handleOfficeChange(office._id)}
-                                            disabled={!office.isOpen}
+                                            checked={office.isOpen}
+                                            readOnly
                                         />
                                         <div className="office-info">
                                             <span className="office-name">{office.name}</span>
@@ -229,20 +179,20 @@ export default function EditProduct() {
                     <div className="product-itemfield">
                         <label htmlFor="file-input">
                             <img
-                                src={image ? URL.createObjectURL(image) : product.image}
+                                src={product.image}
                                 alt="Product Thumbnail"
                                 className="product-thumbnail-img"
                             />
                         </label>
-                        <input onChange={imageHandler} type="file" name="image" id="file-input" hidden />
+                        <input type="file" name="image" id="file-input" hidden disabled />
                     </div>
                     <button 
-                        onClick={submitHandler} 
+                        onClick={deleteHandler} 
                         className="product-btn" 
-                        style={{backgroundColor: "#0f7e09"}}
+                        style={{backgroundColor: "#ff0000"}}
                         disabled={loading}
                     >
-                        {loading ? 'Editting...' : 'Edit'}
+                        {loading ? 'Removing...' : 'Remove'}
                     </button>
         
                     {error && <p className="error-message">{error}</p>}

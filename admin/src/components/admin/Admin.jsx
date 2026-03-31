@@ -7,11 +7,15 @@ import Login from '../login/Login';
 import Sidebar from '../sidebar/Sidebar';
 import NotFound from '../not-found/NotFound';
 import Home from '../home/Home';
-import AddProduct from '../services/add-product/AddProduct';
-import ListProduct from '../services/list-product/ListProduct';
-import EditProduct from '../services/edit-product/EditProduct';
-import DeleteProduct from '../services/delete-product/DeleteProduct';
+import AddProduct from '../services/products/add-product/AddProduct';
+import ListProduct from '../services/products/list-product/ListProduct';
+import EditProduct from '../services/products/edit-product/EditProduct';
+import DeleteProduct from '../services/products/delete-product/DeleteProduct';
 import ProtectedRoutes from '../common/ProtectedRoutes';
+import AddPromocode from '../services/promocodes/add-promocode/AddPromocode';
+import ListPromocodes from '../services/promocodes/list-promocodes/ListPromocodes';
+import EditPromocode from '../services/promocodes/edit-promocode/EditPromocode';
+import DeletePromocode from '../services/promocodes/delete-promocode/DeletePromocode';
 
 export default function Admin() {
 
@@ -38,6 +42,10 @@ export default function Admin() {
                     <Route path='/list-products' element={<ListProduct />} />
                     <Route path='/update-product/:productId' element={<EditProduct />} />
                     <Route path='/remove-product/:productId' element={<DeleteProduct />} />
+                    <Route path="/add-promocode" element={<AddPromocode />} />
+                    <Route path="/list-promocodes" element={<ListPromocodes />} />
+                    <Route path="/update-promocode/:promocodeId" element={<EditPromocode />} />
+                    <Route path="/remove-promocode/:promocodeId" element={<DeletePromocode />} />
                 </Route>
                 <Route path='/*' element={<NotFound />} />
             </Routes>

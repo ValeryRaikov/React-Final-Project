@@ -1,11 +1,11 @@
 import { useContext, useState, useEffect } from 'react';
-import { AuthContext } from '../../../context/AuthContext';
+import { AuthContext } from '../../../../context/AuthContext';
 
-import Warning from '../../warning/Warning';
-import { errMsg, BASE_URL } from '../utils';
+import Warning from '../../../warning/Warning';
+import { errMsg, BASE_URL } from '../../utils';
 
 import '../ProductForm.css';
-import upload_area from '../../assets/upload_area.svg';
+import upload_area from '../../../assets/upload_area.svg';
 
 export default function AddProduct() {
     const { isAuthenticated } = useContext(AuthContext);

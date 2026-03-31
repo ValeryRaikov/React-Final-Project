@@ -1,0 +1,51 @@
+@import url('/styles/base.css');
+
+.delete-promocode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    margin: 30px auto;
+    border-radius: 6px;
+    border: 1px solid #c3c3c3;
+    text-align: center;
+    background-color: #fff;
+}
+
+.delete-promocode p {
+    font-size: 20px;
+    color: #454545;
+    margin-bottom: 30px;
+}
+
+.delete-promocode button {
+    padding: 10px 30px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-confirm-btn {
+    background-color: #ff0000;
+    color: #fff;
+}
+
+.delete-confirm-btn:hover {
+    background-color: #940000;
+}
+
+.delete-cancel-btn {
+    background-color: #ccc;
+    color: #333;
+}
+
+.delete-cancel-btn:hover {
+    background-color: #aaa;
+}

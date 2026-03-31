@@ -14,10 +14,10 @@ const promocodeSchema = new mongoose.Schema({
         type: Boolean, 
         default: true 
     },
-    expiresAt: { 
+    expiresAt: {
         type: Date,
-        default: Date.now() + 30*24*60*60*1000 // Default to 30 days from now
-    },
-});
+        default: () => Date.now() + 30 * 24 * 60 * 60 * 1000
+    }
+},{ timestamps: true });
 
 export default mongoose.model('Promocode', promocodeSchema);

@@ -7,7 +7,7 @@ import './Navbar.css';
 import nav_logo from '../assets/nav-logo.svg';
 
 export default function Navbar() {
-    const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+    const { isAuthenticated, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
     return (
@@ -16,8 +16,8 @@ export default function Navbar() {
             <div className="nav-login">
                 {isAuthenticated
                     ? (<button onClick={() => {
-                        setIsAuthenticated(false);
-                        navigate('/');
+                        logout();
+                        navigate('/admin-login');
                     }}>
                         Logout
                     </button>

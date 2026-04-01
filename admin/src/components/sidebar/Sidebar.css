@@ -1,16 +1,26 @@
 @import url('/styles/base.css');
 
 .sidebar {
+    position: sticky;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-top: 30px;
+    padding-bottom: 30px;
     margin-top: 85px;
-    gap: 20px;
+    gap: 16px;
     width: 100%;
     max-width: 250px;
-    height: 65vh;
+    height: 75vh;
     background-color: #ededed;
+}
+
+.sidebar-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #3d3d3d;
+    margin: 5px 0 10px 0;
 }
 
 .sidebar-item {
@@ -22,4 +32,9 @@
     padding: 10px;
     border-radius: 6px;
     background-color: #fff;
+}
+
+.sidebar-item:hover {
+    background-color: #dcdcdc;
+    cursor: pointer;
 }

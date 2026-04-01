@@ -5,6 +5,8 @@ import add_product_icon from '../assets/Product_Cart.svg';
 import list_product_icon from '../assets/Product_list_icon.svg';
 import edit_pencil_icon from '../assets/pencil_edit.svg';
 import delete_trash_icon from '../assets/delete_trash.svg';
+import add_promocode_icon from '../assets/add_promocode_icon.svg';
+import list_promocodes_icon from '../assets/discount-coupon.svg';
 
 const sidebarLinks = [
     // product links
@@ -14,8 +16,8 @@ const sidebarLinks = [
     { path: '/list-products', label: 'Delete Product', icon: delete_trash_icon },
 
     // promocode links
-    { path: '/add-promocode', label: 'Add Promocode', icon: add_product_icon },
-    { path: '/list-promocodes', label: 'List Promocodes', icon: list_product_icon },
+    { path: '/add-promocode', label: 'Add Promocode', icon: add_promocode_icon },
+    { path: '/list-promocodes', label: 'List Promocodes', icon: list_promocodes_icon },
 ];
 
 export default function Sidebar() {

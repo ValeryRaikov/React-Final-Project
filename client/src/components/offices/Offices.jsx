@@ -26,7 +26,7 @@ function Offices() {
     const [map, setMap] = useState(null);
     const [offices, setOffices] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedOffice, setSelectedOffice] = useState(null); // NEW
+    const [selectedOffice, setSelectedOffice] = useState(null); 
 
     // Fetch offices from backend
     useEffect(() => {

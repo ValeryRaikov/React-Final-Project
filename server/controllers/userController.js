@@ -62,7 +62,8 @@ const signup = async (req, res) => {
 
     const token = jwt.sign(
         { user: { id: user.id, username: user.name } },
-        process.env.JWT_SECRET
+        process.env.JWT_SECRET,
+        { expiresIn: "12h" }
     );
 
     res.json({ success: true, token });
@@ -85,7 +86,8 @@ const login = async (req, res) => {
 
     const token = jwt.sign(
         { user: { id: user.id, username: user.name } },
-        process.env.JWT_SECRET
+        process.env.JWT_SECRET,
+        { expiresIn: "12h" }
     );
 
     res.json({ success: true, token });

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../context/NotificationContext';
 import { AuthContext } from '../../context/AuthContext';
+import WarningModal from '../warning-modal/WarningModal';
 
 import './Profile.css';
 import profile_icon from '../assets/profile_icon.png';
@@ -12,6 +13,7 @@ export default function Profile() {
     const { handleLogout } = useContext(AuthContext);
     const { addNotification } = useNotification();
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [user, setUser] = useState(null);
     const [passwords, setPasswords] = useState({
         oldPassword: '',
@@ -22,14 +24,26 @@ export default function Profile() {
 
     // Fetch profile
     useEffect(() => {
-        fetch(`${BASE_URL}/profile`, {
-            headers: {
-                'auth-token': localStorage.getItem('auth-token')
+        const fetchProfile = async () => {
+            try {
+                const res = await fetch(`${BASE_URL}/profile`, {
+                    headers: {
+                        'auth-token': localStorage.getItem('auth-token')
+                    }
+                });
+
+                if (!res.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+
+                const data = await res.json();
+                setUser(data.user);
+            } catch (err) {
+                console.error(err);
             }
-        })
-        .then(res => res.json())
-        .then(data => setUser(data.user))
-        .catch(err => console.error(err));
+        };
+
+        fetchProfile();
     }, []);
 
     // Change password
@@ -47,13 +61,16 @@ export default function Profile() {
             const data = await res.json();
 
             if (data.success) {
-                // alert('Password updated');
                 setPasswords({
                     oldPassword: '',
                     newPassword: ''
                 });
-                addNotification('Password updated successfully!', 'success');
-                navigate('/');
+
+                addNotification('Password updated. Please log in again.', 'success');
+
+                localStorage.removeItem('auth-token'); 
+                handleLogout();                        
+                navigate('/login');                    
             } else {
                 addNotification('Password mismatch. Try again!', 'error');
             }
@@ -63,14 +80,14 @@ export default function Profile() {
         }
     };
 
-    // Delete account
-    const handleDeleteAccount = async () => {
+    // Delete account click - shows confirmation modal
+    const handleDeleteClick = () => {
+        setShowDeleteModal(true);
+    };
+
+    // Delete account confirmation
+    const confirmDeleteAccount = async () => {
         try {
-            const confirmDelete = window.confirm('Are you sure?');
-
-            if (!confirmDelete) 
-                return;
-
             const response = await fetch(`${BASE_URL}/delete-account`, {
                 method: 'DELETE',
                 headers: {
@@ -91,6 +108,8 @@ export default function Profile() {
         } catch (err) {
             console.error(err);
             addNotification('Failed to delete account', 'error');
+        } finally {
+            setShowDeleteModal(false);
         }
     };
 
@@ -128,10 +147,30 @@ export default function Profile() {
                 </button>
                 
                 <h3>Danger Zone</h3>
-                <button onClick={handleDeleteAccount}>
+                <button onClick={handleDeleteClick}>
                     Delete Account
                 </button>
             </div>
+            <WarningModal
+                isVisible={showDeleteModal}
+                title="Delete Account"
+            >
+                <p>Are you sure you want to delete your account?</p>
+                <p>This action cannot be undone.</p>
+
+                <div className="btn-container">
+                    <button onClick={confirmDeleteAccount}>
+                        Yes, Delete
+                    </button>
+
+                    <button
+                        style={{ backgroundColor: '#999' }}
+                        onClick={() => setShowDeleteModal(false)}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </WarningModal>
         </div>
     );
 }

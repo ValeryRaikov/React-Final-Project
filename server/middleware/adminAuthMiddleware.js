@@ -3,25 +3,28 @@ import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
 
 export const authenticateJWT = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
+    const token = req.header('auth-token'); 
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    if (!token) {
+        return res.status(401).json({ success: false, message: 'No token. Please log in.' });
     }
 
-    const token = authHeader.split(' ')[1];
-    
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_ADMIN);
-        const admin = await Admin.findById(decoded.id).select('-password');
+        const data = jwt.verify(token, process.env.JWT_SECRET_ADMIN);
+
+        const admin = await Admin.findById(data.user.id).select('-password');
 
         if (!admin) {
             return res.status(401).json({ success: false, message: 'Invalid token' });
         }
 
-        req.user = admin;
+        req.user = data.admin;
         next();
     } catch (err) {
-        return res.status(401).json({ success: false, message: 'Invalid token' });
+        if (err.name === "TokenExpiredError") {
+            return res.status(401).json({ success: false, message: "Session expired" });
+        }
+
+        return res.status(401).json({ success: false, message: "Invalid token" });
     }
 };

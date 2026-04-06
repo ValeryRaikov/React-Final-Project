@@ -54,8 +54,9 @@ const adminLogin = async (req, res) => {
     }
 
     const token = jwt.sign(
-        { id: admin._id, email: admin.email, role: admin.role || 'admin' },
-        process.env.JWT_SECRET_ADMIN
+        { user: { id: admin._id, username: admin.name, role: admin.role || 'admin' } },
+        process.env.JWT_SECRET_ADMIN,
+        { expiresIn: "12h" }
     );
 
     res.json({
@@ -72,7 +73,7 @@ const adminLogin = async (req, res) => {
 };
 
 const verifyToken = async (req, res) => {
-    const admin = req.user; 
+    const admin = await Admin.findById(req.user.id); 
 
     res.json({
         success: true,

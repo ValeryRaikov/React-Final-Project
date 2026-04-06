@@ -12,7 +12,7 @@
 
 .cart-items-format-main {
     display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 0.5fr 2fr 1fr 0.6fr 1fr 1fr;
     align-items: center;
     gap: 75px;
     padding: 20px 0;
@@ -28,6 +28,41 @@
 
 .cart-items-product-icon {
     height: 60px;
+}
+
+.cart-items-quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-left: -5px;
+}
+
+.qty-btn {
+    width: 35px;
+    height: 35px;
+    border: 2px solid #ebebeb;
+    background-color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.qty-btn:hover {
+    background-color: #f5f5f5;
+}
+
+.qty-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.qty-value {
+    min-width: 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .cart-items-remove-icon {

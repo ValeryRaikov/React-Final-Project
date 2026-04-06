@@ -166,7 +166,11 @@ export default function ShopContextProvider(props) {
 
         for (const item in cartItems) {
             if (cartItems[item] > 0) {
-                let itemData = allProducts.find(product => product.id === Number(item));
+                const itemData = allProducts.find(p => p.id === Number(item));
+                
+                if (!itemData) 
+                    continue;
+
                 totalAmount += itemData.newPrice * cartItems[item];
             }
         }

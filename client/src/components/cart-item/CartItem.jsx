@@ -6,7 +6,13 @@ import remove_icon from '../assets/cart_cross_icon.png';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function CartItem() {
-    const { allProducts, cartItems, removeFromCart, getTotalCartAmount } = useContext(ShopContext);
+    const { 
+        allProducts, 
+        cartItems, 
+        removeFromCart, 
+        addToCart, 
+        getTotalCartAmount 
+    } = useContext(ShopContext);
 
     const [promocode, setPromocode] = useState('');
     const [discount, setDiscount] = useState(1);
@@ -71,7 +77,24 @@ export default function CartItem() {
                                 <img src={item.image} alt={item.name} className="cart-items-product-icon" />
                                 <p>{item.name}</p>
                                 <p>${item.newPrice}</p>
-                                <button className="cart-items-quantity">{quantity}</button>
+                                <div className="cart-items-quantity-control">
+                                <button 
+                                    className="qty-btn"
+                                    onClick={() => removeFromCart(item.id)}
+                                    disabled={quantity === 1}
+                                >
+                                    -
+                                </button>
+
+                                <span className="qty-value">{quantity}</span>
+
+                                <button 
+                                    className="qty-btn"
+                                    onClick={() => addToCart(item.id)}
+                                >
+                                    +
+                                </button>
+                            </div>
                                 <p>${item.newPrice * quantity}</p>
                                 <img
                                     src={remove_icon}

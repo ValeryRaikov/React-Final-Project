@@ -4,6 +4,10 @@ import { emailRegex, passwordRegex } from '../utils/regex.js';
 
 // Schema for Admin model in MongoDB
 const adminSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true,
@@ -17,7 +21,7 @@ const adminSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['superadmin', 'admin', 'moderator'],
+        enum: ['superadmin', 'admin', 'operator'],
         default: 'admin'
     },
     isActive: {

@@ -7,15 +7,16 @@ export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState({
         isAuthenticated: false,
         user: null,
+        admin: null,
         loading: true, 
     });
 
     useEffect(() => {
         const validateToken = async () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('auth-token');
 
             if (!token) {
-                setAuth({ isAuthenticated: false, user: null, loading: false });
+                setAuth({ isAuthenticated: false, user: null, admin: null, loading: false });
                 return;
             }
 
@@ -29,17 +30,18 @@ export const AuthProvider = ({ children }) => {
                     setAuth({
                         isAuthenticated: true,
                         user: data.user,
+                        admin: data.user,
                         loading: false,
                     });
                 } else {
                     // Token invalid – clear storage
-                    localStorage.removeItem('token');
+                    localStorage.removeItem('auth-token');
                     localStorage.removeItem('user');
-                    setAuth({ isAuthenticated: false, user: null, loading: false });
+                    setAuth({ isAuthenticated: false, user: null, admin: null, loading: false });
                 }
             } catch (err) {
                 console.error('Token validation failed:', err);
-                setAuth({ isAuthenticated: false, user: null, loading: false });
+                setAuth({ isAuthenticated: false, user: null, admin: null, loading: false });
             }
         };
 
@@ -47,15 +49,15 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (token, user) => {
-        localStorage.setItem('token', token);
+        localStorage.setItem('auth-token', token);
         localStorage.setItem('user', JSON.stringify(user));
-        setAuth({ isAuthenticated: true, user, loading: false });
+        setAuth({ isAuthenticated: true, user, admin: user, loading: false });
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('auth-token');
         localStorage.removeItem('user');
-        setAuth({ isAuthenticated: false, user: null, loading: false });
+        setAuth({ isAuthenticated: false, user: null, admin: null, loading: false });
     };
 
     return (

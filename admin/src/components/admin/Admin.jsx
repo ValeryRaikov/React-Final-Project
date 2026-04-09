@@ -16,6 +16,10 @@ import AddPromocode from '../services/promocodes/add-promocode/AddPromocode';
 import ListPromocodes from '../services/promocodes/list-promocodes/ListPromocodes';
 import EditPromocode from '../services/promocodes/edit-promocode/EditPromocode';
 import DeletePromocode from '../services/promocodes/delete-promocode/DeletePromocode';
+import AddUser from '../services/users/add-user/AddUser';
+import ListUser from '../services/users/list-user/ListUser';
+import EditUser from '../services/users/edit-user/EditUser';
+import DeleteUser from '../services/users/delete-user/DeleteUser';
 
 export default function Admin() {
 
@@ -46,6 +50,10 @@ export default function Admin() {
                     <Route path="/list-promocodes" element={<ListPromocodes />} />
                     <Route path="/update-promocode/:promocodeId" element={<EditPromocode />} />
                     <Route path="/remove-promocode/:promocodeId" element={<DeletePromocode />} />
+                    <Route path="/add-user" element={<AddUser />} />
+                    <Route path="/list-users" element={<ListUser />} />
+                    <Route path="/edit-user/:userId" element={<EditUser />} />
+                    <Route path="/delete-user/:userId" element={<DeleteUser />} />
                 </Route>
                 <Route path='/*' element={<NotFound />} />
             </Routes>

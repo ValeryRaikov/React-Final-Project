@@ -5,6 +5,11 @@ export const errMsg = {
     createProduct: 'Error! Failed to create product.',
     updateProduct: 'Error! Failed to update product.',
     deleteProduct: 'Error! Failed to delete product.',
+    fetchUser: 'Error! Failed to fetch user.',
+    fetchUsers: 'Error! Failed to fetch users.',
+    createUser: 'Error! Failed to create user.',
+    updateUser: 'Error! Failed to update user.',
+    deleteUser: 'Error! Failed to delete user.',
     unexpected: 'An unexpected error occurred. Please try again later.',
 };
 

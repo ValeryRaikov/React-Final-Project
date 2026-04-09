@@ -1,0 +1,104 @@
+@import url('/styles/base.css');
+
+.list-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 10px 50px;
+    margin: 30px;
+    border-radius: 6px;
+}
+
+.list-user h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #3d3d3d;
+    margin-bottom: 20px;
+}
+
+.list-user-format-main {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr 1fr 0.6fr 0.6fr;
+    gap: 10px;
+    width: 100%;
+    padding: 20px 0;
+    font-weight: 600;
+    color: #454545;
+    text-align: center;
+    border-bottom: 2px solid #e2e2e2;
+}
+
+.list-user-all-products {
+    width: 100%;
+}
+
+.list-user-format {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2.5fr 2fr 1fr 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 18px 0;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s ease;
+}
+
+.list-user-format:hover {
+    background-color: #f9f9f9;
+}
+
+.list-user-format p {
+    text-align: center;
+    font-size: 15px;
+}
+
+.role-badge,
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.role-superadmin { background-color: #ff6b6b; }
+.role-admin { background-color: #6079ff; }
+.role-operator { background-color: #20c997; }
+
+.status-badge.active { background-color: #28a745; }
+.status-badge.inactive { background-color: #999; }
+
+.edit-btn,
+.delete-btn {
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.edit-btn:hover:not(.disabled),
+.delete-btn:hover:not(.disabled) {
+    transform: scale(1.2);
+}
+
+.edit-btn.disabled,
+.delete-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.loading-message,
+.no-users-message {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    padding: 30px 0;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 16px;
+    text-align: center;
+    padding: 15px;
+}

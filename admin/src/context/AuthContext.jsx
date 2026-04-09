@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
             try {
                 const res = await fetch(`${BASE_URL}/admin-verify`, {
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    headers: { 'auth-token': token },
                 });
 
                 if (res.ok) {

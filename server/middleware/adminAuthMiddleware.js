@@ -18,7 +18,7 @@ export const authenticateJWT = async (req, res, next) => {
             return res.status(401).json({ success: false, message: 'Invalid token' });
         }
 
-        req.user = data.admin;
+        req.user = data.user;
         next();
     } catch (err) {
         if (err.name === "TokenExpiredError") {

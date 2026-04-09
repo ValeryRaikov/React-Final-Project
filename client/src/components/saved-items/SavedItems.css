@@ -64,10 +64,6 @@
     margin-bottom: 20px;
 }
 
-.saved-item-add-btn:hover:not(:disabled) {
-    background: #ff2020;
-}
-
 .saved-item-add-btn:disabled {
     background: #ccc;
     cursor: not-allowed;

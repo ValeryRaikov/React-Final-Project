@@ -7,6 +7,7 @@ import Product from './components/product/Product';
 import About from './components/about/About';
 import Registration from './components/registration/Registration';
 import Cart from './components/cart/Cart';
+import SavedItems from './components/saved-items/SavedItems';
 import Profile from './components/profile/Profile';
 import Footer from './components/footer/Footer';
 import men_banner from './components/assets/banner_men.png';
@@ -46,6 +47,7 @@ function App() {
                 <Route path='/login' element={<Registration />} />
                 <Route element={<ProtectedRoutes />}>
                     <Route path='/cart' element={<Cart />} />
+                    <Route path='/saved-items' element={<SavedItems />} />
                     <Route path="/profile" element={<Profile />} />
                 </Route>
                 <Route path='/*' element={<NotFound />} />

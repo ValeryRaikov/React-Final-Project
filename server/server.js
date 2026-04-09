@@ -6,6 +6,7 @@ import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
+import savedItemsRoutes from './routes/savedItemsRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import promocodeRoutes from './routes/promocodeRoutes.js';
 import officeRoutes from './routes/officeRoutes.js';
@@ -26,6 +27,7 @@ app.use('/', productRoutes);
 app.use('/', userRoutes);
 app.use('/', adminRoutes);
 app.use('/', cartRoutes);
+app.use('/', savedItemsRoutes);
 app.use('/', promocodeRoutes);
 app.use('/', officeRoutes);
 

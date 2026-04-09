@@ -1,0 +1,88 @@
+@import url('/styles/base.css');
+
+.saved-items-container {
+    width: 100%;
+    min-height: calc(100vh - 200px);
+    padding: 20px;
+    margin: auto;
+    background: #fff;
+    overflow-x: hidden; 
+    box-sizing: border-box;
+}
+
+.saved-items-header {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    text-align: center;
+    padding: 0 15px;
+}
+
+.saved-items-header h1 {
+    font-size: 38px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.saved-items-header p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #606060;
+}
+
+.saved-items-grid {
+    max-width: 1480px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);  
+    gap: 30px 25px;  
+    width: 100%;
+}
+
+.saved-item-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+}
+
+.saved-item-wrapper > *:first-child {
+    width: 100%;
+}
+
+.saved-item-add-btn {
+    padding: 12px 20px;
+    background: #ff4141;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.saved-item-add-btn:hover:not(:disabled) {
+    background: #ff2020;
+}
+
+.saved-item-add-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.saved-items-empty {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.saved-items-empty p {
+    font-size: 20px;
+    color: #888;
+    margin-bottom: 20px;
+}

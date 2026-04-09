@@ -8,6 +8,7 @@ export const ShopContext = createContext(null);
 
 export default function ShopContextProvider(props) {
     const [allProducts, setAllProducts] = useState([]);
+    const [savedItems, setSavedItems] = useState({});
     const { 
         isAuthenticated, 
         showModal, 
@@ -56,6 +57,36 @@ export default function ShopContextProvider(props) {
                     } catch (err) {
                         console.error(err.message);
                     }
+
+                    try {
+                        const getSavedResponse = await fetch(`${BASE_URL}/get-saved`, {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/form-data',
+                                'auth-token': `${localStorage.getItem('auth-token')}`,
+                                'Content-Type': 'application/json',
+                            },
+                            body: '',
+                        });
+
+                        if (!getSavedResponse.ok) {
+                            throw new Error('Error fetching saved items for logged in user');
+                        }
+
+                        const getSavedResult = await getSavedResponse.json();
+
+                        const formattedSaved = {};
+
+                        getSavedResult.forEach(item => {
+                            formattedSaved[item.productId] = 1;
+                        });
+
+                        setSavedItems(formattedSaved);
+                    } catch (err) {
+                        console.error(err.message);
+                    }
+                } else {
+                    setSavedItems({});
                 }
             } catch (err) {
                 console.error(err.message);
@@ -71,6 +102,10 @@ export default function ShopContextProvider(props) {
 
     const clearCart = () => { 
         setCartItems({});
+    };
+
+    const clearSavedItems = () => {
+        setSavedItems({});
     };
 
     const getDefaultCart = () => {
@@ -188,6 +223,83 @@ export default function ShopContextProvider(props) {
         return totalItems;
     }
 
+    const toggleSaved = async (itemId) => {
+        if (!isAuthenticated) {
+            showModal('Login required', (
+                <div>
+                    <p>Please login to save items.</p>
+                    <div className="btn-container">
+                        <button onClick={() => handleGoBackClick()}>Go Back</button>
+                        <button onClick={() => handleLoginClick()}>Login</button>
+                    </div>
+                </div>
+            ));
+            
+            return;
+        }
+
+        const isSavedItem = !!savedItems[itemId];
+
+        // Optimistic update
+        setSavedItems(prev => {
+            const updated = { ...prev };
+
+            if (updated[itemId]) {
+                delete updated[itemId];
+            } else {
+                updated[itemId] = 1;
+            }
+
+            return updated;
+        });
+
+        // Sync with backend
+        try {
+            const endpoint = isSavedItem ? '/remove-from-saved' : '/add-to-saved';
+            const response = await fetch(`${BASE_URL}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/form-data',
+                    'auth-token': `${localStorage.getItem('auth-token')}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ itemId }),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error: ${errorText}`);
+            }
+        } catch (err) {
+            console.error(err.message);
+            // Revert optimistic update on error
+            setSavedItems(prev => {
+                const updated = { ...prev };
+
+                if (updated[itemId]) {
+                    delete updated[itemId];
+                } else {
+                    updated[itemId] = 1;
+                }
+
+                return updated;
+            });
+        }
+    };
+
+    const isSaved = (itemId) => {
+        return !!savedItems[itemId];
+    };
+
+    const getTotalSavedItems = () => {
+        let totalSaved = 0;
+        for (const item in savedItems) {
+            if (savedItems[item])
+                totalSaved += 1;
+        }
+        return totalSaved;
+    }
+
     const contextValue = useMemo(() => ({
         allProducts, 
         cartItems, 
@@ -196,7 +308,12 @@ export default function ShopContextProvider(props) {
         removeFromCart, 
         getTotalCartAmount, 
         getTotalCartItems,
-    }), [allProducts, cartItems]);
+        savedItems,
+        toggleSaved,
+        isSaved,
+        clearSavedItems,
+        getTotalSavedItems,
+    }), [allProducts, cartItems, savedItems]);
 
     return (
         <ShopContext.Provider value={contextValue} >

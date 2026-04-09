@@ -97,4 +97,25 @@
     width: 30px;
     margin-right: 15px;
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.nav-profile-icon:hover {
+    transform: scale(1.1);
+}
+
+.nav-saved-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-saved-icon {
+    width: 30px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.nav-saved-icon:hover {
+    transform: scale(1.1);
 }

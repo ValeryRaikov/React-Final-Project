@@ -7,11 +7,12 @@ import { ShopContext } from '../../context/ShopContext';
 import './Navbar.css';
 import logo from '../assets/logo.png';
 import cart_icon from '../assets/cart_icon.png';
+import saved_icon from '../assets/saved_icon.png';
 import profile_icon from '../assets/profile_icon.png';
 
 export default function Navbar() {
     const { isAuthenticated, handleLogout } = useContext(AuthContext);
-    const { clearCart, getTotalCartItems } = useContext(ShopContext);
+    const { clearCart, clearSavedItems, getTotalCartItems, getTotalSavedItems } = useContext(ShopContext);
 
     const navigate = useNavigate();
     const [menu, setMenu] = useState('shop');
@@ -19,7 +20,8 @@ export default function Navbar() {
     const logoutHandler = () => {
         localStorage.removeItem('auth-token');
         handleLogout();
-        clearCart(); 
+        clearCart();
+        clearSavedItems(); 
         navigate('/');
     };
 
@@ -64,6 +66,11 @@ export default function Navbar() {
                     </Link>
                     )
                 }
+                {isAuthenticated && getTotalSavedItems() > 0 && (
+                    <Link to='/saved-items' className="nav-saved-link">
+                        <img src={saved_icon} alt="saved items" className="nav-saved-icon" />
+                    </Link>
+                )}
                 {isAuthenticated && (<>
                 <Link to='/cart'>
                     <img src={cart_icon} alt="" />

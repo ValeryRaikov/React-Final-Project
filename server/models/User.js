@@ -34,6 +34,12 @@ const UserSchema = new mongoose.Schema({
             default: 1
         }
     }],
+    savedItems: [{
+        productId: {
+            type: Number,
+            required: true
+        }
+    }],
     date: { 
         type: Date, 
         default: Date.now 

@@ -20,7 +20,7 @@ export default function ProductDisplay({
     available,
     officeIds,
 }) {
-    const { addToCart } = useContext(ShopContext);
+    const { addToCart, toggleSaved, isSaved } = useContext(ShopContext);
     const { isAuthenticated } = useContext(AuthContext);
     const { addNotification } = useNotification();
     const { 
@@ -31,6 +31,7 @@ export default function ProductDisplay({
     } = useProductLikes(id, isAuthenticated);
 
     const [offices, setOffices] = useState([]);
+    const saved = isSaved(id);
 
     useEffect(() => {
         const fetchOffices = async () => {
@@ -155,7 +156,19 @@ export default function ProductDisplay({
                     </div>
                 </div>
                 <div className="display-right-btn-box">
-                    <button className="add-btn" onClick={() => handleAddToCart()}>Add to cart</button>
+                    <div className="action-buttons">
+                        <button className="add-btn" onClick={handleAddToCart}>
+                            Add to cart
+                        </button>
+
+                        <button 
+                            className={`save-btn ${saved ? 'saved' : ''}`}
+                            onClick={() => toggleSaved(id)}
+                        >
+                            {saved ? '❤️ Saved' : '🤍 Save'}
+                        </button>
+                    </div>
+
                     <div className="display-right-likes">
                         {isAuthenticated && 
                             <div className="likes-btn-box">

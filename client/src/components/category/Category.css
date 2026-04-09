@@ -58,6 +58,36 @@
     font-size: 14px;
 }
 
+.clear-filters-btn {
+    padding: 6px 10px;
+    border: 2px solid #ff4141;
+    background-color: transparent;
+    color: #ff4141;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.clear-filters-btn:hover {
+    background-color: #ff4141;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.clear-filters-btn:active {
+    transform: scale(0.96);
+}
+
+.clear-filters-btn:disabled {
+    border-color: #ccc;
+    color: #aaa;
+    cursor: not-allowed;
+    background-color: transparent;
+    transform: none;
+}
+
 .search-bar {
     display: flex;
     align-items: center;

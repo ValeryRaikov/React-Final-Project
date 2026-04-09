@@ -1,32 +1,50 @@
 export const filterProducts = (products, filters) => {
     const {
         category,
-        searchQuery,
-        stockFilter,
-        subcategoryFilter,
-        maxPrice,
-        minPrice,
-        officeFilter
+        searchQuery = '',
+        stockFilter = 'all',
+        subcategoryFilter = 'all',
+        maxPrice = '',
+        minPrice = '',
+        officeFilter = 'all'
     } = filters;
 
-    return products
-        .filter(p => p.category === category)
-        .filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
-        .filter(p => {
-            if (stockFilter === 'in') 
-                return p.available;
-            if (stockFilter === 'out') 
-                return !p.available;
+    const search = searchQuery.trim().toLowerCase();
+    const max = maxPrice ? Number(maxPrice) : null;
+    const min = minPrice ? Number(minPrice) : null;
 
-            return true;
-        })
-        .filter(p => subcategoryFilter === 'all' || p.subcategory === subcategoryFilter)
-        .filter(p => !maxPrice || p.newPrice <= Number(maxPrice))
-        .filter(p => !minPrice || p.newPrice >= Number(minPrice))
-        .filter(p => {
-            if (officeFilter === 'all') 
-                return true;
-            
-            return p.officeIds?.includes(officeFilter);
-        });
+    return products.filter(p => {
+        // Category
+        if (category && p.category !== category) 
+            return false;
+
+        // Search
+        if (search && !p.name?.toLowerCase().includes(search)) 
+            return false;
+
+        // Stock
+        if (stockFilter === 'in' && !p.available) 
+            return false;
+        if (stockFilter === 'out' && p.available) 
+            return false;
+
+        // Subcategory
+        if (subcategoryFilter !== 'all' && p.subcategory !== subcategoryFilter) 
+            return false;
+
+        // Price
+        if (max !== null && p.newPrice > max) 
+            return false;
+        if (min !== null && p.newPrice < min) 
+            return false;
+
+        // Office
+        if (officeFilter !== 'all') {
+            const officeIds = p.officeIds || [];
+            if (!officeIds.includes(officeFilter)) 
+                return false;
+        }
+
+        return true;
+    });
 };

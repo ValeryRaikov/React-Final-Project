@@ -53,11 +53,11 @@ export default function ListPromocodes() {
                     promocodes.map(promo => (
                         <div key={promo._id} className="list-promocode-format">
                             <p>{promo.code}</p>
-                            <p>{multiplierToPercentage(promo.discount)}%</p> {/* Convert to percentage */}
+                            <p>{multiplierToPercentage(promo.discount)}%</p> 
                             <p>{promo.expiresAt ? new Date(promo.expiresAt).toLocaleDateString() : 'No expiry'}</p>
                             <div className="actions">
                                 <Link to={`/update-promocode/${promo._id}`} className="edit-btn">Edit</Link>
-                                <Link to={`/remove-promocode/${promo._id}`} className="delete-btn">Delete</Link>
+                                <Link to={`/remove-promocode/${promo._id}`} className="delete-btn">Remove</Link>
                             </div>
                         </div>
                     ))

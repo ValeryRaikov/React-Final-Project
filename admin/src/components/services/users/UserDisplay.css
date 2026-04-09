@@ -29,10 +29,6 @@
     border-bottom: 2px solid #e2e2e2;
 }
 
-.list-user-all-products {
-    width: 100%;
-}
-
 .list-user-format {
     display: grid;
     grid-template-columns: 2fr 2fr 2.5fr 2fr 1fr 1fr;
@@ -41,7 +37,7 @@
     padding: 18px 0;
     color: #555;
     border-bottom: 1px solid #eee;
-    transition: background 0.2s ease;
+    transition: background-color 0.2s ease;
 }
 
 .list-user-format:hover {
@@ -79,7 +75,7 @@
 
 .edit-btn:hover:not(.disabled),
 .delete-btn:hover:not(.disabled) {
-    transform: scale(1.2);
+    transform: scale(1.05);
 }
 
 .edit-btn.disabled,

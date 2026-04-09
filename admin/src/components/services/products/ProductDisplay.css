@@ -20,6 +20,8 @@
     padding: 20px 0;
     color: #454545;
     font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #e2e2e2;
 }
 
 .list-product-all-products {

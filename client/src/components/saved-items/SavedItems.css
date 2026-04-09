@@ -46,10 +46,6 @@
     height: 100%;
 }
 
-.saved-item-wrapper > *:first-child {
-    width: 100%;
-}
-
 .saved-item-add-btn {
     padding: 12px 20px;
     background: #ff4141;

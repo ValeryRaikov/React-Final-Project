@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { ShopContext } from '../../context/ShopContext';
 import { AuthContext } from '../../context/AuthContext';
+import { useNotification } from '../../context/NotificationContext';
 import Item from '../item/Item';
 
 import './SavedItems.css';
@@ -10,12 +11,18 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 export default function SavedItems() {
     const { allProducts, savedItems, addToCart } = useContext(ShopContext);
     const { isAuthenticated } = useContext(AuthContext);
+    const { addNotification } = useNotification();
 
     // Filter products that are in saved items
     const savedProducts = allProducts.filter(product => savedItems[product.id]);
 
-    const handleAddToCart = (productId) => {
-        addToCart(productId);
+    const handleAddToCart = async (productId) => {
+        try {
+            await addToCart(productId);
+            addNotification('Product added to cart', 'success');
+        } catch (err) {
+            addNotification('Something went wrong. Try again.', 'error');
+        }
     };
 
     if (!isAuthenticated) {

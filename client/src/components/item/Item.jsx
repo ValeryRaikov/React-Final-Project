@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { ShopContext } from '../../context/ShopContext';
+import { AuthContext } from '../../context/AuthContext';
+import { useNotification } from '../../context/NotificationContext';
 
 import './Item.css';
 
@@ -14,21 +16,43 @@ export default function Item({
     officeIds,
 }) {
     const { toggleSaved, isSaved } = useContext(ShopContext);
+    const { isAuthenticated } = useContext(AuthContext);
+    const { addNotification } = useNotification();
     const saved = isSaved(id);
 
     const shopCount = officeIds?.length || 0;
     const shopText = shopCount === 1 ? 'shop' : 'shops';
+
+    const handleSaveClick = async (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        if (!isAuthenticated) {
+            addNotification('Please login to save items', 'error');
+            return;
+        }
+
+        const wasSaved = saved;
+
+        try {
+            await toggleSaved(id);
+
+            if (wasSaved) {
+                addNotification('Removed from saved items', 'success');
+            } else {
+                addNotification('Added to saved items', 'success');
+            }
+        } catch (err) {
+            addNotification('Something went wrong. Try again.', 'error');
+        }
+    };
 
     return (
         <div className={`item ${!available ? 'out-of-stock-item' : ''}`}>
             <div className="item-image-wrapper">
                 <div 
                     className={`item-save-icon ${saved ? 'saved' : ''}`}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        toggleSaved(id);
-                    }}
+                    onClick={handleSaveClick}
                 >
                     {saved ? '❤️' : '🤍'}
 

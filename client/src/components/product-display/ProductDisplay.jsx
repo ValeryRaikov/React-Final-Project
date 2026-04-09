@@ -79,6 +79,27 @@ export default function ProductDisplay({
         }
     };
 
+    const handleToggleSaved = async () => {
+        if (!isAuthenticated) {
+            addNotification('Please login to save items', 'error');
+            return;
+        }
+
+        const wasSaved = saved;
+
+        try {
+            await toggleSaved(id);
+
+            if (wasSaved) {
+                addNotification('Removed from saved items', 'success');
+            } else {
+                addNotification('Added to saved items', 'success');
+            }
+        } catch (err) {
+            addNotification('Something went wrong. Try again.', 'error');
+        }
+    };
+
     return (
         <div className="display">
             <div className="display-left">
@@ -163,7 +184,7 @@ export default function ProductDisplay({
 
                         <button 
                             className={`save-btn ${saved ? 'saved' : ''}`}
-                            onClick={() => toggleSaved(id)}
+                            onClick={handleToggleSaved}
                         >
                             {saved ? '❤️ Saved' : '🤍 Save'}
                         </button>

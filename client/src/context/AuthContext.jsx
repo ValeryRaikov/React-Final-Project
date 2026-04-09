@@ -24,6 +24,27 @@ export default function AuthContextProvider(props) {
         setIsAuthenticated(false);
     }
 
+    const handleSessionExpired = () => {
+        // Clear auth token
+        localStorage.removeItem('auth-token');
+        // Set authenticated to false
+        setIsAuthenticated(false);
+        // Show session expired modal
+        showModal('Session Expired', (
+            <div>
+                <p>Your session has expired. Please login again.</p>
+                <div className="btn-container">
+                    <button onClick={() => {
+                        setIsModalVisible(false);
+                        navigate('/login');
+                    }}>
+                        Login
+                    </button>
+                </div>
+            </div>
+        ));
+    }
+
     const handleLoginClick = () => {
         navigate('/login');
         setIsModalVisible(false);
@@ -43,6 +64,7 @@ export default function AuthContextProvider(props) {
         isAuthenticated,
         handleLogin,
         handleLogout,
+        handleSessionExpired,
         handleLoginClick,
         handleGoBackClick,
         showModal,

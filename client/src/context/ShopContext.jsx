@@ -13,7 +13,8 @@ export default function ShopContextProvider(props) {
         isAuthenticated, 
         showModal, 
         handleLoginClick, 
-        handleGoBackClick, 
+        handleGoBackClick,
+        handleSessionExpired,
     } = useContext(AuthContext);
 
     useEffect(() => {
@@ -40,6 +41,11 @@ export default function ShopContextProvider(props) {
                             },
                             body: '',
                         });
+
+                        if (getCartResponse.status === 401) {
+                            handleSessionExpiredResponse();
+                            return;
+                        }
 
                         if (!getCartResponse.ok) {
                             throw new Error('Error fetching cart products for logged in user');
@@ -68,6 +74,11 @@ export default function ShopContextProvider(props) {
                             },
                             body: '',
                         });
+
+                        if (getSavedResponse.status === 401) {
+                            handleSessionExpiredResponse();
+                            return;
+                        }
 
                         if (!getSavedResponse.ok) {
                             throw new Error('Error fetching saved items for logged in user');
@@ -106,6 +117,12 @@ export default function ShopContextProvider(props) {
 
     const clearSavedItems = () => {
         setSavedItems({});
+    };
+
+    const handleSessionExpiredResponse = () => {
+        clearCart();
+        clearSavedItems();
+        handleSessionExpired();
     };
 
     const getDefaultCart = () => {
@@ -152,6 +169,11 @@ export default function ShopContextProvider(props) {
                     body: JSON.stringify({ itemId }),
                 });
 
+                if (response.status === 401) {
+                    handleSessionExpiredResponse();
+                    return;
+                }
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     throw new Error(`Error: ${errorText}`);
@@ -186,6 +208,11 @@ export default function ShopContextProvider(props) {
                     body: JSON.stringify({ itemId }),
                 });
 
+                if (response.status === 401) {
+                    handleSessionExpiredResponse();
+                    return;
+                }
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     throw new Error(`Error: ${errorText}`);
@@ -218,6 +245,11 @@ export default function ShopContextProvider(props) {
                     },
                     body: JSON.stringify({ itemId }),
                 });
+
+                if (response.status === 401) {
+                    handleSessionExpiredResponse();
+                    return;
+                }
 
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -298,6 +330,11 @@ export default function ShopContextProvider(props) {
                 },
                 body: JSON.stringify({ itemId }),
             });
+
+            if (response.status === 401) {
+                handleSessionExpiredResponse();
+                return;
+            }
 
             if (!response.ok) {
                 const errorText = await response.text();

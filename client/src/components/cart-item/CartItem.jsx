@@ -9,7 +9,8 @@ export default function CartItem() {
     const { 
         allProducts, 
         cartItems, 
-        removeFromCart, 
+        removeFromCart,
+        removeEntirelyFromCart, 
         addToCart, 
         getTotalCartAmount 
     } = useContext(ShopContext);
@@ -100,7 +101,7 @@ export default function CartItem() {
                                     src={remove_icon}
                                     alt=""
                                     className="cart-items-remove-icon"
-                                    onClick={() => removeFromCart(item.id)}
+                                    onClick={() => removeEntirelyFromCart(item.id)}
                                 />
                             </div>
                             <hr />

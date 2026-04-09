@@ -196,6 +196,39 @@ export default function ShopContextProvider(props) {
         }
     }
 
+    const removeEntirelyFromCart = async (itemId) => {
+        if (!isAuthenticated) {
+            return;
+        }
+
+        // Set quantity to 0
+        setCartItems(prev => ({
+            ...prev,
+            [itemId]: 0
+        }));
+
+        if (isAuthenticated) {
+            try {
+                const response = await fetch(`${BASE_URL}/remove-from-cart`, {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/form-data',
+                        'auth-token': `${localStorage.getItem('auth-token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ itemId }),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Error: ${errorText}`);
+                }
+            } catch (err) {
+                console.error(err.message);
+            }
+        }
+    }
+
     const getTotalCartAmount = () => {
         let totalAmount = 0;
 
@@ -234,7 +267,7 @@ export default function ShopContextProvider(props) {
                     </div>
                 </div>
             ));
-            
+
             return;
         }
 
@@ -305,7 +338,8 @@ export default function ShopContextProvider(props) {
         cartItems, 
         clearCart,
         addToCart, 
-        removeFromCart, 
+        removeFromCart,
+        removeEntirelyFromCart,
         getTotalCartAmount, 
         getTotalCartItems,
         savedItems,

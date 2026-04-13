@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BASE_URL, multiplierToPercentage, percentageToMultiplier } from '../../utils';
+import { useTranslation } from 'react-i18next';
 
 import './EditPromocode.css';
 
 export default function EditPromocode() {
     const { promocodeId } = useParams();
     const navigate = useNavigate();
+    const { t } = useTranslation(['promocodes', 'others', 'common']);
 
     const [formData, setFormData] = useState({ code: '', discount: '', expiresAt: '' });
     const [loading, setLoading] = useState(true);
@@ -15,7 +17,7 @@ export default function EditPromocode() {
 
     useEffect(() => {
         if (!promocodeId || promocodeId === 'undefined') {
-            setError('Invalid promocode ID');
+            setError(t('promocodes:invalidPromocodeId'));
             setLoading(false);
             return;
         }
@@ -82,17 +84,17 @@ export default function EditPromocode() {
     };
 
     if (loading) 
-        return <div className="promocode"><p>Loading...</p></div>;
+        return <div className="promocode"><p>{t('others:loading')}</p></div>;
 
     if (error) 
         return <div className="promocode"><p className="error-message">{error}</p></div>;
 
     return (
         <form onSubmit={handleSubmit} className="promocode">
-            <h3>Edit Promocode</h3>
+            <h3>{t('promocodes:editPromocode')}</h3>
 
             <div className="promocode-itemfield">
-                <p>Promo Code</p>
+                <p>{t('promocodes:promocode')}</p>
                 <input
                     name="code"
                     value={formData.code}
@@ -102,7 +104,7 @@ export default function EditPromocode() {
             </div>
 
             <div className="promocode-itemfield">
-                <p>Discount (%)</p>
+                <p>{t('promocodes:discount')}</p>
                 <input
                     name="discount"
                     type="number"
@@ -113,7 +115,7 @@ export default function EditPromocode() {
             </div>
 
             <div className="promocode-itemfield">
-                <p>Expiration Date (optional)</p>
+                <p>{t('promocodes:expiresAt')}</p>
                 <input
                     name="expiresAt"
                     type="date"
@@ -122,9 +124,9 @@ export default function EditPromocode() {
                 />
             </div>
 
-            <button type="submit" className="promocode-btn">Update</button>
+            <button type="submit" className="promocode-btn">{t('common:update')}</button>
 
-            {success && <p className="success-message">Promocode updated! Redirecting...</p>}
+            {success && <p className="success-message">{t('promocodes:promocodeUpdateSuccess')}</p>}
             {error && <p className="error-message">{error}</p>}
         </form>
     );

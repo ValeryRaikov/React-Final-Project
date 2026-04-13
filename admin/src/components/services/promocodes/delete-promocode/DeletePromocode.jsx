@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../utils';
+import { useTranslation } from 'react-i18next';
 
 import './DeletePromocode.css';
 
@@ -9,6 +10,7 @@ export default function DeletePromocode() {
     const navigate = useNavigate();
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState(null);
+    const { t } = useTranslation('promocodes');
 
     const handleDelete = async () => {
         setDeleting(true);
@@ -32,17 +34,17 @@ export default function DeletePromocode() {
     };
 
     if (deleting) 
-        return <div className="delete-promocode"><p>Deleting promocode...</p></div>;
+        return <div className="delete-promocode"><p>{t('promocodeDeleteLoading')}</p></div>;
 
     return (
         <div className="delete-promocode">
-            <h3>Delete Promocode</h3>
-            <p>Are you sure you want to delete this promocode?</p>
-            <p>This action cannot be undone.</p>
+            <h3>{t('promocodeDelete')}</h3>
+            <p>{t('promocodeDeleteConfirm')}</p>
+            <p>{t('promocodeDeleteWarning')}</p>
             {error && <p className="error-message">{error}</p>}
             <div>
-                <button onClick={handleDelete} className="delete-confirm-btn">Delete</button>
-                <button onClick={handleCancel} className="delete-cancel-btn">Cancel</button>
+                <button onClick={handleDelete} className="delete-confirm-btn">{t('delete')}</button>
+                <button onClick={handleCancel} className="delete-cancel-btn">{t('cancel')}</button>
             </div>
         </div>
     );

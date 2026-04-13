@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 import Warning from '../../../warning/Warning';
 import { errMsg, BASE_URL } from '../../utils';
@@ -13,6 +14,7 @@ export default function DeleteProduct() {
     const navigate = useNavigate();
     const [offices, setOffices] = useState([]);
     const [loadingOffices, setLoadingOffices] = useState(true);
+    const { t } = useTranslation(['products', 'others']);
     const [product, setProduct] = useState({
         name: '',
         image: '',
@@ -73,7 +75,7 @@ export default function DeleteProduct() {
                 throw new Error(errMsg.deleteProduct);
             }
 
-            setSuccessMessage('Product deleted successfully!');
+            setSuccessMessage(t('products:productDeleted'));
             navigate('/list-products');
         } catch (err) {
             setError(err.message || errMsg.unexpected);
@@ -88,72 +90,72 @@ export default function DeleteProduct() {
                 ? <Warning />
                 : (<form className="product" onSubmit={deleteHandler}>
                     <div className="product-itemfield">
-                        <p>Product name</p>
+                        <p>{t('products:productName')}</p>
                         <input
                             value={product.name}
                             type="text"
                             name="name"
-                            placeholder="Type here..."
+                            placeholder={t('others:typeHere')}
                             disabled
                         />
                     </div>
                     <div className="product-price">
                         <div className="product-itemfield">
-                            <p>Price</p>
+                            <p>{t('products:price')}</p>
                             <input
                                 value={product.oldPrice}
                                 type="number"
                                 name="oldPrice"
-                                placeholder="Type here..."
+                                placeholder={t('others:typeHere')}
                                 disabled
                             />
                         </div>
                         <div className="product-itemfield">
-                            <p>Offer Price</p>
+                            <p>{t('products:offerPrice')}</p>
                             <input
                                 value={product.newPrice}
                                 type="number"
                                 name="newPrice"
-                                placeholder="Type here..."
+                                placeholder={t('others:typeHere')}
                                 disabled
                             />
                         </div>
                     </div>
                     <div className="product-category-row">
                         <div className="product-itemfield">
-                            <p>Product Category</p>
+                            <p>{t('products:category')}</p>
                             <select
                                 value={product.category}
                                 name="category"
                                 className="product-selector"
                                 disabled
                             >
-                                <option value="women">Women</option>
-                                <option value="men">Men</option>
-                                <option value="kids">Kids</option>
+                                <option value="women">{t('products:women')}</option>
+                                <option value="men">{t('products:men')}</option>
+                                <option value="kids">{t('products:kids')}</option>
                             </select>
                         </div>
                         <div className="product-itemfield">
-                            <p>Subcategory</p>
+                            <p>{t('products:subcategory')}</p>
                             <select
                                 value={product.subcategory}
                                 name="subcategory"
                                 className="product-selector"
                                 disabled
                             >
-                                <option value="shirts">Shirts</option>
-                                <option value="pants">Pants</option>
-                                <option value="dresses">Dresses</option>
-                                <option value="tops">Tops</option>
-                                <option value="jackets">Jackets</option>
-                                <option value="shoes">Shoes</option>
+                                <option value="shirts">{t('products:shirts')}</option>
+                                <option value="pants">{t('products:pants')}</option>
+                                <option value="dresses">{t('products:dresses')}</option>
+                                <option value="tops">{t('products:tops')}</option>
+                                <option value="jackets">{t('products:jackets')}</option>
+                                <option value="shoes">{t('products:shoes')}</option>
                             </select>
                         </div>
                     </div>
                     <div className="product-itemfield">
-                        <p>Available in Offices</p>
+                        <p>{t('products:offices')}</p>
                         {loadingOffices ? (
-                            <p>Loading offices...</p>
+                            <p>{t('others:loadingOffices')}</p>
                         ) : offices.length > 0 ? (
                             <div className="offices-container">
                                 {offices.map((office) => (
@@ -166,14 +168,14 @@ export default function DeleteProduct() {
                                         <div className="office-info">
                                             <span className="office-name">{office.name}</span>
                                             <span className={`office-status ${office.isOpen ? 'open' : 'closed'}`}>
-                                                {office.isOpen ? '✓ Open' : '✗ Closed (Not Available)'}
+                                                {office.isOpen ? t('others:open') : t('others:closed')}
                                             </span>
                                         </div>
                                     </label>
                                 ))}
                             </div>
                         ) : (
-                            <p>No offices available</p>
+                            <p>{t('others:noOfficesAvailable')}</p>
                         )}
                     </div>
                     <div className="product-itemfield">
@@ -192,7 +194,7 @@ export default function DeleteProduct() {
                         style={{backgroundColor: "#ff0000"}}
                         disabled={loading}
                     >
-                        {loading ? 'Removing...' : 'Remove'}
+                        {loading ? t('others:removing') : t('products:delete')}
                     </button>
         
                     {error && <p className="error-message">{error}</p>}

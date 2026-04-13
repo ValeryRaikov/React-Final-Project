@@ -1,0 +1,17 @@
+{
+  "language": "English",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "close": "Close",
+  "add": "Add",
+  "remove": "Remove",
+  "search": "Search",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "warning": "Warning",
+  "noResults": "No results found",
+  "tryAgain": "Try again",
+  "back": "Back"
+}

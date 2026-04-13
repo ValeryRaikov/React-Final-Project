@@ -1,0 +1,17 @@
+{
+  "shop": "Shop",
+  "home": "Home",
+  "aboutUs": "About Us",
+  "contact": "Contact",
+  "cart": "Cart",
+  "savedItems": "Saved Items",
+  "profile": "Profile",
+  "search": "Search Products",
+  "login": "Login",
+  "logout": "Logout",
+  "register": "Register",
+  "language": "Language",
+  "english": "English",
+  "bulgarian": "Български",
+  "categories": "Categories"
+}

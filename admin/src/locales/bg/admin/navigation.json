@@ -1,0 +1,12 @@
+{
+  "dashboard": "Админ Табло",
+  "addProduct": "Добавяне на продукт",
+  "listProducts": "Списък с продукти",
+  "addPromocode": "Добавяне на промокод",
+  "listPromocodes": "Списък с промокоди",
+  "addUser": "Добавяне на потребител",
+  "listUsers": "Списък със служители",
+  "language": "Език",
+  "english": "English",
+  "bulgarian": "Български"
+}

@@ -1,0 +1,13 @@
+{
+    "welcome": "Welcome to Shopify Administration Panel",
+    "pageNotFound": "Oops, the page you are looking for doesn't exist!",
+    "typeHere": "Type here...",
+    "loadingOffices": "Loading offices...",
+    "open": "✓ Open",
+    "closed": "✗ Closed",
+    "noOfficesAvailable": "No offices available",
+    "adding": "Adding...",
+    "editting": "Updating...",
+    "removing": "Removing...",
+    "loading": "Loading..."
+}

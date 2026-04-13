@@ -1,8 +1,10 @@
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { AuthContext } from '../../context/AuthContext';
 import { ShopContext } from '../../context/ShopContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 import './Navbar.css';
 import logo from '../assets/logo.png';
@@ -13,6 +15,8 @@ import profile_icon from '../assets/profile_icon.png';
 export default function Navbar() {
     const { isAuthenticated, handleLogout } = useContext(AuthContext);
     const { clearCart, clearSavedItems, getTotalCartItems, getTotalSavedItems } = useContext(ShopContext);
+    const { t } = useTranslation();
+    const { currentLanguage, changeLanguage } = useLanguage();
 
     const navigate = useNavigate();
     const [menu, setMenu] = useState('shop');
@@ -27,6 +31,20 @@ export default function Navbar() {
 
     return (
          <div className='navbar'>
+            <div className='nav-language-toggle'>
+                <label className='toggle-switch'>
+                    <input 
+                        type='checkbox' 
+                        checked={currentLanguage === 'bg'}
+                        onChange={(e) => changeLanguage(e.target.checked ? 'bg' : 'en')}
+                    />
+                    <span className='toggle-slider'>
+                        <span className='toggle-label en-label'>EN</span>
+                        <span className='toggle-label bg-label'>БГ</span>
+                    </span>
+                </label>
+            </div>
+            
             <div className='nav-logo'>
                 <Link style={{textDecoration: 'none'}} to='/'>
                     <img src={logo} alt="" />
@@ -56,6 +74,7 @@ export default function Navbar() {
                     <Link style={{textDecoration: 'none'}} to='/about'>About</Link>
                     {menu === 'about' ? <hr /> : <></>}
                 </li>
+                
                 {localStorage.getItem('auth-token')
                     ? (<button onClick={logoutHandler}>
                         Logout

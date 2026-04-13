@@ -1,0 +1,12 @@
+{
+  "dashboard": "Admin Dashboard",
+  "addProduct": "Add Product",
+  "listProducts": "List Products",
+  "addPromocode": "Add Promocode",
+  "listPromocodes": "List Promocodes",
+  "addUser": "Add User",
+  "listUsers": "List Users",
+  "language": "Language",
+  "english": "English",
+  "bulgarian": "Български"
+}

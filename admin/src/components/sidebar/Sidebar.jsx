@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../context/AuthContext';
 
 import './Sidebar.css';
@@ -10,24 +11,25 @@ import list_admin_icon from '../assets/contact-book.svg';
 import add_promocode_icon from '../assets/add_promocode_icon.svg';
 import list_promocode_icon from '../assets/discount-coupon.svg';
 
-const baseLinks = [
-    // product links
-    { path: '/add-product', label: 'Add Product', icon: add_product_icon },
-    { path: '/list-products', label: 'List Products', icon: list_product_icon },
-
-    // promocode links
-    { path: '/add-promocode', label: 'Add Promocode', icon: add_promocode_icon },
-    { path: '/list-promocodes', label: 'List Promocodes', icon: list_promocode_icon },
-];
-
-// User management links - only for superadmin and admin
-const userLinks = [
-    { path: '/add-user', label: 'Add User', icon: add_admin_icon },
-    { path: '/list-users', label: 'List Users', icon: list_admin_icon },
-];
-
 export default function Sidebar() {
     const { admin } = useContext(AuthContext);
+    const { t } = useTranslation();
+
+    const baseLinks = [
+        // product links
+        { path: '/add-product', labelKey: 'navigation:addProduct', icon: add_product_icon },
+        { path: '/list-products', labelKey: 'navigation:listProducts', icon: list_product_icon },
+
+        // promocode links
+        { path: '/add-promocode', labelKey: 'navigation:addPromocode', icon: add_promocode_icon },
+        { path: '/list-promocodes', labelKey: 'navigation:listPromocodes', icon: list_promocode_icon },
+    ];
+
+    // User management links - only for superadmin and admin
+    const userLinks = [
+        { path: '/add-user', labelKey: 'navigation:addUser', icon: add_admin_icon },
+        { path: '/list-users', labelKey: 'navigation:listUsers', icon: list_admin_icon },
+    ];
     
     // Only show user management links to superadmin and admin
     const sidebarLinks = admin && admin.role !== 'operator' 
@@ -36,12 +38,13 @@ export default function Sidebar() {
 
     return (
         <div className="sidebar">
-            <h3 className="sidebar-title">Admin Dashboard</h3>
+            <h3 className="sidebar-title">{t('navigation:dashboard')}</h3>
+            
             {sidebarLinks.map((link, idx) => (
                 <Link to={link.path} key={idx} style={{textDecoration: "none"}}>
                     <div className="sidebar-item">
                         <img src={link.icon} alt="" />
-                        <p>{link.label}</p>
+                        <p>{t(link.labelKey)}</p>
                     </div>
                 </Link>
             ))}

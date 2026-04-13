@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { BASE_URL } from '../services/utils';
 
 import './Login.css';
@@ -15,14 +16,16 @@ export default function Login() {
         password: '',
     });
 
+    const { t } = useTranslation('auth');
+
     const validateForm = () => {
         if (formData.email.trim() === '') {
-            setError('Email is required');
+            setError(t('emailRequired'));
             return false;
         }
 
         if (formData.password.trim() === '') {
-            setError('Password is required');
+            setError(t('passwordRequired'));
             return false;
         }
 
@@ -54,7 +57,7 @@ export default function Login() {
             const data = await response.json();          
 
             if (!data.success) {
-                throw new Error(data.message || data.errors || 'Login failed');
+                throw new Error(data.message || data.errors || t('loginFailed'));
             }
 
             // Login successful – store token and user via context
@@ -67,32 +70,32 @@ export default function Login() {
 
     return (
         <div className="admin-login">
-            <h1>Admin Login</h1>
+            <h1>{t('adminLogin')}</h1>
             {error && <p className="error">{error}</p>}
             <form onSubmit={submitHandler}>
                 <div>
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email">{t('email')}</label>
                     <input
                         value={formData.email}
                         onChange={changeHandler}
                         type="email"
                         name="email"
-                        placeholder='Enter email...'
+                        placeholder={t('emailPlaceholder')}
                         required
                     />
                 </div>
                 <div>
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password">{t('password')}</label>
                     <input
                         value={formData.password}
                         onChange={changeHandler}
                         type="password"
                         name="password"
-                        placeholder="Enter password..."
+                        placeholder={t('passwordPlaceholder')}
                         required
                     />
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit">{t('login')}</button>
             </form>
         </div>
     );

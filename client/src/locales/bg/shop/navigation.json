@@ -1,0 +1,17 @@
+{
+  "shop": "Магазин",
+  "home": "Начало",
+  "aboutUs": "За нас",
+  "contact": "Контакт",
+  "cart": "Кошница",
+  "savedItems": "Запазени елементи",
+  "profile": "Профил",
+  "search": "Потърсете продукти",
+  "login": "Влизане",
+  "logout": "Излизане",
+  "register": "Регистрация",
+  "language": "Език",
+  "english": "English",
+  "bulgarian": "Български",
+  "categories": "Категории"
+}

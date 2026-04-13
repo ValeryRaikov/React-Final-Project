@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL, percentageToMultiplier } from '../../utils';
+import { useTranslation } from 'react-i18next';
 
 import './AddPromocode.css';
 
 export default function AddPromocode() {
     const navigate = useNavigate();
+    const { t } = useTranslation('promocodes');
 
     const [formData, setFormData] = useState({
         code: '',
@@ -47,7 +49,7 @@ export default function AddPromocode() {
             if (!data.success) 
                 throw new Error(data.message);
 
-            setMessage('Promocode created successfully!');
+            setMessage(t('promocodeSuccess'));
             setIsSuccess(true);
             setFormData({ code: '', discount: '', expiresAt: '' });
             setTimeout(() => navigate('/list-promocodes'), 1500);
@@ -59,10 +61,10 @@ export default function AddPromocode() {
 
     return (
         <form onSubmit={handleSubmit} className="promocode">
-            <h3>Add Promocode</h3>
+            <h3>{t('addPromocode')}</h3>
 
             <div className="promocode-itemfield">
-                <p>Promo Code</p>
+                <p>{t('promocode')}</p>
                 <input
                     name="code"
                     value={formData.code}
@@ -73,7 +75,7 @@ export default function AddPromocode() {
             </div>
 
             <div className="promocode-itemfield">
-                <p>Discount (%)</p>
+                <p>{t('discount')}</p>
                 <input
                     name="discount"
                     type="number"
@@ -87,7 +89,7 @@ export default function AddPromocode() {
             </div>
 
             <div className="promocode-itemfield">
-                <p>Expiration Date (optional)</p>
+                <p>{t('expiresAt')}</p>
                 <input
                     name="expiresAt"
                     type="date"
@@ -96,7 +98,7 @@ export default function AddPromocode() {
                 />
             </div>
 
-            <button type="submit" className="promocode-btn">Create</button>
+            <button type="submit" className="promocode-btn">{t('create')}</button>
 
             {message && (
                 <p className={isSuccess ? 'success-message' : 'error-message'}>

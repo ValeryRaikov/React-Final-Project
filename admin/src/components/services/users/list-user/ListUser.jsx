@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 import Warning from '../../../warning/Warning';
 
@@ -13,6 +14,7 @@ export default function ListUser() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { t } = useTranslation(['admins', 'auth', 'common', 'others']);
 
     useEffect(() => {
         (async () => {
@@ -28,9 +30,10 @@ export default function ListUser() {
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        setError('Session expired. Please login again.');
+                        setError(t('auth:sessionExpired'));
                         return;
                     }
+
                     throw new Error(errMsg.fetchUsers || 'Failed to fetch users');
                 }
 
@@ -66,7 +69,8 @@ export default function ListUser() {
     };
 
     const canManageUser = (user) => {
-        if (!admin) return false;
+        if (!admin) 
+            return false;
         
         // Superadmin can manage everyone
         if (admin.role === 'superadmin') 
@@ -92,7 +96,7 @@ export default function ListUser() {
                     ? <Warning />
                     : (
                         <div className="list-user-restricted">
-                            <p className="error-message">You do not have permission to view users. Only admins can manage users.</p>
+                            <p className="error-message">{t('admins:permissionDeniedManageUsers')}</p>
                         </div>
                     )
                 }
@@ -106,19 +110,19 @@ export default function ListUser() {
                 ? <Warning />
                 : (
                     <div className="list-user">
-                        <h1>All Users</h1>
+                        <h1>{t('admins:allUsers')}</h1>
                         <div className="list-user-format-main">
-                            <p>Name</p>
-                            <p>Email</p>
-                            <p>Role</p>
-                            <p>Status</p>
-                            <p>Edit</p>
-                            <p>Remove</p>
+                            <p>{t('admins:name')}</p>
+                            <p>{t('admins:email')}</p>
+                            <p>{t('admins:role')}</p>
+                            <p>{t('admins:status')}</p>
+                            <p>{t('common:edit')}</p>
+                            <p>{t('common:delete')}</p>
                         </div>
                         <div className="list-user-all-users">
                             <hr />
                             {loading 
-                                ? <p className="loading-message">Loading...</p>
+                                ? <p className="loading-message">{t('others:loading')}</p>
                                 : error 
                                 ? <p className="error-message">{error}</p>
                                 : allUsers.length > 0 
@@ -133,24 +137,24 @@ export default function ListUser() {
                                         </p>
                                         <p>
                                             <span className={`status-badge ${user.isActive ? 'active' : 'inactive'}`}>
-                                                {user.isActive ? 'Active' : 'Inactive'}
+                                                {user.isActive ? t('admins:active') : t('admins:inactive')}
                                             </span>
                                         </p>
                                         <p 
                                             className={canManageUser(user) ? 'edit-btn' : 'edit-btn disabled'}
                                             onClick={() => canManageUser(user) && editClickHandler(user._id)}
                                         >
-                                            Edit
+                                            {t('common:edit')}
                                         </p>
                                         <p 
                                             className={canManageUser(user) ? 'delete-btn' : 'delete-btn disabled'}
                                             onClick={() => canManageUser(user) && deleteClickHandler(user._id)}
                                         >
-                                            Remove
+                                            {t('common:delete')}
                                         </p>
                                     </div>
                                 ))
-                                : <p className="no-users-message">No users available.</p>
+                                : <p className="no-users-message">{t('admins:noUsersAvailable')}</p>
                             }
                         </div>
                         <hr />

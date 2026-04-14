@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 import Warning from '../../../warning/Warning';
 import { errMsg, BASE_URL } from '../../utils';
@@ -11,15 +12,15 @@ export default function DeleteUser() {
     const { isAuthenticated, admin } = useContext(AuthContext);
     const { userId } = useParams();
     const navigate = useNavigate();
+    const { t } = useTranslation(['admins', 'auth']);
     const [user, setUser] = useState({
         name: '',
         email: '',
-        role: 'operator',
+        role: t('admins:operator'),
     });
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [showWarning, setShowWarning] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -35,9 +36,10 @@ export default function DeleteUser() {
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        setError('Session expired. Please login again.');
+                        setError(t('auth:sessionExpired'));
                         return;
                     }
+
                     throw new Error(errMsg.fetchUser || 'Failed to fetch user');
                 }
 
@@ -52,21 +54,24 @@ export default function DeleteUser() {
     }, [userId]);
 
     const canDeleteUser = () => {
-        if (!admin) return false;
+        if (!admin) 
+            return false;
         
         // Cannot delete yourself
-        if (admin._id === userId) return false;
+        if (admin._id === userId) 
+            return false;
         
         // Superadmin can delete everyone except if trying to delete last superadmin
-        if (admin.role === 'superadmin') {
+        if (admin.role === 'superadmin') 
             return true;
-        }
         
         // Admin cannot delete superadmin
-        if (user.role === 'superadmin') return false;
+        if (user.role === 'superadmin') 
+            return false;
         
         // Admin can delete other admins and operators
-        if (admin.role === 'admin') return true;
+        if (admin.role === 'admin') 
+            return true;
         
         // Operators cannot delete anyone
         return false;
@@ -88,14 +93,16 @@ export default function DeleteUser() {
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    setError('Session expired. Please login again.');
+                    setError(t('auth:sessionExpired'));
                     return;
                 }
+
                 const errorData = await response.json();
+
                 throw new Error(errorData.message || errMsg.deleteUser || 'Failed to delete user');
             }
 
-            setSuccessMessage('User deleted successfully!');
+            setSuccessMessage(t('admins:userDeletedSuccess'));
             setTimeout(() => {
                 navigate('/list-users');
             }, 1500);
@@ -114,7 +121,7 @@ export default function DeleteUser() {
                     ? <Warning />
                     : (
                         <div className="user-form-restricted">
-                            <p className="error-message">You do not have permission to manage users.</p>
+                            <p className="error-message">{t('admins:permissionDeniedManageUsers')}</p>
                         </div>
                     )
                 }
@@ -128,72 +135,72 @@ export default function DeleteUser() {
                 ? <Warning />
                 : (
                     <form className="user-form" onSubmit={deleteHandler}>
-                        <h2>Delete User</h2>
-                        
+                        <h2>{t('admins:deleteUserTitle')}</h2>
+
                         {error && <p className="error-message">{error}</p>}
                         {successMessage && <p className="success-message">{successMessage}</p>}
 
                         {loading ? (
-                            <p className="loading-message">Loading...</p>
+                            <p className="loading-message">{t('others:loading')}</p>
                         ) : !canDeleteUser() ? (
                             <div className="delete-restrictions">
                                 {admin._id === userId ? (
-                                    <p className="error-message">You cannot delete your own account.</p>
+                                    <p className="error-message">{t('admins:cannotDeleteOwnAccount')}</p>
                                 ) : user.role === 'superadmin' && admin.role !== 'superadmin' ? (
-                                    <p className="error-message">Only superadmins can delete other superadmins.</p>
+                                    <p className="error-message">{t('admins:onlySuperAdminsCanDeleteSuperAdmins')}</p>
                                 ) : (
-                                    <p className="error-message">You do not have permission to delete this user.</p>
+                                    <p className="error-message">{t('admins:permissionDeniedDeleteUser')}</p>
                                 )}
                             </div>
                         ) : (
                             <>
                                 <div className="user-itemfield">
-                                    <p>Name</p>
+                                    <p>{t('admins:name')}</p>
                                     <input
                                         value={user.name}
                                         type="text"
                                         name="name"
-                                        placeholder="Type here..."
+                                        placeholder={t('admins:namePlaceholder')}
                                         disabled
                                     />
                                 </div>
 
                                 <div className="user-itemfield">
-                                    <p>Email</p>
+                                    <p>{t('admins:email')}</p>
                                     <input
                                         value={user.email}
                                         type="email"
                                         name="email"
-                                        placeholder="Type here..."
+                                        placeholder={t('admins:emailPlaceholder')}
                                         disabled
                                     />
                                 </div>
 
                                 <div className="user-itemfield">
-                                    <p>Role</p>
+                                    <p>{t('admins:role')}</p>
                                     <input
                                         value={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                                         type="text"
                                         name="role"
-                                        placeholder="Type here..."
+                                        placeholder={t('admins:rolePlaceholder')}
                                         disabled
                                     />
                                 </div>
 
                                 {user.role === 'superadmin' && (
                                     <div className="delete-warning">
-                                        <p className="warning-text">⚠️ Warning: You are about to delete a superadmin account. This action cannot be undone.</p>
+                                        <p className="warning-text">{t('admins:warningDeleteSuperAdmin')}</p>
                                     </div>
                                 )}
 
                                 {(user.role === 'admin' || user.role === 'superadmin') && (
                                     <div className="delete-warning">
-                                        <p className="warning-text">⚠️ This user has elevated privileges. Deletion may affect system security.</p>
+                                        <p className="warning-text">{t('admins:warningDeleteAdmin')}</p>
                                     </div>
                                 )}
 
                                 <button type="submit" className="user-btn delete-btn" disabled={loading}>
-                                    {loading ? 'Deleting...' : 'Delete User'}
+                                    {loading ? t('admins:deletingUser') : t('admins:deleteUser')}
                                 </button>
                             </>
                         )}

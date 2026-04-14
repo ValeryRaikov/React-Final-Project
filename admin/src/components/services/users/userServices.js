@@ -6,10 +6,12 @@ const handleResponse = async (response) => {
     if (response.status === 401) {
         throw new Error('Session expired. Please login again.');
     }
+
     if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Request failed');
     }
+
     return await response.json();
 };
 
@@ -36,6 +38,7 @@ export const userServices = {
                     'auth-token': getAuthToken(),
                 },
             });
+
             return await handleResponse(response);
         } catch (err) {
             throw new Error(err.message || errMsg.fetchUser);
@@ -53,6 +56,7 @@ export const userServices = {
                 },
                 body: JSON.stringify(userData),
             });
+
             return await handleResponse(response);
         } catch (err) {
             throw new Error(err.message || errMsg.createUser);
@@ -70,6 +74,7 @@ export const userServices = {
                 },
                 body: JSON.stringify(userData),
             });
+
             return await handleResponse(response);
         } catch (err) {
             throw new Error(err.message || errMsg.updateUser);
@@ -86,6 +91,7 @@ export const userServices = {
                     'auth-token': getAuthToken(),
                 },
             });
+            
             return await handleResponse(response);
         } catch (err) {
             throw new Error(err.message || errMsg.deleteUser);

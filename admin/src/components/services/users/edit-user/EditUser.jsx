@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 import Warning from '../../../warning/Warning';
 import { errMsg, BASE_URL } from '../../utils';
@@ -11,10 +12,11 @@ export default function EditUser() {
     const { isAuthenticated, admin } = useContext(AuthContext);
     const { userId } = useParams();
     const navigate = useNavigate();
+    const { t } = useTranslation(['admins', 'auth', 'others']);
     const [user, setUser] = useState({
         name: '',
         email: '',
-        role: 'operator',
+        role: t('admins:operator'),
         isActive: true,
     });
     const [passwordUpdate, setPasswordUpdate] = useState('');
@@ -36,9 +38,10 @@ export default function EditUser() {
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        setError('Session expired. Please login again.');
+                        setError(t('auth:sessionExpired'));
                         return;
                     }
+
                     throw new Error(errMsg.fetchUser || 'Failed to fetch user');
                 }
 
@@ -61,23 +64,28 @@ export default function EditUser() {
     };
 
     const canEditUser = () => {
-        if (!admin) return false;
+        if (!admin) 
+            return false;
         
         // Superadmin can edit everyone
-        if (admin.role === 'superadmin') return true;
+        if (admin.role === 'superadmin') 
+            return true;
         
         // Admin cannot edit superadmin
-        if (user.role === 'superadmin') return false;
+        if (user.role === 'superadmin') 
+            return false;
         
         // Admin can edit other admins and operators
-        if (admin.role === 'admin') return true;
+        if (admin.role === 'admin') 
+            return true;
         
         // Operators cannot edit anyone
         return false;
     };
 
     const canChangeRole = () => {
-        if (!admin) return false;
+        if (!admin) 
+            return false;
         
         // Only superadmin can change to superadmin role
         if (user.role === 'superadmin' && admin.role !== 'superadmin') {
@@ -114,17 +122,19 @@ export default function EditUser() {
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    setError('Session expired. Please login again.');
+                    setError(t('auth:sessionExpired'));
                     return;
                 }
+
                 const errorData = await response.json();
+
                 throw new Error(errorData.message || errMsg.updateUser || 'Failed to update user');
             }
 
             const result = await response.json();
 
             if (result.success) {
-                setSuccessMessage('User updated successfully!');
+                setSuccessMessage(t('admins:userUpdatedSuccess'));
                 setTimeout(() => {
                     navigate('/list-users');
                 }, 1500);
@@ -146,8 +156,8 @@ export default function EditUser() {
                     ? <Warning />
                     : (
                         <div className="user-form-restricted">
-                            <p className="error-message">You do not have permission to manage users.</p>
-                        </div>
+                                <p className="error-message">{t('admins:permissionDeniedManageUsers')}</p>
+                            </div>
                     )
                 }
             </>
@@ -160,54 +170,54 @@ export default function EditUser() {
                 ? <Warning />
                 : (
                     <form className="user-form" onSubmit={submitHandler}>
-                        <h2>Edit User</h2>
-                        
+                        <h2>{t('admins:editUserTitle')}</h2>
+
                         {error && <p className="error-message">{error}</p>}
                         {successMessage && <p className="success-message">{successMessage}</p>}
 
                         {loading ? (
-                            <p className="loading-message">Loading...</p>
+                            <p className="loading-message">{t('others:loading')}</p>
                         ) : !canEditUser() ? (
-                            <p className="error-message">You do not have permission to edit this user.</p>
+                            <p className="error-message">{t('admins:permissionDeniedEditUser')}</p>
                         ) : (
                             <>
                                 <div className="user-itemfield">
-                                    <p>Name</p>
+                                    <p>{t('admins:name')}</p>
                                     <input
                                         value={user.name}
                                         onChange={changeHandler}
                                         type="text"
                                         name="name"
-                                        placeholder="Enter full name..."
+                                        placeholder={t('admins:namePlaceholder')}
                                         disabled={!canEditUser()}
                                     />
                                 </div>
 
                                 <div className="user-itemfield">
-                                    <p>Email</p>
+                                    <p>{t('admins:email')}</p>
                                     <input
                                         value={user.email}
                                         onChange={changeHandler}
                                         type="email"
                                         name="email"
-                                        placeholder="Enter email address..."
+                                        placeholder={t('admins:emailPlaceholder')}
                                         disabled={!canEditUser()}
                                     />
                                 </div>
 
                                 <div className="user-itemfield">
-                                    <p>Update Password (Optional)</p>
+                                    <p>{t('admins:updatePassword')}</p>
                                     <input
                                         value={passwordUpdate}
                                         onChange={(e) => setPasswordUpdate(e.target.value)}
                                         type="password"
-                                        placeholder="Leave empty to keep current password..."
+                                        placeholder={t('admins:updatePasswordPlaceholder')}
                                         disabled={!canEditUser()}
                                     />
                                 </div>
 
                                 <div className="user-itemfield">
-                                    <p>Role</p>
+                                    <p>{t('admins:role')}</p>
                                     <select
                                         value={user.role}
                                         onChange={changeHandler}
@@ -216,13 +226,13 @@ export default function EditUser() {
                                         disabled={!canChangeRole()}
                                     >
                                         {admin && admin.role === 'superadmin' && (
-                                            <option value="superadmin">Super Admin</option>
+                                            <option value="superadmin">{t('admins:superAdmin')}</option>
                                         )}
-                                        <option value="admin">Admin</option>
-                                        <option value="operator">Operator</option>
+                                        <option value="admin">{t('admins:admin')}</option>
+                                        <option value="operator">{t('admins:operator')}</option>
                                     </select>
                                     {user.role === 'superadmin' && admin?.role !== 'superadmin' && (
-                                        <small className="disabled-note">Only superadmins can edit superadmin roles</small>
+                                        <small className="disabled-note">{t('admins:permissionDeniedSuperAdmin')}</small>
                                     )}
                                 </div>
 
@@ -235,11 +245,11 @@ export default function EditUser() {
                                         id="isActive"
                                         disabled={!canEditUser()}
                                     />
-                                    <label htmlFor="isActive">Active Status</label>
+                                    <label htmlFor="isActive">{t('admins:active')}</label>
                                 </div>
 
                                 <button type="submit" className="user-btn" disabled={loading || !canEditUser()}>
-                                    {loading ? 'Updating...' : 'Update User'}
+                                    {loading ? t('admins:updatingUser') : t('admins:editUser')}
                                 </button>
                             </>
                         )}

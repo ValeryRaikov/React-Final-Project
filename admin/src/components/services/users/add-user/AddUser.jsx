@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 import Warning from '../../../warning/Warning';
 import { errMsg, BASE_URL } from '../../utils';
@@ -8,11 +9,12 @@ import '../UserForm.css';
 
 export default function AddUser() {
     const { isAuthenticated, admin } = useContext(AuthContext);
+    const { t } = useTranslation(['admins', 'auth', 'others']);
     const [userDetails, setUserDetails] = useState({
         name: '',
         email: '',
         password: '',
-        role: 'operator',
+        role: t('admins:operator'),
     });
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
@@ -30,7 +32,7 @@ export default function AddUser() {
             name: '',
             email: '',
             password: '',
-            role: 'operator',
+            role: t('admins:operator'),
         });
     };
 
@@ -54,17 +56,19 @@ export default function AddUser() {
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    setError('Session expired. Please login again.');
+                    setError(t('auth:sessionExpired'));
                     return;
                 }
+
                 const errorData = await response.json();
+
                 throw new Error(errorData.message || errMsg.createUser || 'Failed to create user');
             }
 
             const result = await response.json();
 
             if (result.success) {
-                setSuccessMessage('User added successfully!');
+                setSuccessMessage(t('admins:userAddedSuccess'));
                 clearForm();
             } else {
                 throw new Error(result.message || errMsg.createUser);
@@ -84,7 +88,7 @@ export default function AddUser() {
                     ? <Warning />
                     : (
                         <div className="user-form-restricted">
-                            <p className="error-message">You do not have permission to manage users. Only admins can manage users.</p>
+                            <p className="error-message">{t('admins:permissionDeniedManageUsers')}</p>
                         </div>
                     )
                 }
@@ -98,49 +102,49 @@ export default function AddUser() {
                 ? <Warning />
                 : (
                     <form className="user-form" onSubmit={addUser}>
-                        <h2>Add New User</h2>
+                        <h2>{t('admins:addUserTitle')}</h2>
                         
                         {error && <p className="error-message">{error}</p>}
                         {successMessage && <p className="success-message">{successMessage}</p>}
 
                         <div className="user-itemfield">
-                            <p>Name</p>
+                            <p>{t('admins:name')}</p>
                             <input
                                 value={userDetails.name}
                                 onChange={changeHandler}
                                 type="text"
                                 name="name"
-                                placeholder="Enter full name..."
+                                placeholder={t('admins:namePlaceholder')}
                                 required
                             />
                         </div>
 
                         <div className="user-itemfield">
-                            <p>Email</p>
+                            <p>{t('admins:email')}</p>
                             <input
                                 value={userDetails.email}
                                 onChange={changeHandler}
                                 type="email"
                                 name="email"
-                                placeholder="Enter email address..."
+                                placeholder={t('admins:emailPlaceholder')}
                                 required
                             />
                         </div>
 
                         <div className="user-itemfield">
-                            <p>Password</p>
+                            <p>{t('admins:password')}</p>
                             <input
                                 value={userDetails.password}
                                 onChange={changeHandler}
                                 type="password"
                                 name="password"
-                                placeholder="Enter password..."
+                                placeholder={t('admins:passwordPlaceholder')}
                                 required
                             />
                         </div>
 
                         <div className="user-itemfield">
-                            <p>Role</p>
+                            <p>{t('admins:role')}</p>
                             <select
                                 value={userDetails.role}
                                 onChange={changeHandler}
@@ -148,15 +152,15 @@ export default function AddUser() {
                                 className="user-selector"
                             >
                                 {admin && admin.role === 'superadmin' && (
-                                    <option value="superadmin">Super Admin</option>
+                                    <option value="superadmin">{t('admins:superAdmin')}</option>
                                 )}
-                                <option value="admin">Admin</option>
-                                <option value="operator">Operator</option>
+                                <option value="admin">{t('admins:admin')}</option>
+                                <option value="operator">{t('admins:operator')}</option>
                             </select>
                         </div>
 
                         <button type="submit" className="user-btn" disabled={loading}>
-                            {loading ? 'Adding...' : 'Add User'}
+                            {loading ? t('admins:addingUser') : t('admins:addUser')}
                         </button>
                     </form>
                 )

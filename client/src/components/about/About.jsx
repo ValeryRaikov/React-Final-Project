@@ -1,19 +1,22 @@
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import './About.css';
 import hand_icon from '../assets/hand_icon.png';
 
-const sidebarLinks = [
-    { path: "company", label: "Company" },
-    { path: "products", label: "Products" },
-    { path: "offices", label: "Offices" },
-    { path: "about-us", label: "About Us" },
-    { path: "contact", label: "Contact" },
-];
-
 export default function About() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { t } = useTranslation(['navigation', 'pages']);
+    
+    const sidebarLinks = [
+        { path: "company", label: t('navigation:company') },
+        { path: "products", label: t('navigation:products') },
+        { path: "offices", label: t('navigation:offices') },
+        { path: "about-us", label: t('navigation:aboutUs') },
+        { path: "contact", label: t('navigation:contact') },
+    ];
+
     const currentPath = location.pathname.split("/").pop() || 'company';
     const isSidebarLinkSelected = sidebarLinks.some(link => link.path === currentPath);
 
@@ -34,17 +37,17 @@ export default function About() {
                 {!isSidebarLinkSelected
                     ? (
                         <div className="about-content">
-                            <h1>All About Shopify</h1>
+                            <h1>{t('pages:allAboutShopify')}</h1>
 
                             <div className="about-content-description">
                                 <img src={hand_icon} alt="" />
                                 <div className="about-text">
-                                    <p>This is the <span>About</span> section of Shopify.</p>
-                                    <p>Use the navigation to the left to navigate to different sections and find everything you want to know about us!</p>
+                                    <p>{t('pages:aboutSection')}</p>
+                                    <p>{t('pages:useNavigation')}</p>
                                 </div>
                             </div>
                             <div className="about-btn">
-                                <button onClick={() => navigate('/')}>Go back</button>
+                                <button onClick={() => navigate('/')}>{t('pages:goBack')}</button>
                             </div>
                         </div>
                     )

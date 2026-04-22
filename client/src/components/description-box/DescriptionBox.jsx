@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../context/AuthContext';
 import { jwtDecode } from 'jwt-decode';
 import { useNotification } from '../../context/NotificationContext';
@@ -20,6 +21,7 @@ export default function DescriptionBox({
 }) {
     const { isAuthenticated } = useContext(AuthContext);
     const { addNotification } = useNotification();
+    const { t } = useTranslation(['products', 'forms']);
 
     const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState('description');
@@ -66,11 +68,11 @@ export default function DescriptionBox({
             if (data.success) {
                 setLocalComments(data.comments);
                 setCommentText('');
-                addNotification('Comment added successfully', 'success');
+                addNotification(t('forms:commentAdded'), 'success');
             }
         } catch (err) {
             console.error('Add comment error:', err);
-            addNotification('Failed to add comment', 'error');
+            addNotification(t('forms:failedToAddComment'), 'error');
         }
     };
 
@@ -88,11 +90,11 @@ export default function DescriptionBox({
 
             if (data.success) {
                 setLocalComments(data.comments);
-                addNotification('Comment deleted successfully', 'success');
+                addNotification(t('products:commentDeleted'), 'success');
             }
         } catch (err) {
             console.error(err);
-            addNotification('Failed to delete comment', 'error');
+            addNotification(t('products:failedToDeleteComment'), 'error');
         }
     };
 
@@ -116,42 +118,42 @@ export default function DescriptionBox({
                     className={`description-box-nav-box ${activeTab !== 'description' ? 'fade' : ''}`}
                     onClick={() => setActiveTab('description')}
                 >
-                    Description
+                    {t('products:descriptionTab')}
                 </div>
                 <div
                     className={`description-box-nav-box ${activeTab !== 'reviews' ? 'fade' : ''}`}
                     onClick={() => setActiveTab('reviews')}
                 >
-                    Reviews
+                    {t('products:reviewsTab')}
                 </div>
             </div>
 
             <div className="description-box-description">
                 {activeTab === 'description' && (
                     !isAuthenticated
-                        ? <p className="warning-message">You need to be logged in to see this.</p>
+                        ? <p className="warning-message">{t('forms:loginRequired')}</p>
                         : (
                             <>
-                                <p><span className="title">Product:</span> {name}</p>
-                                <p><span className="title">Category:</span> {category}</p>
-                                <p><span className="title">Subcategory:</span> {subcategory}</p>
+                                <p><span className="title">{t('products:product')}:</span> {name}</p>
+                                <p><span className="title">{t('products:category')}:</span> {category}</p>
+                                <p><span className="title">{t('products:subcategory')}:</span> {subcategory}</p>
                                 <p>
-                                    <span className="title">Price:</span>
+                                    <span className="title">{t('products:price')}:</span>
                                     <span className="old-price">${oldPrice}</span>
                                     <span className="new-price">${newPrice}</span>
                                 </p>
                                 {available
-                                    ? <p className="in-stock">In Stock</p>
-                                    : <p className="out-of-stock">Out of Stock</p>
+                                    ? <p className="in-stock">{t('products:inStock')}</p>
+                                    : <p className="out-of-stock">{t('products:outOfStock')}</p>
                                 }
-                                <p><span className="title">Year:</span> {new Date(date).getFullYear()}</p>
+                                <p><span className="title">{t('products:year')}:</span> {new Date(date).getFullYear()}</p>
                             </>
                         )
                 )}
                 {activeTab === 'reviews' && (
                     <>
                         {!isAuthenticated && (
-                            <p className="warning-message">You need to be logged in to see reviews.</p>
+                            <p className="warning-message">{t('forms:reviewsLoginRequired')}</p>
                         )}
 
                         {isAuthenticated && (
@@ -159,17 +161,17 @@ export default function DescriptionBox({
                                 <div className="comment-box">
                                     <textarea
                                         disabled={hasCommented}
-                                        value={hasCommented ? 'You already commented on this product.' : commentText}
+                                        value={hasCommented ? t('forms:alreadyCommented') : commentText}
                                         onChange={(e) => setCommentText(e.target.value)}
-                                        placeholder="Write a comment..."
+                                        placeholder={t('forms:writeComment')}
                                     />
                                     <button onClick={handleAddComment} disabled={hasCommented}>
-                                        Add Comment
+                                        {t('forms:addComment')}
                                     </button>
                                 </div>
                                 <div className="comments-list">
                                     {localComments.length === 0 ? (
-                                        <p>No comments yet.</p>
+                                        <p>{t('forms:noComments')}</p>
                                     ) : (
                                         localComments.map((c) => (
                                             <div key={c._id} className="comment-item">
@@ -185,7 +187,7 @@ export default function DescriptionBox({
                                                             className="delete-btn"
                                                             onClick={() => handleDeleteComment(c._id)}
                                                         >
-                                                            Delete
+                                                            {t('forms:deleteComment')}
                                                         </button>
                                                     )}
                                                 </div>

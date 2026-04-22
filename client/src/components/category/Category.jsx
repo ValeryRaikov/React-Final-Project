@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShopContext } from '../../context/ShopContext';
 import { filterProducts } from '../../utils/filters.js';
 import { sortProducts } from '../../utils/sortings.js';
@@ -20,6 +21,7 @@ const DEFAULT_FILTERS = {
 
 export default function Category({ banner, category }) {
     const { allProducts } = useContext(ShopContext);
+    const { t } = useTranslation(['pages', 'products']);
 
     const [offices, setOffices] = useState([]);
     const [showFilters, setShowFilters] = useState(false);
@@ -107,42 +109,42 @@ export default function Category({ banner, category }) {
                         className="filter-toggle" 
                         onClick={() => setShowFilters(prev => !prev)}
                     >
-                        Filters ▾
+                        {t('pages:filters')}
                     </button>
                     {showFilters && (
                         <div className="filters-menu">
                             <div className="filter-group">
-                                <label>Stock</label>
+                                <label>{t('pages:filterStock')}</label>
                                 <select value={stockFilter} onChange={e => setStockFilter(e.target.value)}>
-                                    <option value="all">All</option>
-                                    <option value="in">In Stock</option>
-                                    <option value="out">Out of Stock</option>
+                                    <option value="all">{t('pages:filterAll')}</option>
+                                    <option value="in">{t('pages:stockIn')}</option>
+                                    <option value="out">{t('pages:stockOut')}</option>
                                 </select>
                             </div>
                             <div className="filter-group">
-                                <label>Type</label>
+                                <label>{t('pages:filterType')}</label>
                                 <select value={subcategoryFilter} onChange={e => setSubcategoryFilter(e.target.value)}>
-                                    <option value="all">All</option>
-                                    <option value="shirts">Shirts</option>
-                                    <option value="tops">Tops</option>
-                                    <option value="jackets">Jackets</option>
-                                    <option value="shoes">Shoes</option>
-                                    <option value="pants">Pants</option>
+                                    <option value="all">{t('pages:filterAll')}</option>
+                                    <option value="shirts">{t('pages:typeShirts')}</option>
+                                    <option value="tops">{t('pages:typeTops')}</option>
+                                    <option value="jackets">{t('pages:typeJackets')}</option>
+                                    <option value="shoes">{t('pages:typeShoes')}</option>
+                                    <option value="pants">{t('pages:typePants')}</option>
                                 </select>
                             </div>
                             <div className="filter-group">
-                                <label>Office</label>
+                                <label>{t('pages:filterOffice')}</label>
                                 <select value={officeFilter} onChange={e => setOfficeFilter(e.target.value)}>
-                                    <option value="all">All</option>
+                                    <option value="all">{t('pages:filterAll')}</option>
                                     {offices.map(o => (
                                         <option key={o._id} value={o._id}>
-                                            {o.name} {!o.isOpen ? '(Closed)' : ''}
+                                            {o.name} {!o.isOpen ? ` ${t('pages:officeClosedLabel')}` : ''}
                                         </option>
                                     ))}
                                 </select>
                             </div>
                             <div className="filter-group">
-                                <label>Max Price</label>
+                                <label>{t('pages:filterMaxPrice')}</label>
                                 <input
                                     type="number"
                                     placeholder="999"
@@ -151,7 +153,7 @@ export default function Category({ banner, category }) {
                                 />
                             </div>
                             <div className="filter-group">
-                                <label>Min Price</label>
+                                <label>{t('pages:filterMinPrice')}</label>
                                 <input
                                     type="number"
                                     placeholder="1"
@@ -165,7 +167,7 @@ export default function Category({ banner, category }) {
                                     onClick={clearFilters}
                                     disabled={isDefaultState}
                                 >
-                                    Clear Filters
+                                    {t('pages:clearFilters')}
                                 </button>
                             </div>
                         </div>
@@ -176,25 +178,25 @@ export default function Category({ banner, category }) {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         type="text"
-                        placeholder="Search products..."
+                        placeholder={t('pages:searchProducts')}
                     />
                 </div>
                 <div className="category-sort">
-                    <label>Sort by:</label>
+                    <label>{t('pages:sortBy')}</label>
                     <select value={sortOption} onChange={e => setSortOption(e.target.value)}>
-                        <option value="id-asc">Oldest</option>
-                        <option value="id-desc">Newest</option>
-                        <option value="newPrice-asc">Cheapest</option>
-                        <option value="newPrice-desc">Most Expensive</option>
-                        <option value="likes-desc">Most Liked</option>
-                        <option value="comments-desc">Most Commented</option>
+                        <option value="id-asc">{t('pages:sortOldest')}</option>
+                        <option value="id-desc">{t('pages:sortNewest')}</option>
+                        <option value="newPrice-asc">{t('pages:sortCheapest')}</option>
+                        <option value="newPrice-desc">{t('pages:sortMostExpensive')}</option>
+                        <option value="likes-desc">{t('pages:sortMostLiked')}</option>
+                        <option value="comments-desc">{t('pages:sortMostCommented')}</option>
                     </select>
                 </div>
             </div>
             {!allProducts.length ? (
                 <div className="loading-spinner"><LoadingSpinner /></div>
             ) : !sortedProducts.length ? (
-                <p className="error-message">No products found</p>
+                <p className="error-message">{t('pages:noProductsFound')}</p>
             ) : (
                 <div className="category-products">
                     {sortedProducts.map(item => (
@@ -203,7 +205,7 @@ export default function Category({ banner, category }) {
                 </div>
             )}
             <div className="category-loadmore">
-                Explore More
+                {t('pages:exploreMore')}
             </div>
         </div>
     );

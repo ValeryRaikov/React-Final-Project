@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShopContext } from '../../context/ShopContext';
 import { AuthContext } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -15,6 +16,7 @@ export default function ProductDisplay({
     name,
     image,
     category,
+    subcategory,
     newPrice,
     oldPrice,
     available,
@@ -23,11 +25,11 @@ export default function ProductDisplay({
     const { addToCart, toggleSaved, isSaved } = useContext(ShopContext);
     const { isAuthenticated } = useContext(AuthContext);
     const { addNotification } = useNotification();
+    const { t } = useTranslation(['products', 'errors', 'others']);
     const { 
         likes,
         likeProduct, 
         dislikeProduct, 
-        // error,
     } = useProductLikes(id, isAuthenticated);
 
     const [offices, setOffices] = useState([]);
@@ -68,12 +70,12 @@ export default function ProductDisplay({
     const handleAddToCart = () => {
         if (isAuthenticated) {
             if (!available) {
-                addNotification('This product is currently out of stock', 'error');
+                addNotification(t('products:outOfStockMsg'), 'error');
                 return;
             }
 
             addToCart(id);
-            addNotification('Product added to cart', 'success');
+            addNotification(t('forms:cartUpdated'), 'success');
         } else {
             addToCart(id);
         }
@@ -96,7 +98,7 @@ export default function ProductDisplay({
                 addNotification('Added to saved items', 'success');
             }
         } catch (err) {
-            addNotification('Something went wrong. Try again.', 'error');
+            addNotification(t('errors:unexpectedError', { defaultValue: 'Something went wrong. Try again.' }), 'error');
         }
     };
 
@@ -123,9 +125,9 @@ export default function ProductDisplay({
                             <>
                                 <span className="availability-badge-icon">✓</span>
                                 <div className="availability-badge-content">
-                                    <p className="availability-status">In Stock</p>
+                                    <p className="availability-status">{t('products:inStock')}</p>
                                     <p className="availability-details">
-                                        Available in {officeIds?.length || 0} shop{officeIds?.length !== 1 ? 's' : ''}
+                                        {t('products:availableIn', { count: officeIds?.length || 0 })} {officeIds?.length !== 1 ? t('products:shops') : t('products:shop')}
                                     </p>
                                 </div>
                                 <div className="offices-list">
@@ -140,8 +142,8 @@ export default function ProductDisplay({
                             <>
                                 <span className="availability-badge-icon">✕</span>
                                 <div className="availability-badge-content">
-                                    <p className="availability-status out-of-stock-text">Out of Stock</p>
-                                    <p className="availability-details">Not available in any shop</p>
+                                    <p className="availability-status out-of-stock-text">{t('products:outOfStock')}</p>
+                                    <p className="availability-details">{t('products:notAvailable')}</p>
                                 </div>
                             </>
                         )}
@@ -165,10 +167,10 @@ export default function ProductDisplay({
                 </div>
 
                 <div className="display-right-description">
-                    {`${name} is the perfect ${category} clothing for everyday. Made of fine materials and 100% cotton, our clothes are suitable for everyone. Now, don't miss the opportunity and get it for only ${newPrice}!`}
+                    {t('others:productDescription', { name, category, subcategory, newPrice })}
                 </div>
                 <div className="display-right-size">
-                    <h1>Select Size</h1>
+                    <h1>{t('products:selectSizeLabel')}</h1>
                     <div className="display-right-sizes">
                         <div>S</div>
                         <div>M</div>
@@ -179,30 +181,30 @@ export default function ProductDisplay({
                 <div className="display-right-btn-box">
                     <div className="action-buttons">
                         <button className="add-btn" onClick={handleAddToCart}>
-                            Add to cart
+                            {t('products:addBtn')}
                         </button>
 
                         <button 
                             className={`save-btn ${saved ? 'saved' : ''}`}
                             onClick={handleToggleSaved}
                         >
-                            {saved ? '❤️ Saved' : '🤍 Save'}
+                            {saved ? '❤️ ' + t('products:saved') : '🤍 ' + t('products:saveBtn')}
                         </button>
                     </div>
 
                     <div className="display-right-likes">
                         {isAuthenticated && 
                             <div className="likes-btn-box">
-                                <button className="like-btn" onClick={likeProduct}>Like</button>
-                                <button className="dislike-btn" onClick={dislikeProduct}>Dislike</button>
+                                <button className="like-btn" onClick={likeProduct}>{t('products:likeBtn')}</button>
+                                <button className="dislike-btn" onClick={dislikeProduct}>{t('products:dislikeBtn')}</button>
                             </div>
                         }
                     </div>
                 </div>
 
-                <p className="likes">Total likes: <span>{likes}</span></p>
-                <p className="display-right-category"><span>Category: </span>{category} clothing</p>
-                <p className="display-right-category"><span>Tags: </span>{category} clothing</p>
+                <p className="likes">{t('products:totalLikes')}: <span>{likes}</span></p>
+                <p className="display-right-category"><span>{t('products:category')}: </span>{category} clothing</p>
+                <p className="display-right-category"><span>{t('products:tags')}: </span>{category} clothing > {subcategory}</p>
             </div>
         </div>
     );

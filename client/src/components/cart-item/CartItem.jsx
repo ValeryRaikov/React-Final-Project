@@ -1,4 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNotification } from '../../context/NotificationContext';
 import { ShopContext } from '../../context/ShopContext';
 import './CartItem.css';
 import remove_icon from '../assets/cart_cross_icon.png';
@@ -14,6 +16,9 @@ export default function CartItem() {
         addToCart, 
         getTotalCartAmount 
     } = useContext(ShopContext);
+
+    const { t } = useTranslation(['cart', 'errors', 'forms']);
+    const { addNotification } = useNotification();
 
     const [promocode, setPromocode] = useState('');
     const [discount, setDiscount] = useState(1);
@@ -45,27 +50,30 @@ export default function CartItem() {
             if (data.valid) {
                 setDiscount(data.discount);
                 setTotalPrice(data.total);
+                addNotification(t('forms:promoCodeApplied'), 'success');
             } else {
                 setDiscount(1);
-                setPromocode(data.message || 'Invalid promo code');
+                setPromocode('');
+                addNotification(data.message || t('errors:invalidPromoCode'), 'error');
             }
 
         } catch (error) {
             console.error(error);
-            setPromocode('Server error');
+            setPromocode('');
             setDiscount(1);
+            addNotification(t('errors:serverError'), 'error');
         }
     };
 
     return (
         <div className="cart-items">
             <div className="cart-items-format-main">
-                <p>Product</p>
-                <p>Title</p>
-                <p>Price</p>
-                <p>Quantity</p>
-                <p>Total</p>
-                <p>Remove</p>
+                <p>{t('cart:product')}</p>
+                <p>{t('cart:title')}</p>
+                <p>{t('cart:price')}</p>
+                <p>{t('cart:quantity')}</p>
+                <p>{t('cart:total')}</p>
+                <p>{t('cart:remove')}</p>
             </div>
             <hr />
 
@@ -108,43 +116,44 @@ export default function CartItem() {
                         </div>
                     );
                 }
+
                 return null;
             })}
 
             <div className="cart-items-down">
                 <div className="cart-items-total">
-                    <h1>Cart Totals:</h1>
+                    <h1>{t('cart:cart')} {t('cart:total')}:</h1>
                     <div>
                         <div className="cart-items-total-item">
-                            <p>Subtotal</p>
+                            <p>{t('cart:subtotal')}</p>
                             <p>${getTotalCartAmount()}</p>
                         </div>
                         <hr />
                         <div className="cart-items-total-item">
-                            <p>Shipping Fee</p>
-                            <p>Free</p>
+                            <p>{t('cart:shipping')}</p>
+                            <p>{t('cart:free')}</p>
                         </div>
                         <hr />
                         <div className="cart-items-total-item">
-                            <h3>Total</h3>
+                            <h3>{t('cart:total')}</h3>
                             <h3>${totalPrice.toFixed(2)}</h3>
                         </div>
                     </div>
 
-                    <button>Proceed to checkout</button>
+                    <button>{t('cart:checkout')}</button>
                 </div>
 
                 <div className="cart-items-promocode">
-                    <p>If you have a promo code, Enter it here...</p>
+                    <p>{t('forms:promoCodePromt')}</p>
                     <div className="cart-items-promobox">
                         <input
                             value={promocode}
                             onChange={handlePromocodeChange}
                             type="text"
                             name="promocode"
-                            placeholder="Promo Code"
+                            placeholder={t('cart:promoCode')}
                         />
-                        <button onClick={handlePromocodeSubmit}>Submit</button>
+                        <button onClick={handlePromocodeSubmit}>{t('forms:submit')}</button>
                     </div>
                 </div>
             </div>

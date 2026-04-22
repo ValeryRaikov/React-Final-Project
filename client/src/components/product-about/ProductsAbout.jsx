@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import './ProductsAbout.css';
 import product_1 from '../assets/product_1.png';
@@ -10,11 +11,13 @@ import product_28 from '../assets/product_28.png';
 import product_30 from '../assets/product_30.png';
 
 export default function ProductsAbout() {
+    const { t } = useTranslation(['about', 'others', 'products']);
+
     return (
         <div className="products-about">
-            <h2>Our Products</h2>
-            <p>At Shopify, we offer a curated selection of high-quality products that cater to all your fashion and lifestyle needs. From trendy apparel and stylish accessories to chic home decor, our collections are designed to inspire and empower you. Each item is carefully chosen for its quality, craftsmanship, and unique style, ensuring that you find something special every time you shop with us. Whether you're looking for the latest fashion trends or timeless pieces, Shopify has you covered.</p>
-            <h2>Bestsellers</h2>
+            <h2>{t('about:ourProducts')}</h2>
+            <p>{t('about:productsAboutDesc')}</p>
+            <h2>{t('about:bestsellers')}</h2>
             <div className="products-about-gallery">
                 <img src={product_1} alt="" />
                 <div className="gallery-right">
@@ -31,12 +34,12 @@ export default function ProductsAbout() {
                 </div>
             </div>
             <div className="products-about-shop">
-                <h2>Shop Now</h2>
+                <h2>{t('others:shopNow')}</h2>
                 <div className="shop-links">
                     <ul>
-                        <li><Link to='/men'>Men</Link></li>
-                        <li><Link to='/women'>Women</Link></li>
-                        <li><Link to='/kids'>Kids</Link></li>
+                        <li><Link to='/men'>{t('products:men')}</Link></li>
+                        <li><Link to='/women'>{t('products:women')}</Link></li>
+                        <li><Link to='/kids'>{t('products:kids')}</Link></li>
                     </ul>
                 </div>
             </div>

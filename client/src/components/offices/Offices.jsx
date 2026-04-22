@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { GoogleMap, MarkerF, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 import { mapOptions } from '../../utils/mapConfig';
 import LoadingSpinner from '../loading-spinner/LoadingSpinner';
@@ -18,6 +19,7 @@ const defaultCenter = {
 };
 
 function Offices() {
+    const { t } = useTranslation(['pages']);
     const { isLoaded } = useJsApiLoader({
         id: mapOptions.googleMapApiKey,
         googleMapsApiKey: mapOptions.googleMapApiKey,
@@ -128,7 +130,7 @@ function Offices() {
                         lat: Number(office.location.lat),
                         lng: Number(office.location.lng),
                     }}
-                    title={`${office.name} - ${office.isOpen ? 'Open' : 'Closed'}`}
+                    title={`${office.name} - ${office.isOpen ? t('pages:officeOpen') : t('pages:officeClosed')}`}
                     icon={{
                         url: office.isOpen
                             ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
@@ -151,7 +153,7 @@ function Offices() {
                     <div className="office-info-window">
                         <div className="office-name">{selectedOffice.name}</div>
                         <div className="office-status">
-                            {selectedOffice.isOpen ? '✅ Open' : '❌ Closed'}
+                            {selectedOffice.isOpen ? `${t('pages:officeOpenIcon')} ${t('pages:officeOpen')}` : `${t('pages:officeClosedIcon')} ${t('pages:officeClosed')}`}
                         </div>
                     </div>
                 </InfoWindow>

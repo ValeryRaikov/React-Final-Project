@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext, useMemo } from "react";
-
+import { useTranslation } from "react-i18next";
 import { AuthContext } from "./AuthContext";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -9,6 +9,7 @@ export const ShopContext = createContext(null);
 export default function ShopContextProvider(props) {
     const [allProducts, setAllProducts] = useState([]);
     const [savedItems, setSavedItems] = useState({});
+    const { t } = useTranslation(['errors', 'forms']);
     const { 
         isAuthenticated, 
         showModal, 
@@ -138,12 +139,12 @@ export default function ShopContextProvider(props) {
 
     const addToCart = async (itemId) => {
         if (!isAuthenticated) {
-            showModal('Login required', (
+            showModal(t('errors:loginRequiredTitle'), (
                 <div>
-                    <p>Please login to purchase items.</p>
+                    <p>{t('errors:loginRequiredDesc')}</p>
                     <div className="btn-container">
-                        <button onClick={() => handleGoBackClick()}>Go Back</button>
-                        <button onClick={() => handleLoginClick()}>Login</button>
+                        <button onClick={() => handleGoBackClick()}>{t('forms:goBack')}</button>
+                        <button onClick={() => handleLoginClick()}>{t('forms:login')}</button>
                     </div>
                 </div>
             ));
@@ -290,12 +291,12 @@ export default function ShopContextProvider(props) {
 
     const toggleSaved = async (itemId) => {
         if (!isAuthenticated) {
-            showModal('Login required', (
+            showModal(t('errors:loginRequiredTitle'), (
                 <div>
-                    <p>Please login to save items.</p>
+                    <p>{t('errors:loginRequiredSaveDesc')}</p>
                     <div className="btn-container">
-                        <button onClick={() => handleGoBackClick()}>Go Back</button>
-                        <button onClick={() => handleLoginClick()}>Login</button>
+                        <button onClick={() => handleGoBackClick()}>{t('forms:goBack')}</button>
+                        <button onClick={() => handleLoginClick()}>{t('forms:login')}</button>
                     </div>
                 </div>
             ));

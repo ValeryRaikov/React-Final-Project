@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -10,10 +11,12 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 export default function Registration() {
     const { handleLogin } = useContext(AuthContext);
     const { addNotification } = useNotification();
+    const { t } = useTranslation(['navigation', 'forms', 'errors']);
 
     const navigate = useNavigate();
-    // const [error, setError] = useState(null);
-    const [state, setState] = useState('Login');
+
+    const [mode, setMode] = useState('login');
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -23,35 +26,32 @@ export default function Registration() {
 
     const changeHandler = (e) => {
         setFormData({
-            ...formData, 
-            [e.target.name]: e.target.type === 'checkbox' 
-                ? e.target.checked 
-                : e.target.value,
+            ...formData,
+            [e.target.name]:
+                e.target.type === 'checkbox'
+                    ? e.target.checked
+                    : e.target.value,
         });
-    }
+    };
 
     const validateForm = () => {
-        if (state === 'Sign Up' && formData.name.trim() === '') {
-            // setError('Name is required');
-            addNotification('Name is required', 'error');
+        if (mode === 'signup' && formData.name.trim() === '') {
+            addNotification(t('errors:nameRequired'), 'error');
             return false;
         }
 
         if (formData.email.trim() === '') {
-            // setError('Email is required');
-            addNotification('Email is required', 'error');
+            addNotification(t('errors:emailRequired'), 'error');
             return false;
         }
 
         if (formData.password.trim() === '') {
-            // setError('Password is required');
-            addNotification('Password is required', 'error');
+            addNotification(t('errors:passwordRequired'), 'error');
             return false;
         }
 
         if (!formData.agree) {
-            // setError('You must agree to the terms of use & privacy policy.');
-            addNotification('You must agree to the terms of use & privacy policy.', 'error');
+            addNotification(t('errors:agreeRequired'), 'error');
             return false;
         }
 
@@ -59,134 +59,140 @@ export default function Registration() {
     };
 
     const login = async () => {
-        if (!validateForm()) {
-            return;
-        }
+        if (!validateForm()) return;
 
         try {
             const response = await fetch(`${BASE_URL}/login`, {
                 method: 'POST',
                 headers: {
-                    Accept: 'application/form-data',
+                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });
 
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                addNotification(errorResponse.errors || 'Login Error!', 'error');
-                throw new Error(errorResponse.errors || 'Login Error!');
-            }
-
             const result = await response.json();
 
-            if (result.success) {
-                localStorage.setItem('auth-token', result.token);
-                handleLogin();
-                addNotification('Login successful', 'success');
-                navigate('/');
-            } else {
-                // setError(result.errors);
-                addNotification(result.errors, 'error');
+            if (!response.ok || !result.success) {
+                addNotification(
+                    result.errors || t('errors:loginFailed'),
+                    'error'
+                );
+                return;
             }
+
+            localStorage.setItem('auth-token', result.token);
+            handleLogin();
+            addNotification(t('forms:loginSuccess'), 'success');
+            navigate('/');
         } catch (err) {
-            // setError(err.message);
-            addNotification(err.message, 'error');
+            addNotification(t('errors:somethingWentWrong'), 'error');
         }
-    }
+    };
 
     const signup = async () => {
-        if (!validateForm()) {
-            return;
-        }
+        if (!validateForm()) return;
 
         try {
             const response = await fetch(`${BASE_URL}/signup`, {
                 method: 'POST',
                 headers: {
-                    Accept: 'application/form-data',
+                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });
 
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                addNotification(errorResponse.errors || 'SignUp Error!', 'error');
-                throw new Error(errorResponse.errors || 'SignUp Error!');
-            }
-
             const result = await response.json();
 
-            if (result.success) {
-                localStorage.setItem('auth-token', result.token);
-                handleLogin();
-                addNotification('Sign up successful', 'success');
-                navigate('/');
-            } else {
-                // setError(result.errors);
-                addNotification(result.errors, 'error');
+            if (!response.ok || !result.success) {
+                addNotification(
+                    result.errors || t('errors:signupFailed'),
+                    'error'
+                );
+                return;
             }
+
+            localStorage.setItem('auth-token', result.token);
+            handleLogin();
+            addNotification(t('forms:signupSuccess'), 'success');
+            navigate('/');
         } catch (err) {
-            // setError(err.message);
-            addNotification(err.message, 'error');
+            addNotification(t('errors:somethingWentWrong'), 'error');
         }
-    }
+    };
 
     return (
         <div className="registration">
             <div className="registration-container">
                 <div className="registration-header-box">
-                    <h1>{state}</h1>
-                    {/* {error 
-                        ? <p className="error-message">{error}</p> 
-                        : <></>
-                    } */}
+                    <h1>
+                        {mode === 'login'
+                            ? t('forms:login')
+                            : t('forms:signup')}
+                    </h1>
                 </div>
+
                 <div className="registration-fields">
-                    {state === 'Sign Up' 
-                        ? <input 
-                                onChange={changeHandler}
-                                value={formData.name}
-                                type="text" 
-                                name="name" 
-                                placeholder="Your name" 
-                            />
-                        : <></>
-                    }
-                    <input 
+                    {mode === 'signup' && (
+                        <input
+                            onChange={changeHandler}
+                            value={formData.name}
+                            type="text"
+                            name="name"
+                            placeholder={t('forms:yourName')}
+                        />
+                    )}
+
+                    <input
                         onChange={changeHandler}
                         value={formData.email}
-                        type="email" 
-                        name="email" 
-                        placeholder="Email address" 
+                        type="email"
+                        name="email"
+                        placeholder={t('forms:emailAddress')}
                     />
-                    <input 
+
+                    <input
                         onChange={changeHandler}
                         value={formData.password}
-                        type="password" 
-                        name="password" 
-                        placeholder="Password" 
+                        type="password"
+                        name="password"
+                        placeholder={t('forms:passwordLabel')}
                     />
                 </div>
-                <button onClick={() => state === 'Login' ? login(): signup()}>Continue</button>
-                {state === 'Sign Up' 
-                    ? <p className="registration-login">Already have an account? 
-                        <span onClick={() => setState('Login')}> Login here</span>
+
+                <button
+                    onClick={() =>
+                        mode === 'login' ? login() : signup()
+                    }
+                >
+                    {t('forms:continue')}
+                </button>
+
+                {mode === 'signup' ? (
+                    <p className="registration-login">
+                        {t('forms:alreadyHaveAccount')}
+                        <span onClick={() => setMode('login')}>
+                            {' '}{t('forms:loginHere')}
+                        </span>
                     </p>
-                    : <p className="registration-login">Create an account? 
-                        <span onClick={() => setState('Sign Up')}> Click here</span>
+                ) : (
+                    <p className="registration-login">
+                        {t('forms:createAccount')}
+                        <span onClick={() => setMode('signup')}>
+                            {' '}{t('forms:clickHere')}
+                        </span>
                     </p>
-                }
+                )}
+
                 <div className="registration-agree">
-                    <input 
+                    <input
                         checked={formData.agree}
-                        onChange={changeHandler} 
-                        type="checkbox" 
-                        name="agree" 
+                        onChange={changeHandler}
+                        type="checkbox"
+                        name="agree"
                     />
-                    <p>By continuing, I agree to the terms of use & privacypolicy.</p>
+                    <p>{t('forms:agreeTerms')}</p>
                 </div>
             </div>
         </div>

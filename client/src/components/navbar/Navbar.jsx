@@ -15,7 +15,7 @@ import profile_icon from '../assets/profile_icon.png';
 export default function Navbar() {
     const { isAuthenticated, handleLogout } = useContext(AuthContext);
     const { clearCart, clearSavedItems, getTotalCartItems, getTotalSavedItems } = useContext(ShopContext);
-    const { t } = useTranslation();
+    const { t } = useTranslation(['navigation', 'products']);
     const { currentLanguage, changeLanguage } = useLanguage();
 
     const navigate = useNavigate();
@@ -53,35 +53,35 @@ export default function Navbar() {
             </div>
             <ul className='nav-menu'>
                 <li onClick={() => setMenu('shop')}>
-                    <Link style={{textDecoration: 'none'}} to='/'>Shop</Link>
+                    <Link style={{textDecoration: 'none'}} to='/'>{t('navigation:shop')}</Link>
                     {menu === 'shop' ? <hr /> : <></>}
                 </li>
                 <li onClick={() => setMenu('men')}>
-                    <Link style={{textDecoration: 'none'}} to='/men'>Men</Link>
+                    <Link style={{textDecoration: 'none'}} to='/men'>{t('products:men')}</Link>
                     {menu === 'men' ? <hr /> : <></>}
                 </li>
                 <li onClick={() => setMenu('women')}>
-                    <Link style={{textDecoration: 'none'}} to='/women'>Women</Link>
+                    <Link style={{textDecoration: 'none'}} to='/women'>{t('products:women')}</Link>
                     {menu === 'women' ? <hr /> : <></>}
                 </li>
                 <li onClick={() => setMenu('kids')}>
-                    <Link style={{textDecoration: 'none'}} to='/kids'>Kids</Link>
+                    <Link style={{textDecoration: 'none'}} to='/kids'>{t('products:kids')}</Link>
                     {menu === 'kids' ? <hr /> : <></>}
                 </li>
             </ul>
             <div className="nav-login-cart">
                 <li onClick={() => setMenu('about')}>
-                    <Link style={{textDecoration: 'none'}} to='/about'>About</Link>
+                    <Link style={{textDecoration: 'none'}} to='/about'>{t('navigation:about')}</Link>
                     {menu === 'about' ? <hr /> : <></>}
                 </li>
                 
                 {localStorage.getItem('auth-token')
                     ? (<button onClick={logoutHandler}>
-                        Logout
+                        {t('navigation:logout')}
                     </button>
                     )
                     : (<Link to='/login'>
-                        <button>Login</button>
+                        <button>{t('navigation:login')}</button>
                     </Link>
                     )
                 }

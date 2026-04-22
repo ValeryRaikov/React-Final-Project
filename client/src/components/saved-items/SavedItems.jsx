@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShopContext } from '../../context/ShopContext';
 import { AuthContext } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -12,6 +13,7 @@ export default function SavedItems() {
     const { allProducts, savedItems, addToCart } = useContext(ShopContext);
     const { isAuthenticated } = useContext(AuthContext);
     const { addNotification } = useNotification();
+    const { t } = useTranslation(['pages', 'products', 'forms']);
 
     // Filter products that are in saved items
     const savedProducts = allProducts.filter(product => savedItems[product.id]);
@@ -19,9 +21,9 @@ export default function SavedItems() {
     const handleAddToCart = async (productId) => {
         try {
             await addToCart(productId);
-            addNotification('Product added to cart', 'success');
+            addNotification(t('forms:cartUpdated'), 'success');
         } catch (err) {
-            addNotification('Something went wrong. Try again.', 'error');
+            addNotification(t('errors:unexpectedError'), 'error');
         }
     };
 
@@ -29,7 +31,7 @@ export default function SavedItems() {
         return (
             <div className="saved-items-container">
                 <div className="saved-items-empty">
-                    <p>Please login to view your saved items.</p>
+                    <p>{t('pages:pleaseLogin')}</p>
                 </div>
             </div>
         );
@@ -38,13 +40,13 @@ export default function SavedItems() {
     return (
         <div className="saved-items-container">
             <div className="saved-items-header">
-                <h1>My Saved Items</h1>
-                <p>{savedProducts.length} item{savedProducts.length !== 1 ? 's' : ''} saved</p>
+                <h1>{t('pages:mySavedItems')}</h1>
+                <p>{savedProducts.length} {t('pages:itemsSaved', { count: savedProducts.length })}</p>
             </div>
 
             {savedProducts.length === 0 ? (
                 <div className="saved-items-empty">
-                    <p>You haven't saved any items yet.</p>
+                    <p>{t('pages:noSavedItems')}</p>
                 </div>
             ) : (
                 <div className="saved-items-grid">
@@ -56,7 +58,7 @@ export default function SavedItems() {
                                 onClick={() => handleAddToCart(product.id)}
                                 disabled={!product.available}
                             >
-                                {product.available ? 'Add to Cart' : 'Out of Stock'}
+                                {product.available ? t('products:addToCart') : t('products:outOfStock')}
                             </button>
                         </div>
                     ))}

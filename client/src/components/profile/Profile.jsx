@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../context/NotificationContext';
 import { AuthContext } from '../../context/AuthContext';
@@ -12,6 +13,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 export default function Profile() {
     const { handleLogout } = useContext(AuthContext);
     const { addNotification } = useNotification();
+    const { t } = useTranslation(['forms', 'errors']);
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [user, setUser] = useState(null);
@@ -66,17 +68,17 @@ export default function Profile() {
                     newPassword: ''
                 });
 
-                addNotification('Password updated. Please log in again.', 'success');
+                addNotification(t('forms:passwordUpdated'), 'success');
 
                 localStorage.removeItem('auth-token'); 
                 handleLogout();                        
                 navigate('/login');                    
             } else {
-                addNotification('Password mismatch. Try again!', 'error');
+                addNotification(t('errors:passwordMismatch'), 'error');
             }
         } catch (err) {
             console.error(err);
-            addNotification('Failed to update password', 'error');
+            addNotification(t('errors:failedToUpdatePassword'), 'error');
         }
     };
 
@@ -99,28 +101,28 @@ export default function Profile() {
 
             if (data.success) {
                 localStorage.removeItem('auth-token');  
-                addNotification('Account deleted successfully', 'success');
+                addNotification(t('forms:signupSuccess'), 'success');
                 handleLogout();                         
                 navigate('/');                          
             } else {
-                addNotification('Failed to delete account', 'error');
+                addNotification(t('errors:unexpectedError'), 'error');
             }
         } catch (err) {
             console.error(err);
-            addNotification('Failed to delete account', 'error');
+            addNotification(t('errors:unexpectedError'), 'error');
         } finally {
             setShowDeleteModal(false);
         }
     };
 
     if (!user) 
-        return <p>Loading...</p>;
+        return <p>{t('pages:loading')}</p>;
 
     return (
         <div className="profile-background">
             <div className="profile-page">
                 <div className="profile-header">
-                    <h1>My Profile</h1>
+                    <h1>{t('myProfile')}</h1>
                     <img 
                         src={profile_icon} 
                         alt="profile_icon" 
@@ -128,46 +130,49 @@ export default function Profile() {
                     />
                 </div>
 
-                <p><strong>Name:</strong> {user.name}</p>
-                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>{t('name')}:</strong> {user.name}</p>
+                <p><strong>{t('email')}:</strong> {user.email}</p>
 
-                <h3>Change Password</h3>
+                <h3>{t('changePassword')}</h3>
                 <input
                     type="password"
-                    placeholder="Current Password"
+                    placeholder={t('currentPassword')}
                     onChange={(e) => setPasswords({ ...passwords, oldPassword: e.target.value })}
                 />
                 <input
                     type="password"
-                    placeholder="New Password"
+                    placeholder={t('newPassword')}
                     onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
                 />
                 <button onClick={handleChangePassword}>
-                    Update Password
+                    {t('updatePassword')}
                 </button>
                 
-                <h3>Danger Zone</h3>
+                <h3>{t('dangerZone')}</h3>
                 <button onClick={handleDeleteClick}>
-                    Delete Account
+                    {t('deleteAccount')}
                 </button>
             </div>
             <WarningModal
                 isVisible={showDeleteModal}
-                title="Delete Account"
+                title={t('confirmDeleteAccount')}
             >
-                <p>Are you sure you want to delete your account?</p>
-                <p>This action cannot be undone.</p>
+                <p>{t('deleteConfirmation')}</p>
+                <p>{t('cannotUndo')}</p>
 
                 <div className="btn-container">
-                    <button onClick={confirmDeleteAccount}>
-                        Yes, Delete
+                    <button 
+                        style={{ cursor: 'pointer' }}
+                        onClick={confirmDeleteAccount}
+                    >
+                        {t('yesDelete')}
                     </button>
 
                     <button
-                        style={{ backgroundColor: '#999' }}
+                        style={{ backgroundColor: '#999', cursor: 'pointer' }}
                         onClick={() => setShowDeleteModal(false)}
                     >
-                        Cancel
+                        {t('cancel')}
                     </button>
                 </div>
             </WarningModal>

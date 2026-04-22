@@ -11,9 +11,12 @@
   "removeItem": "Remove Item",
   "quantity": "Quantity",
   "price": "Price",
-  "total": "Total",
   "items": "Items",
   "itemRemoved": "Item removed from cart",
   "cartUpdated": "Your cart has been updated",
-  "free": "Free"
+  "free": "Free",
+  "product": "Product",
+  "title": "Title",
+  "remove": "Remove",
+  "promoCode": "Promo Code"
 }

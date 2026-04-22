@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import './Footer.css';
 import footer_logo from '../assets/logo_big.png';
@@ -8,6 +9,7 @@ import whatsapp_icon from '../assets/whatsapp_icon.png';
 
 export default function Footer() {
     const navigate = useNavigate();
+    const { t } = useTranslation('navigation');
 
     return (
         <div className="footer">
@@ -16,11 +18,11 @@ export default function Footer() {
                 <p>Shopify</p>
             </div>
             <ul className="footer-links">
-                <li onClick={() => navigate('/about/company')}>Company</li>
-                <li onClick={() => navigate('/about/products')}>Products</li>
-                <li onClick={() => navigate('/about/offices')}>Offices</li>
-                <li onClick={() => navigate('/about/about-us')}>About Us</li>
-                <li onClick={() => navigate('/about/contact')}>Contact</li>
+                <li onClick={() => navigate('/about/company')}>{t('company')}</li>
+                <li onClick={() => navigate('/about/products')}>{t('products')}</li>
+                <li onClick={() => navigate('/about/offices')}>{t('offices')}</li>
+                <li onClick={() => navigate('/about/about-us')}>{t('aboutUs')}</li>
+                <li onClick={() => navigate('/about/contact')}>{t('contact')}</li>
             </ul>
             <div className="footer-socials-icons">
                 <div className="footer-icons-container">
@@ -35,7 +37,7 @@ export default function Footer() {
             </div>
             <div className="footer-copyright">
                 <hr />
-                <p>Copyright @ 2024 - All Rights Reserved</p>
+                <p>{t('copyright')}</p>
             </div>
         </div>
     );

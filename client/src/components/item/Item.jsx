@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShopContext } from '../../context/ShopContext';
 import { AuthContext } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -18,17 +19,18 @@ export default function Item({
     const { toggleSaved, isSaved } = useContext(ShopContext);
     const { isAuthenticated } = useContext(AuthContext);
     const { addNotification } = useNotification();
+    const { t } = useTranslation(['products', 'forms', 'errors']);
     const saved = isSaved(id);
 
     const shopCount = officeIds?.length || 0;
-    const shopText = shopCount === 1 ? 'shop' : 'shops';
+    const shopText = shopCount === 1 ? t('products:shop') : t('products:shops');
 
     const handleSaveClick = async (e) => {
         e.stopPropagation();
         e.preventDefault();
         
         if (!isAuthenticated) {
-            addNotification('Please login to save items', 'error');
+            addNotification(t('errors:pleaseLoginToSaveItems'), 'error');
             return;
         }
 
@@ -38,12 +40,12 @@ export default function Item({
             await toggleSaved(id);
 
             if (wasSaved) {
-                addNotification('Removed from saved items', 'success');
+                addNotification(t('forms:itemRemovedFromSaved'), 'success');
             } else {
-                addNotification('Added to saved items', 'success');
+                addNotification(t('forms:itemAddedToSaved'), 'success');
             }
         } catch (err) {
-            addNotification('Something went wrong. Try again.', 'error');
+            addNotification(t('errors:somethingWentWrong'), 'error');
         }
     };
 
@@ -57,7 +59,7 @@ export default function Item({
                     {saved ? '❤️' : '🤍'}
 
                     <span className="save-tooltip">
-                        {saved ? 'Saved' : 'Save for later'}
+                        {saved ? t('products:saved') : t('products:saveForLater')}
                     </span>
                 </div>
 
@@ -74,7 +76,7 @@ export default function Item({
                     ) : (
                         <>
                             <span className="availability-icon">✕</span>
-                            <span className="availability-text">Out of stock</span>
+                            <span className="availability-text">{t('products:outOfStock')}</span>
                         </>
                     )}
                 </div>

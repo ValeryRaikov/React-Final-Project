@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
 import './Registration.css';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -16,6 +18,7 @@ export default function Registration() {
     const navigate = useNavigate();
 
     const [mode, setMode] = useState('login');
+    const [showPassword, setShowPassword] = useState(false); 
 
     const [formData, setFormData] = useState({
         name: '',
@@ -141,6 +144,7 @@ export default function Registration() {
                             type="text"
                             name="name"
                             placeholder={t('forms:yourName')}
+                            className="name-input"
                         />
                     )}
 
@@ -150,15 +154,26 @@ export default function Registration() {
                         type="email"
                         name="email"
                         placeholder={t('forms:emailAddress')}
+                        className="email-input"
                     />
 
-                    <input
-                        onChange={changeHandler}
-                        value={formData.password}
-                        type="password"
-                        name="password"
-                        placeholder={t('forms:passwordLabel')}
-                    />
+                    <div className="password-field">
+                        <input
+                            onChange={changeHandler}
+                            value={formData.password}
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            placeholder={t('forms:passwordLabel')}
+                            className="password-input"
+                        />
+
+                        <span
+                            className="password-eye"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </span>
+                    </div>
                 </div>
 
                 <button

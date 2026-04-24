@@ -7,6 +7,7 @@ import Login from '../login/Login';
 import Sidebar from '../sidebar/Sidebar';
 import NotFound from '../not-found/NotFound';
 import Home from '../home/Home';
+import Statistics from '../statistics/Statistics';
 import AddProduct from '../services/products/add-product/AddProduct';
 import ListProduct from '../services/products/list-product/ListProduct';
 import EditProduct from '../services/products/edit-product/EditProduct';
@@ -42,6 +43,7 @@ export default function Admin() {
                 <Route path='/admin' element={<Home />}/>
                 <Route path='/admin-login' element={<Login />} />
                 <Route element={<ProtectedRoutes />}>
+                    <Route path='/statistics' element={<Statistics />} />
                     <Route path='/add-product' element={<AddProduct />} />
                     <Route path='/list-products' element={<ListProduct />} />
                     <Route path='/update-product/:productId' element={<EditProduct />} />

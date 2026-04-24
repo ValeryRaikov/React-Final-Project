@@ -9,6 +9,7 @@ import productsEn from './locales/en/admin/products.json';
 import authEn from './locales/en/admin/auth.json';
 import promocodesEn from './locales/en/admin/promocodes.json';
 import othersEn from './locales/en/admin/others.json';
+import statisticsEN from './locales/en/admin/statistics.json';
 
 import commonBg from './locales/bg/admin/common.json';
 import navigationBg from './locales/bg/admin/navigation.json';
@@ -17,11 +18,13 @@ import productsBg from './locales/bg/admin/products.json';
 import authBg from './locales/bg/admin/auth.json';
 import promocodesBg from './locales/bg/admin/promocodes.json';
 import othersBg from './locales/bg/admin/others.json';
+import statisticsBG from './locales/bg/admin/statistics.json';
 
 const resources = {
     en: {
         translation: {
             ...commonEn,
+            ...statisticsEN,
         },
         common: commonEn,
         navigation: navigationEn,
@@ -30,10 +33,12 @@ const resources = {
         auth: authEn,
         promocodes: promocodesEn,
         others: othersEn,
+        statistics: statisticsEN,
     },
     bg: {
         translation: {
             ...commonBg,
+            ...statisticsBG,
         },
         common: commonBg,
         navigation: navigationBg,
@@ -42,6 +47,7 @@ const resources = {
         auth: authBg,
         promocodes: promocodesBg,
         others: othersBg,
+        statistics: statisticsBG,
     },
 };
 

@@ -16,7 +16,14 @@ export default function Navbar() {
 
     return (
         <div className="navbar">
-            <img src={nav_logo} alt="" className="nav-logo" />
+            <div className="navbar-left">
+                <img src={nav_logo} alt="" className="nav-logo" />
+                {isAuthenticated && (
+                    <Link to='/statistics' className="stats-link">
+                        <button className="stats-button">📊 {t('statistics') || 'Analytics'}</button>
+                    </Link>
+                )}
+            </div>
             <div className="nav-login">
                 <label className='toggle-switch'>
                     <input 

@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
+import User from '../models/User.js';
+import Product from '../models/Product.js';
 import { isValidEmail, isValidPassword } from '../utils/validators.js';
 
 // Admin login
@@ -86,4 +88,112 @@ const verifyToken = async (req, res) => {
     });
 };
 
-export { adminLogin, verifyToken };
+// Get admin statistics
+const getStatistics = async (req, res) => {
+    try {
+        // Total customers
+        const totalCustomers = await User.countDocuments();
+
+        // Total products
+        const totalProducts = await Product.countDocuments();
+
+        // Products by category
+        const productsByCategory = await Product.aggregate([
+            {
+                $group: {
+                    _id: '$category',
+                    count: { $sum: 1 },
+                    available: {
+                        $sum: { $cond: ['$available', 1, 0] }
+                    }
+                }
+            },
+            { $sort: { count: -1 } }
+        ]);
+
+        // Products by subcategory
+        const productsBySubcategory = await Product.aggregate([
+            {
+                $group: {
+                    _id: '$subcategory',
+                    count: { $sum: 1 },
+                    category: { $first: '$category' }
+                }
+            },
+            { $sort: { count: -1 } },
+            { $limit: 10 }
+        ]);
+
+        // Most liked products (top 5)
+        const mostLiked = await Product.find()
+            .select('id name category image newPrice likes')
+            .lean()
+            .sort({ 'likes': -1 })
+            .limit(5);
+
+        const mostLikedProducts = mostLiked.map(p => ({
+            id: p.id,
+            name: p.name,
+            category: p.category,
+            image: p.image,
+            price: p.newPrice,
+            likes: p.likes.length
+        }));
+
+        // Most commented products (top 5)
+        const mostCommented = await Product.aggregate([
+            {
+                $project: {
+                    id: 1,
+                    name: 1,
+                    category: 1,
+                    image: 1,
+                    newPrice: 1,
+                    commentCount: { $size: '$comments' }
+                }
+            },
+            { $match: { commentCount: { $gt: 0 } } },
+            { $sort: { commentCount: -1 } },
+            { $limit: 5 }
+        ]);
+
+        const mostCommentedProducts = mostCommented.map(p => ({
+            id: p.id,
+            name: p.name,
+            category: p.category,
+            image: p.image,
+            price: p.newPrice,
+            comments: p.commentCount
+        }));
+
+        // Products distribution
+        const availableProducts = await Product.countDocuments({ available: true });
+        const unavailableProducts = totalProducts - availableProducts;
+
+        // Average products per category
+        const avgProductsPerCategory = totalProducts > 0 
+            ? (totalProducts / productsByCategory.length).toFixed(2)
+            : 0;
+
+        res.json({
+            success: true,
+            statistics: {
+                totalCustomers,
+                totalProducts,
+                availableProducts,
+                unavailableProducts,
+                avgProductsPerCategory: parseFloat(avgProductsPerCategory),
+                productsByCategory,
+                productsBySubcategory,
+                mostLikedProducts,
+                mostCommentedProducts
+            }
+        });
+
+    } catch (err) {
+        console.error('Get statistics error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+export { adminLogin, verifyToken, getStatistics };

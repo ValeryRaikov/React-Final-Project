@@ -135,8 +135,8 @@ export default function DescriptionBox({
                         : (
                             <>
                                 <p><span className="title">{t('products:product')}:</span> {name}</p>
-                                <p><span className="title">{t('products:category')}:</span> {category}</p>
-                                <p><span className="title">{t('products:subcategory')}:</span> {subcategory}</p>
+                                <p><span className="title">{t('products:category')}:</span> {t(`products:${category}`)}</p>
+                                <p><span className="title">{t('products:subcategory')}:</span> {t(`products:${subcategory}`)}</p>
                                 <p>
                                     <span className="title">{t('products:price')}:</span>
                                     <span className="old-price">${oldPrice}</span>

@@ -11,7 +11,7 @@ export default function ListProductItem({
     onEdit,
     onDelete,
 }) {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation(['common', 'products']);
 
     return (
         <div className="list-product-format-main list-product-format">
@@ -19,9 +19,9 @@ export default function ListProductItem({
             <p>{name}</p>
             <p>${oldPrice}</p>
             <p>${newPrice}</p>
-            <p>{category}</p>
-            <button className="edit-btn" onClick={() => onEdit(id)}>{t('edit')}</button>
-            <button className="delete-btn" onClick={() => onDelete(id)}>{t('delete')}</button>
+            <p>{t(`products:${category}`)}</p>
+            <button className="edit-btn" onClick={() => onEdit(id)}>{t('common:edit')}</button>
+            <button className="delete-btn" onClick={() => onDelete(id)}>{t('common:delete')}</button>
         </div>
     );
 }

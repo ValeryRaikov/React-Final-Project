@@ -123,7 +123,7 @@ export default function ProductDisplay({
 
     const handleToggleSaved = async () => {
         if (!isAuthenticated) {
-            addNotification('Please login to save items', 'error');
+            addNotification(t('errors:pleaseLoginToSaveItems'), 'error');
             return;
         }
 
@@ -133,12 +133,12 @@ export default function ProductDisplay({
             await toggleSaved(id);
 
             if (wasSaved) {
-                addNotification('Removed from saved items', 'success');
+                addNotification(t('products:removedFromSaved'), 'success');
             } else {
-                addNotification('Added to saved items', 'success');
+                addNotification(t('products:addedToSaved'), 'success');
             }
         } catch (err) {
-            addNotification(t('errors:unexpectedError', { defaultValue: 'Something went wrong. Try again.' }), 'error');
+            addNotification(t('errors:unexpectedError'), 'error');
         }
     };
 
@@ -243,8 +243,8 @@ export default function ProductDisplay({
                 </div>
 
                 <p className="likes">{t('products:totalLikes')}: <span>{likes}</span></p>
-                <p className="display-right-category"><span>{t('products:category')}: </span>{category} clothing</p>
-                <p className="display-right-category"><span>{t('products:tags')}: </span>{category} clothing | {subcategory}</p>
+                <p className="display-right-category"><span>{t('products:category')}: </span>{t(`products:${category}`)} {t('others:clothing')}</p>
+                <p className="display-right-category"><span>{t('products:tags')}: </span>{t(`products:${category}`)} {t('others:clothing')} | {t(`products:${subcategory}`)}</p>
             </div>
         </div>
     );

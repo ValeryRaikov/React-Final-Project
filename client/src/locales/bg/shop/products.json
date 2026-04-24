@@ -32,6 +32,12 @@
   "men": "Мъже",
   "women": "Жени",
   "kids": "Деца",
+  "jackets": "Якета",
+  "shirts": "Тениски",
+  "tops": "Връхни дрехи",
+  "pants": "Панталони",
+  "shoes": "Обувки",
+  "dresses": "Рокли",
   "saveForLater": "Запазване за по-късно",
   "descriptionTab": "Описание",
   "reviewsTab": "Отзиви",
@@ -50,5 +56,7 @@
   "outOfStockMsg": "Този продукт е изчерпан",
   "productLikedSuccess": "Продуктът е харесан успешно",
   "productDislikedSuccess": "Харесването е премахнато",
-  "notLikedProductYet": "Все още не сте харесали този продукт"
+  "notLikedProductYet": "Все още не сте харесали този продукт",
+  "removedFromSaved": "Премахнато от запазените",
+  "addedToSaved": "Добавено в запазените"
 }

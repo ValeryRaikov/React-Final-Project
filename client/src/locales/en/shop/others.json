@@ -2,5 +2,6 @@
   "404notFound": "Oops, the page you are looking for doesn't exist!",
   "shopNow": "Shop Now",
   "productDescription": "{{name}} is the perfect {{category}} clothing for everyday. This {{subcategory}} is made of fine materials and 100% cotton and is suitable for everyone. Now, don't miss the opportunity and get it for only {{newPrice}}!",
-  "or": "OR"
+  "or": "OR",
+  "clothing": "clothing"
 }

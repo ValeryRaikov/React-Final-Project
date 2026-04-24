@@ -36,6 +36,45 @@ export default function ProductDisplay({
     const saved = isSaved(id);
 
     useEffect(() => {
+        // Track product view for authenticated users
+        if (isAuthenticated) {
+            const trackView = async () => {
+                try {
+                    const token = localStorage.getItem('auth-token');
+                    
+                    const response = await fetch(`${BASE_URL}/track-view`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'auth-token': token
+                        },
+                        body: JSON.stringify({ productId: Number(id) })
+                    });
+
+                    if (!response.ok) {
+                        console.error('Failed to track product view:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error tracking product view:', error);
+                }
+            };
+
+            trackView();
+        } else {
+            // For non-authenticated users, use localStorage as fallback
+            // const stored = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
+            // const filtered = stored.filter(p => p.id !== id);
+            //
+            // const updated = [
+            //     { id, name, image, newPrice, oldPrice, category, subcategory, available, officeIds },
+            //     ...filtered
+            // ].slice(0, 8);
+            //
+            // localStorage.setItem('recentlyViewed', JSON.stringify(updated));
+        }
+    }, [id, name, image, newPrice, oldPrice, category, subcategory, available, officeIds, isAuthenticated]);
+
+    useEffect(() => {
         const fetchOffices = async () => {
             try {
                 const response = await fetch(`${BASE_URL}/offices`);
@@ -61,7 +100,8 @@ export default function ProductDisplay({
             const idStr = id?.toString?.() || String(id);
             return idStr === officeIdStr;
         });
-        console.log(`Office ${office.name} (${officeIdStr}): ${hasMatch}`);
+
+        // console.log(`Office ${office.name} (${officeIdStr}): ${hasMatch}`);
         return hasMatch;
     }) : [];
     
@@ -204,7 +244,7 @@ export default function ProductDisplay({
 
                 <p className="likes">{t('products:totalLikes')}: <span>{likes}</span></p>
                 <p className="display-right-category"><span>{t('products:category')}: </span>{category} clothing</p>
-                <p className="display-right-category"><span>{t('products:tags')}: </span>{category} clothing > {subcategory}</p>
+                <p className="display-right-category"><span>{t('products:tags')}: </span>{category} clothing | {subcategory}</p>
             </div>
         </div>
     );

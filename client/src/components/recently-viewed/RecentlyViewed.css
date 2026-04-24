@@ -1,36 +1,30 @@
 @import url('/styles/base.css');
 
-.popular {
+.recently-viewed {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    height: 90vh;
-    padding-top: 200px;
+    margin-bottom: 100px;
+    padding-top: 100px;
 }
 
-.popular h1 {
+.recently-viewed h1 {
     color: #1f1f1f;
     font-size: 40px;
     font-weight: 600;
 }
 
-.popular hr {
+.recently-viewed hr {
     width: 200px;
     height: 3px;
     border-radius: 8px;
     background-color: #1f1f1f;
 }
 
-.popular-item {
+.collections {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     margin-top: 50px;
-    display: flex;
     gap: 30px;
-}
-
-.error-message {
-    padding-top: 100px;
-    font-size: 28px;
-    font-weight: 600;
-    color: #ff0000;
 }

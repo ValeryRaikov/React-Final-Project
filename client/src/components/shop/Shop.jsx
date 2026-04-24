@@ -3,6 +3,7 @@ import NewCollections from '../new-collections/NewCollections';
 import Newsletter from '../newsletter/Newsletter';
 import Offers from '../offers/Offers';
 import Popular from '../popular/Popular';
+import RecentlyViewed from '../recently-viewed/RecentlyViewed';
 
 export default function Shop() {
     return (
@@ -11,6 +12,7 @@ export default function Shop() {
             <Popular />
             <Offers />
             <NewCollections />
+            <RecentlyViewed />
             <Newsletter />
         </>
     );

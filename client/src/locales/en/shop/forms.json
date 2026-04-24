@@ -51,5 +51,10 @@
   "loginHere": "Login here",
   "createAccount": "Create an account?",
   "clickHere": "Click here",
-  "agreeTerms": "By continuing, I agree to the terms of use & privacy policy."
+  "agreeTerms": "By continuing, I agree to the terms of use & privacy policy.",
+  "continueWithGoogle": "Continue with Google",
+  "googleSigninError": "Google sign-in failed. Please try again.",
+  "recaptchaError": "Please verify that you are not a robot.",
+  "recaptchaRequired": "reCAPTCHA verification is required.",
+  "loading": "Loading..."
 }

@@ -223,6 +223,94 @@ const popularWomen = async (req, res) => {
     res.send(products.slice(0, 4));
 };
 
+// Track a product view (add to recently viewed)
+const trackProductView = async (req, res) => {
+    try {
+        const { productId } = req.body;
+
+        if (!productId || isNaN(productId)) {
+            return res.status(400).json({ error: 'Invalid product ID' });
+        }
+
+        // Verify product exists
+        const product = await Product.findOne({ id: productId });
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        // Use atomic findByIdAndUpdate with aggregation pipeline to avoid version conflicts
+        await User.findByIdAndUpdate(
+            req.user.id,
+            [
+                {
+                    $set: {
+                        recentlyViewed: {
+                            $slice: [
+                                {
+                                    $concatArrays: [
+                                        [{ productId, viewedAt: new Date() }],
+                                        {
+                                            $filter: {
+                                                input: { $ifNull: ['$recentlyViewed', []] },
+                                                as: 'item',
+                                                cond: { $ne: ['$$item.productId', productId] }
+                                            }
+                                        }
+                                    ]
+                                },
+                                8
+                            ]
+                        }
+                    }
+                }
+            ],
+            { new: true }
+        );
+
+        res.json({ success: true });
+
+    } catch (err) {
+        console.error('Track product view error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+// Get recently viewed products
+const getRecentlyViewed = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Handle users without recentlyViewed field (existing users)
+        if (!user.recentlyViewed || user.recentlyViewed.length === 0) {
+            return res.json([]);
+        }
+
+        // Get product IDs from recently viewed
+        const productIds = user.recentlyViewed.map(item => item.productId);
+
+        if (productIds.length === 0) {
+            return res.json([]);
+        }
+
+        // Fetch full product details
+        const products = await Product.find({ id: { $in: productIds } });
+
+        // Sort products in the order they appear in recently viewed
+        const sortedProducts = productIds
+            .map(id => products.find(p => p.id === id))
+            .filter(p => p !== undefined);
+
+        res.json(sortedProducts);
+
+    } catch (err) {
+        console.error('Get recently viewed error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 export { 
     addProduct, 
     updateProduct, 
@@ -234,5 +322,7 @@ export {
     addComment,
     deleteComment,
     newCollection, 
-    popularWomen 
+    popularWomen,
+    trackProductView,
+    getRecentlyViewed
 };

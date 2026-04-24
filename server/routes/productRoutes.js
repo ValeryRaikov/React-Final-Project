@@ -20,4 +20,7 @@ router.delete('/product/:id/comment/:commentId', auth, c.deleteComment);
 router.get('/new-collection', c.newCollection);
 router.get('/popular-in-women', c.popularWomen);
 
+router.post('/track-view', auth, c.trackProductView);
+router.get('/recently-viewed', auth, c.getRecentlyViewed);
+
 export default router;

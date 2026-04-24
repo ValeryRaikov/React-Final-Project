@@ -19,6 +19,12 @@ const UserSchema = new mongoose.Schema({
         required: true,
         match: [passwordRegex, 'Invalid password format']
     },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true,
+        default: null
+    },
     agree: {
         type: Boolean,
         required: true
@@ -38,6 +44,16 @@ const UserSchema = new mongoose.Schema({
         productId: {
             type: Number,
             required: true
+        }
+    }],
+    recentlyViewed: [{
+        productId: {
+            type: Number,
+            required: true
+        },
+        viewedAt: {
+            type: Date,
+            default: Date.now
         }
     }],
     date: { 

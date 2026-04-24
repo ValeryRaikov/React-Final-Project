@@ -6,6 +6,7 @@ const router = Router();
 
 router.post('/signup', c.signup);
 router.post('/login', c.login);
+router.post('/google-signin', c.googleSignin);
 
 router.get('/profile', auth, c.getProfile);
 router.put('/change-password', auth, c.changePassword);

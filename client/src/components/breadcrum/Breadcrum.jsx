@@ -6,13 +6,13 @@ export default function Breadcrum({
     name,
     category,
 }) {
-    const { t } = useTranslation('pages');
+    const { t } = useTranslation(['pages', 'products']);
     
     return (
         <div className="breadcrum">
-            {t('home')} <img src={arrow_icon} alt="" />
-            {t('shop')} <img src={arrow_icon} alt="" />
-            {category} <img src={arrow_icon} alt="" /> {name}
+            {t('pages:home')} <img src={arrow_icon} alt="" />
+            {t('pages:shop')} <img src={arrow_icon} alt="" />
+            {t(`products:${category}`)} <img src={arrow_icon} alt="" /> {name}
         </div>
     );
 }

@@ -127,6 +127,7 @@ export default function Category({ banner, category }) {
                                     <option value="all">{t('pages:filterAll')}</option>
                                     <option value="shirts">{t('pages:typeShirts')}</option>
                                     <option value="tops">{t('pages:typeTops')}</option>
+                                    <option value="dresses">{t('pages:typeDresses')}</option>
                                     <option value="jackets">{t('pages:typeJackets')}</option>
                                     <option value="shoes">{t('pages:typeShoes')}</option>
                                     <option value="pants">{t('pages:typePants')}</option>

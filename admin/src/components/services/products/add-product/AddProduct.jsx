@@ -17,8 +17,8 @@ export default function AddProduct() {
     const [productDetails, setProductDetails] = useState({
         name: '',
         image: '',
-        category: t('products:category'),
-        subcategory: t('products:subcategory'),
+        category: 'women',
+        subcategory: 'shirts',
         newPrice: '',
         oldPrice: '',
     });
@@ -71,8 +71,8 @@ export default function AddProduct() {
         setProductDetails({
             name: '',
             image: '',
-            category: t('products:category'),
-            subcategory: t('products:subcategory'),
+            category: 'women',
+            subcategory: 'shirts',
             newPrice: '',
             oldPrice: '',
         });

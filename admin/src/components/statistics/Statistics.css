@@ -237,7 +237,7 @@
 .product-image {
     position: relative;
     width: 100%;
-    aspect-ratio: 1;
+    aspect-ratio: 1/1.15;
     overflow: hidden;
     background: white;
 }

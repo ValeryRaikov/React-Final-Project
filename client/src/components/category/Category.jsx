@@ -6,7 +6,7 @@ import { sortProducts } from '../../utils/sortings.js';
 
 import './Category.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faFilter, faSort, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 import Item from '../item/Item';
 import LoadingSpinner from '../loading-spinner/LoadingSpinner';
@@ -111,7 +111,9 @@ export default function Category({ banner, category }) {
                         className="filter-toggle" 
                         onClick={() => setShowFilters(prev => !prev)}
                     >
+                        <FontAwesomeIcon icon={faFilter} className="filter-icon" />
                         {t('pages:filters')}
+                        <FontAwesomeIcon icon={faChevronDown} className={`chevron-icon ${showFilters ? 'rotated' : ''}`} />
                     </button>
                     {showFilters && (
                         <div className="filters-menu">
@@ -186,7 +188,10 @@ export default function Category({ banner, category }) {
                     />
                 </div>
                 <div className="category-sort">
-                    <label>{t('pages:sortBy')}</label>
+                    <label>
+                        <FontAwesomeIcon icon={faSort} className="sort-icon" />
+                        {t('pages:sortBy')}
+                    </label>
                     <select value={sortOption} onChange={e => setSortOption(e.target.value)}>
                         <option value="id-asc">{t('pages:sortOldest')}</option>
                         <option value="id-desc">{t('pages:sortNewest')}</option>

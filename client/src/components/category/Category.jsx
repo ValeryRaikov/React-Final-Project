@@ -5,6 +5,8 @@ import { filterProducts } from '../../utils/filters.js';
 import { sortProducts } from '../../utils/sortings.js';
 
 import './Category.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import Item from '../item/Item';
 import LoadingSpinner from '../loading-spinner/LoadingSpinner';
@@ -175,6 +177,7 @@ export default function Category({ banner, category }) {
                     )}
                 </div>
                 <div className="search-bar">
+                    <FontAwesomeIcon icon={faSearch} className="search-icon" />
                     <input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}

@@ -22,5 +22,8 @@
   "noSubcategories": "Няма намерени подкатегории",
   "price": "Цена",
   "likes": "Харесвания",
-  "comments": "Коментари"
+  "comments": "Коментари",
+  "noOfficesWithProducts": "Няма магазини с продукти",
+  "productsByOffice": "Продукти по магазин",
+  "office": "магазин"
 }

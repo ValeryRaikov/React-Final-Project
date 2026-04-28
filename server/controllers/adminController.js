@@ -175,6 +175,44 @@ const getStatistics = async (req, res) => {
             ? (totalProducts / productsByCategory.length).toFixed(2)
             : 0;
 
+        // Products by office
+        const productsByOffice = await Product.aggregate([
+            {
+                $unwind: {
+                    path: '$officeIds',
+                    preserveNullAndEmptyArrays: false
+                }
+            },
+            {
+                $group: {
+                    _id: '$officeIds',
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'offices',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'officeInfo'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$officeInfo',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    count: 1,
+                    officeName: { $ifNull: ['$officeInfo.name', 'Unknown Office'] }
+                }
+            },
+            { $sort: { count: -1 } }
+        ]);
+
         res.json({
             success: true,
             statistics: {
@@ -185,6 +223,7 @@ const getStatistics = async (req, res) => {
                 avgProductsPerCategory: parseFloat(avgProductsPerCategory),
                 productsByCategory,
                 productsBySubcategory,
+                productsByOffice,
                 mostLikedProducts,
                 mostCommentedProducts
             }

@@ -22,5 +22,8 @@
   "noSubcategories": "No subcategories found",
   "price": "Price",
   "likes": "Likes",
-  "comments": "Comments"
+  "comments": "Comments",
+  "noOfficesWithProducts": "No offices with products",
+  "productsByOffice": "Products by Office",
+  "office": "Office"
 }

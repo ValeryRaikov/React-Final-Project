@@ -162,6 +162,56 @@ export default function Statistics() {
             </div>
 
             <div className="stats-section">
+                <h2>🏢 {t('statistics:productsByOffice')}</h2>
+                <div className="table-responsive">
+                    <table className="stats-table">
+                        <thead>
+                            <tr>
+                                <th>{t('statistics:office')}</th>
+                                <th>{t('statistics:total')}</th>
+                                <th>{t('statistics:percentage')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {stats.productsByOffice && stats.productsByOffice.length > 0 ? (
+                                stats.productsByOffice.map((office) => {
+                                    const percentage = stats.totalProducts > 0
+                                        ? ((office.count / stats.totalProducts) * 100).toFixed(1)
+                                        : 0;
+
+                                    return (
+                                        <tr key={office._id}>
+                                            <td className="office-name">
+                                                {office.officeName}
+                                            </td>
+                                            <td className="count">{office.count}</td>
+                                            <td>
+                                                <div className="progress-bar">
+                                                    <div
+                                                        className="progress-fill"
+                                                        style={{
+                                                            width: `${percentage}%`
+                                                        }}
+                                                    ></div>
+                                                </div>
+                                                {percentage}%
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td colSpan="3" className="no-data">
+                                        {t('products:noOfficesWithProducts')}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div className="stats-section">
                 <h2>❤️ {t('statistics:mostLikedProducts')}</h2>
 
                 <div className="products-grid">

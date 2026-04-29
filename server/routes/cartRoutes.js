@@ -6,6 +6,7 @@ const router = Router();
 
 router.post('/add-to-cart', auth, c.addToCart);
 router.post('/remove-from-cart', auth, c.removeFromCart);
+router.post('/remove-entirely-from-cart', auth, c.removeEntirelyFromCart);
 router.post('/get-cart', auth, c.getCart);
 
 export default router;

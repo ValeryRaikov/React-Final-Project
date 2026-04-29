@@ -225,42 +225,37 @@ export default function ShopContextProvider(props) {
     }
 
     const removeEntirelyFromCart = async (itemId) => {
-        if (!isAuthenticated) {
-            return;
-        }
+        if (!isAuthenticated) return;
 
-        // Set quantity to 0
+        // Optimistic update
         setCartItems(prev => ({
             ...prev,
             [itemId]: 0
         }));
 
-        if (isAuthenticated) {
-            try {
-                const response = await fetch(`${BASE_URL}/remove-from-cart`, {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/form-data',
-                        'auth-token': `${localStorage.getItem('auth-token')}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ itemId }),
-                });
+        try {
+            const response = await fetch(`${BASE_URL}/remove-entirely-from-cart`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/form-data',
+                    'auth-token': `${localStorage.getItem('auth-token')}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ itemId }),
+            });
 
-                if (response.status === 401) {
-                    handleSessionExpiredResponse();
-                    return;
-                }
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Error: ${errorText}`);
-                }
-            } catch (err) {
-                console.error(err.message);
+            if (response.status === 401) {
+                handleSessionExpiredResponse();
+                return;
             }
+
+            if (!response.ok) {
+                throw new Error('Failed to remove item completely');
+            }
+        } catch (err) {
+            console.error(err.message);
         }
-    }
+    };
 
     const getTotalCartAmount = () => {
         let totalAmount = 0;

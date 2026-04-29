@@ -73,6 +73,30 @@ const removeFromCart = async (req, res) => {
     }
 };
 
+const removeEntirelyFromCart = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        const itemId = Number(req.body.itemId);
+
+        if (!itemId || isNaN(itemId)) {
+            return res.status(400).json({ error: 'Invalid itemId' });
+        }
+
+        // Remove item completely (no quantity logic)
+        user.cartData = user.cartData.filter(
+            item => item.productId !== itemId
+        );
+
+        await user.save();
+
+        res.send('Item removed completely from cart');
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 // Get the current cart data
 const getCart = async (req, res) => {
     try {
@@ -85,4 +109,4 @@ const getCart = async (req, res) => {
     }
 };
 
-export { addToCart, removeFromCart, getCart };
+export { addToCart, removeFromCart, removeEntirelyFromCart, getCart };

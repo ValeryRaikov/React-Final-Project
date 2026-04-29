@@ -1,3 +1,5 @@
+import { fuzzySearchProducts } from './fuzzySearch.js';
+
 export const filterProducts = (products, filters) => {
     const {
         category,
@@ -6,20 +8,33 @@ export const filterProducts = (products, filters) => {
         subcategoryFilter = 'all',
         maxPrice = '',
         minPrice = '',
-        officeFilter = 'all'
+        officeFilter = 'all',
+        isExactMatch = false
     } = filters;
 
     const search = searchQuery.trim().toLowerCase();
     const max = maxPrice ? Number(maxPrice) : null;
     const min = minPrice ? Number(minPrice) : null;
 
-    return products.filter(p => {
+    let filtered = products;
+
+    // Apply fuzzy search if search query exists
+    if (search) {
+        if (isExactMatch) {
+            // 🔴 STRICT MATCH ONLY
+            filtered = products.filter(p =>
+                p.name.toLowerCase() === search
+            );
+        } else {
+            // 🔴 NORMAL FUZZY SEARCH
+            filtered = fuzzySearchProducts(products, searchQuery, ['name', 'description'], 2);
+        }
+    }
+
+    // Apply other filters
+    return filtered.filter(p => {
         // Category
         if (category && p.category !== category) 
-            return false;
-
-        // Search
-        if (search && !p.name?.toLowerCase().includes(search)) 
             return false;
 
         // Stock

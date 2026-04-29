@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ShopContext } from '../../context/ShopContext';
 import { filterProducts } from '../../utils/filters.js';
 import { sortProducts } from '../../utils/sortings.js';
+import { getAutocompleteSuggestions } from '../../utils/fuzzySearch.js';
 
 import './Category.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,6 +28,9 @@ export default function Category({ banner, category }) {
 
     const [offices, setOffices] = useState([]);
     const [showFilters, setShowFilters] = useState(false);
+    const [showAutocomplete, setShowAutocomplete] = useState(false);
+    const [autocompleteSuggestions, setAutocompleteSuggestions] = useState([]);
+    const [isExactMatch, setIsExactMatch] = useState(false);
 
     // Filters state
     const [sortOption, setSortOption] = useState(DEFAULT_FILTERS.sortOption);
@@ -50,7 +54,8 @@ export default function Category({ banner, category }) {
             subcategoryFilter,
             maxPrice,
             minPrice,
-            officeFilter
+            officeFilter,
+            isExactMatch
         });
 
         return sortProducts(filtered, sortOption);
@@ -80,6 +85,38 @@ export default function Category({ banner, category }) {
 
         fetchOffices();
     }, []);
+
+    // Autocomplete suggestions
+    useEffect(() => {
+        if (isExactMatch) {
+            setShowAutocomplete(false);
+            return;
+        }
+
+        if (searchQuery.trim().length < 2) {
+            setAutocompleteSuggestions([]);
+            setShowAutocomplete(false);
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            const categoryProducts = allProducts.filter(
+                p => !category || p.category === category
+            );
+
+            const suggestions = getAutocompleteSuggestions(
+                categoryProducts, 
+                searchQuery, 
+                10, 
+                2
+            );
+
+            setAutocompleteSuggestions(suggestions);
+            setShowAutocomplete(suggestions.length > 0);
+        }, 200);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery, allProducts]);
 
     // Clear filters
     const clearFilters = () => {
@@ -182,10 +219,37 @@ export default function Category({ banner, category }) {
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
                     <input
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => {
+                            setSearchQuery(e.target.value);
+                            setIsExactMatch(false);
+                        }}
+                        onFocus={() => {
+                            if (autocompleteSuggestions.length > 0) {
+                                setShowAutocomplete(true);
+                            }
+                        }}
+                        onBlur={() => setTimeout(() => setShowAutocomplete(false), 200)}
                         type="text"
                         placeholder={t('pages:searchProducts')}
                     />
+                    {showAutocomplete && autocompleteSuggestions.length > 0 && (
+                        <div className="autocomplete-dropdown">
+                            {autocompleteSuggestions.map((suggestion, idx) => (
+                                <div
+                                    key={idx}
+                                    className="autocomplete-item"
+                                    onClick={() => {
+                                        setSearchQuery(suggestion.name);
+                                        setIsExactMatch(true);
+                                        setShowAutocomplete(false);
+                                    }}
+                                >
+                                    <span className="autocomplete-name">{suggestion.name}</span>
+                                    <span className="autocomplete-category">{suggestion.category}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
                 <div className="category-sort">
                     <label>

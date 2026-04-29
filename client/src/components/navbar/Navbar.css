@@ -83,6 +83,12 @@
     cursor: pointer;
 }
 
+.nav-login-cart .logout-btn:hover {
+    background-color: #e63939;
+    color: #fff;
+    transition: all 0.5s ease-in-out;
+}
+
 .nav-login-cart button:active {
     background-color: #f3f3f3;
 }

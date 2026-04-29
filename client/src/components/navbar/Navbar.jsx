@@ -76,7 +76,7 @@ export default function Navbar() {
                 </li>
                 
                 {localStorage.getItem('auth-token')
-                    ? (<button onClick={logoutHandler}>
+                    ? (<button onClick={logoutHandler} className='logout-btn'>
                         {t('navigation:logout')}
                     </button>
                     )

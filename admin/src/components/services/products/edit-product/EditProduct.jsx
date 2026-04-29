@@ -19,6 +19,7 @@ export default function EditProduct() {
     const { t } = useTranslation(['products', 'others']);
     const [product, setProduct] = useState({
         name: '',
+        description: '',
         image: '',
         category: '',
         subcategory: '',
@@ -145,6 +146,16 @@ export default function EditProduct() {
                             onChange={changeHandler}
                             type="text"
                             name="name"
+                        />
+                    </div>
+                    <div className="product-itemfield">
+                        <p>{t('products:productDescription')}</p>
+                        <textarea
+                            value={product.description}
+                            onChange={changeHandler}
+                            name="description"
+                            placeholder={t('others:typeHere')}
+                            rows="4"
                         />
                     </div>
                     <div className="product-price">

@@ -5,6 +5,7 @@
   "deleteProduct": "Изтриване на продукт",
   "allProducts": "Всички продукти",
   "productName": "Име на продукта",
+  "productDescription": "Описание на продукта",
   "price": "Цена",
   "offerPrice": "Цена на оферта",
   "category": "Категория на продукта",

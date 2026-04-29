@@ -42,6 +42,19 @@
     color: #7b7b7b;
 }
 
+.product-itemfield textarea {
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 4px;
+    padding: 15px;
+    border: 1px solid #c3c3c3;
+    outline: none;
+    font-family: inherit;
+    font-size: 16px;
+    color: #7b7b7b;
+    resize: vertical;
+}
+
 .product-price {
     display: flex;
     gap: 40px;

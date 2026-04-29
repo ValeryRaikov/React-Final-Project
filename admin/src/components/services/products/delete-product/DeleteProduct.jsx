@@ -17,6 +17,7 @@ export default function DeleteProduct() {
     const { t } = useTranslation(['products', 'others']);
     const [product, setProduct] = useState({
         name: '',
+        description: '',
         image: '',
         category: '',
         subcategory: '',
@@ -96,6 +97,16 @@ export default function DeleteProduct() {
                             type="text"
                             name="name"
                             placeholder={t('others:typeHere')}
+                            disabled
+                        />
+                    </div>
+                    <div className="product-itemfield">
+                        <p>{t('products:productDescription')}</p>
+                        <textarea
+                            value={product.description}
+                            name="description"
+                            placeholder={t('others:typeHere')}
+                            rows="4"
                             disabled
                         />
                     </div>

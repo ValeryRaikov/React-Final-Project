@@ -5,6 +5,7 @@
   "deleteProduct": "Delete Product",
   "allProducts": "All Products",
   "productName": "Product name",
+  "productDescription": "Product description",
   "price": "Price",
   "offerPrice": "Offer Price",
   "category": "Product Category",

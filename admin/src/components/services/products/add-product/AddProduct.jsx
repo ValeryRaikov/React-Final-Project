@@ -16,6 +16,7 @@ export default function AddProduct() {
     const { t } = useTranslation(['products', 'common', 'others']);
     const [productDetails, setProductDetails] = useState({
         name: '',
+        description: '',
         image: '',
         category: 'women',
         subcategory: 'shirts',
@@ -70,6 +71,7 @@ export default function AddProduct() {
     const clearForm = () => {
         setProductDetails({
             name: '',
+            description: '',
             image: '',
             category: 'women',
             subcategory: 'shirts',
@@ -152,6 +154,16 @@ export default function AddProduct() {
                             type="text"
                             name="name"
                             placeholder={t('others:typeHere')}
+                        />
+                    </div>
+                    <div className="product-itemfield">
+                        <p>{t('products:productDescription')}</p>
+                        <textarea
+                            value={productDetails.description}
+                            onChange={changeHandler}
+                            name="description"
+                            placeholder={t('others:typeHere')}
+                            rows="4"
                         />
                     </div>
                     <div className="product-price">

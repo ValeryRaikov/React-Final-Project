@@ -11,6 +11,8 @@ import savedItemsRoutes from './routes/savedItemsRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import promocodeRoutes from './routes/promocodeRoutes.js';
 import officeRoutes from './routes/officeRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 
 const app = express();
 const port = process.env.PORT;
@@ -32,6 +34,8 @@ app.use('/', cartRoutes);
 app.use('/', savedItemsRoutes);
 app.use('/', promocodeRoutes);
 app.use('/', officeRoutes);
+app.use('/', paymentRoutes);
+app.use('/', orderRoutes);
 
 // Root
 app.get('/', (req, res) => {

@@ -12,6 +12,7 @@ import contactEn from './locales/en/shop/contact.json';
 import pagesEn from './locales/en/shop/pages.json';
 import errorsEn from './locales/en/shop/errors.json';
 import formsEn from './locales/en/shop/forms.json';
+import ordersEN from './locales/en/shop/order.json';
 import othersEn from './locales/en/shop/others.json';
 
 import commonBg from './locales/bg/shop/common.json';
@@ -24,6 +25,7 @@ import contactBg from './locales/bg/shop/contact.json';
 import pagesBg from './locales/bg/shop/pages.json';
 import errorsBg from './locales/bg/shop/errors.json';
 import formsBg from './locales/bg/shop/forms.json';
+import ordersBG from './locales/bg/shop/order.json';
 import othersBg from './locales/bg/shop/others.json';
 
 const resources = {
@@ -41,6 +43,7 @@ const resources = {
         pages: pagesEn,
         errors: errorsEn,
         forms: formsEn,
+        order: ordersEN,   
         others: othersEn,
     },
     bg: {
@@ -57,6 +60,7 @@ const resources = {
         pages: pagesBg,
         errors: errorsBg,
         forms: formsBg,
+        order: ordersBG,
         others: othersBg,
     },
 };

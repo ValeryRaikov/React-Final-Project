@@ -1,0 +1,17 @@
+{
+  "totalAmount": "Total Amount",
+  "secureCheckout": "Secure Checkout",
+  "payNow": "Pay Now",
+  "processing": "Processing...",
+  "paymentSuccess": "Payment Successful!",
+  "paymentSuccessMessage": "Your transaction has been completed. A confirmation email will be sent shortly.",
+  "returnBack": "Return to Dashboard →",
+  "goBack": "Go Back",
+  "loadingOrders": "Loading orders...",
+  "noOrders": "You have no orders yet.",
+  "yourOrders": "Your Orders",
+  "orderId": "Order ID:",
+  "quantity": "Quantity:",
+  "totalItems": "Total Items:",
+  "totalPaid": "Total Paid:"
+}

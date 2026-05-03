@@ -47,6 +47,7 @@
     font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
+    border-radius: 10px;
 }
 
 .profile-page button:hover {
@@ -72,10 +73,23 @@
     padding-bottom: 12px;
 }
 
+.profile-header .container-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .profile-header h1 {
     margin: 0;
     border-bottom: none;
     padding-bottom: 0;
+}
+
+.profile-header .orders-btn {
+    margin-left: 10px;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 10px;
 }
 
 .profile-avatar {

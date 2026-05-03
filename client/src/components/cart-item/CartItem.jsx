@@ -65,6 +65,34 @@ export default function CartItem() {
         }
     };
 
+    const handleCheckout = async () => {
+        try {
+            const res = await fetch(`${BASE_URL}/create-checkout-session`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('auth-token')
+                },
+                    body: JSON.stringify({
+                    discount // send applied discount
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Checkout failed');
+            }
+
+            // redirect to mock stripe page
+            window.location.href = data.url;
+
+        } catch (err) {
+            console.error(err);
+            addNotification(t('errors:serverError'), 'error');
+        }
+    };
+
     return (
         <div className="cart-items">
             <div className="cart-items-format-main">
@@ -140,7 +168,9 @@ export default function CartItem() {
                         </div>
                     </div>
 
-                    <button>{t('cart:checkout')}</button>
+                    <button onClick={handleCheckout}>
+                        {t('cart:checkout')}
+                    </button>
                 </div>
 
                 <div className="cart-items-promocode">

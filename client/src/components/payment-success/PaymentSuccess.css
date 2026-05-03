@@ -1,0 +1,76 @@
+@import url('/styles/base.css');
+
+.success-container {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-glow: rgba(99, 102, 241, 0.4);
+    --bg-dark: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.8);
+    --text-light: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border-glow: rgba(99, 102, 241, 0.5);
+    --success: #10b981;
+    --success-glow: rgba(16, 185, 129, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.success-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border-radius: 2rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--success-glow);
+    animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.success-icon {
+    font-size: 5rem;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--success), #34d399);
+    border-radius: 100px;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px var(--success-glow);
+    animation: pop 0.5s ease-out;
+}
+
+.success-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff, #a7f3d0);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 1rem;
+}
+
+.success-message {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.return-link {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+.return-link:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--primary);
+    color: white;
+}

@@ -123,11 +123,16 @@ export default function Profile() {
             <div className="profile-page">
                 <div className="profile-header">
                     <h1>{t('myProfile')}</h1>
-                    <img 
-                        src={profile_icon} 
-                        alt="profile_icon" 
-                        className="profile-avatar"
-                    />
+                    <div className='container-left'>
+                        <button onClick={() => navigate('/orders')} className="orders-btn">
+                            Orders
+                        </button>
+                        <img 
+                            src={profile_icon} 
+                            alt="profile_icon" 
+                            className="profile-avatar"
+                        />
+                    </div>
                 </div>
 
                 <p><strong>{t('name')}:</strong> {user.name}</p>
@@ -148,6 +153,7 @@ export default function Profile() {
                     {t('updatePassword')}
                 </button>
                 
+                <hr />
                 <h3>{t('dangerZone')}</h3>
                 <button onClick={handleDeleteClick}>
                     {t('deleteAccount')}

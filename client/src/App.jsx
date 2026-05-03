@@ -20,6 +20,9 @@ import Offices from './components/offices/Offices';
 import AboutUs from './components/about-us/AboutUs';
 import Contact from './components/contact/Contact';
 import ProtectedRoutes from './components/common/ProtectedRoutes';
+import MockCheckout from './components/mock-checkout/MockCheckout';
+import PaymentSuccess from './components/payment-success/PaymentSuccess';
+import Orders from './components/orders/Orders';
 
 function App() {
     const location = useLocation();
@@ -49,6 +52,9 @@ function App() {
                     <Route path='/cart' element={<Cart />} />
                     <Route path='/saved-items' element={<SavedItems />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/orders" element={<Orders />} />
+                    <Route path="/mock-checkout" element={<MockCheckout />} />
+                    <Route path="/success" element={<PaymentSuccess />} />
                 </Route>
                 <Route path='/*' element={<NotFound />} />
             </Routes>

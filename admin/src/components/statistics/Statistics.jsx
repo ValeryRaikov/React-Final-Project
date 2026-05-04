@@ -303,6 +303,40 @@ export default function Statistics() {
                     )}
                 </div>
             </div>
+            
+            <div className='secondary-metrics'>
+                <div className="stat-card info">
+                    <div className="stat-icon">🧾</div>
+                    <div className="stat-content">
+                        <h3>{t('statistics:totalOrders')}</h3>
+                        <p className="stat-value">
+                            {stats.totalOrders ?? 0}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="stat-card success">
+                    <div className="stat-icon">💰</div>
+                    <div className="stat-content">
+                        <h3>{t('statistics:totalIncome')}</h3>
+                        <p className="stat-value">
+                            ${(stats.totalIncome ?? 0).toFixed(2)}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="stat-card warning">
+                    <div className="stat-icon">🏆</div>
+                    <div className="stat-content">
+                        <h3>{t('statistics:topCustomer')}</h3>
+                        <p className="stat-value">
+                            {stats.topUser
+                                ? `${stats.topUser.email} (${stats.topUser.ordersCount})`
+                                : 'N/A'}
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

@@ -25,5 +25,8 @@
   "comments": "Comments",
   "noOfficesWithProducts": "No offices with products",
   "productsByOffice": "Products by Office",
-  "office": "Office"
+  "office": "Office",
+  "totalOrders": "Total Orders",
+  "totalIncome": "Total Income",
+  "topCustomer": "Top Customer"
 }

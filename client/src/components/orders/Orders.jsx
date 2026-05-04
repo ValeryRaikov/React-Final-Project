@@ -50,7 +50,7 @@ export default function Orders() {
             {orders.map(order => (
                 <div key={order._id} className="order-card">
                     <div className="order-header">
-                        <span>{t('orderID')} {order._id}</span>
+                        <span>{t('orderId')} {order._id}</span>
                         <span>{new Date(order.createdAt).toLocaleString()}</span>
                     </div>
 

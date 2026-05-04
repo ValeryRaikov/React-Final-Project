@@ -25,5 +25,8 @@
   "comments": "Коментари",
   "noOfficesWithProducts": "Няма магазини с продукти",
   "productsByOffice": "Продукти по магазин",
-  "office": "магазин"
+  "office": "магазин",
+  "totalOrders": "Общ брой поръчки",
+  "totalIncome": "Общ приход",
+  "topCustomer": "Супер купувач"
 }

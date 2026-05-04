@@ -361,3 +361,7 @@
     font-weight: 600;
     color: #2c3e50;
 }
+
+.secondary-metrics .stat-card {
+    margin: 15px 0 15px 0;
+}

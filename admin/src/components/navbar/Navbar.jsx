@@ -20,7 +20,7 @@ export default function Navbar() {
                 <img src={nav_logo} alt="" className="nav-logo" />
                 {isAuthenticated && (
                     <Link to='/statistics' className="stats-link">
-                        <button className="stats-button">📊 {t('statistics') || 'Analytics'}</button>
+                        <button className="stats-button">{t('statistics') || 'Analytics'}</button>
                     </Link>
                 )}
             </div>

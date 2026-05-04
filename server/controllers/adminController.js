@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
 import User from '../models/User.js';
 import Product from '../models/Product.js';
+import Order from '../models/Order.js';
 import { isValidEmail, isValidPassword } from '../utils/validators.js';
 
 // Admin login
@@ -213,6 +214,43 @@ const getStatistics = async (req, res) => {
             { $sort: { count: -1 } }
         ]);
 
+        // TOTAL ORDERS
+        const totalOrders = await Order.countDocuments();
+
+        // TOTAL INCOME
+        const totalIncomeAgg = await Order.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: '$totalPrice' }
+                }
+            }
+        ]);
+
+        const totalIncome = totalIncomeAgg[0]?.total || 0;
+
+        // USER WITH MOST ORDERS
+        const topUserAgg = await Order.aggregate([
+            {
+                $group: {
+                    _id: '$userId',
+                    ordersCount: { $sum: 1 }
+                }
+            },
+            { $sort: { ordersCount: -1 } },
+            { $limit: 1 }
+        ]);
+
+        let topUser = null;
+
+        if (topUserAgg.length > 0) {
+            const user = await User.findById(topUserAgg[0]._id).select('email');
+            topUser = {
+                email: user?.email || 'Unknown',
+                ordersCount: topUserAgg[0].ordersCount
+            };
+        }
+
         res.json({
             success: true,
             statistics: {
@@ -225,7 +263,10 @@ const getStatistics = async (req, res) => {
                 productsBySubcategory,
                 productsByOffice,
                 mostLikedProducts,
-                mostCommentedProducts
+                mostCommentedProducts,
+                totalOrders,
+                totalIncome,
+                topUser
             }
         });
 

@@ -1,6 +1,7 @@
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ShopContext } from '../../context/ShopContext';
 
 import './MockCheckout.css';   
 
@@ -23,6 +24,7 @@ export default function MockCheckout() {
 
     const { t } = useTranslation('order');
     const amount = params.get('amount');
+    const { clearCart } = useContext(ShopContext);
 
     const handleChange = (e) => {
         setFormData(prev => ({
@@ -66,6 +68,8 @@ export default function MockCheckout() {
             if (!res.ok) {
                 throw new Error('Payment failed');
             }
+
+            clearCart();
  
             navigate('/success');
         } catch (err) {

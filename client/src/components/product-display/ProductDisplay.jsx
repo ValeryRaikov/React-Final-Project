@@ -123,7 +123,7 @@ export default function ProductDisplay({
 
     const handleToggleSaved = async () => {
         if (!isAuthenticated) {
-            addNotification(t('errors:pleaseLoginToSaveItems'), 'error');
+            await toggleSaved(id);
             return;
         }
 

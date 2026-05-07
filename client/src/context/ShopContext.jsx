@@ -148,6 +148,7 @@ export default function ShopContextProvider(props) {
                     </div>
                 </div>
             ));
+            
             return;
         }
 

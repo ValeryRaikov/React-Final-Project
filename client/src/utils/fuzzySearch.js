@@ -152,13 +152,15 @@ export const fuzzySearchProducts = (
  * @param {string} query - Search query
  * @param {number} limit - Maximum number of suggestions (default: 10)
  * @param {number} maxDistance - Maximum allowed edit distance (default: 2)
+ * @param {Array} searchFields - Fields to search in (default: ['name'])
  * @returns {Array} - Array of suggested product names
  */
 export const getAutocompleteSuggestions = (
     products,
     query,
     limit = 10,
-    maxDistance = 2
+    maxDistance = 2,
+    searchFields = ['name']
 ) => {
     if (!query || query.trim().length < 2) {
         return [];
@@ -168,19 +170,25 @@ export const getAutocompleteSuggestions = (
 
     const scored = products
         .map(product => {
-            // Prioritize prefix matches for autocomplete
-            const name = (product.name || '').toLowerCase();
-            
-            let score = 0;
-            if (name === queryLower) {
-                score = 1;
-            } else if (name.startsWith(queryLower)) {
-                score = 0.95;
-            } else {
-                score = fuzzyMatchScore(query, product.name, maxDistance);
+            let bestScore = 0;
+
+            // Search across all specified fields
+            for (const field of searchFields) {
+                const fieldValue = (product[field] || '').toLowerCase();
+                
+                let score = 0;
+                if (fieldValue === queryLower) {
+                    score = 1;
+                } else if (fieldValue.startsWith(queryLower)) {
+                    score = 0.95;
+                } else {
+                    score = fuzzyMatchScore(query, fieldValue, maxDistance);
+                }
+
+                bestScore = Math.max(bestScore, score);
             }
 
-            return { product, score };
+            return { product, score: bestScore };
         })
         .filter(item => item.score > 0)
         .sort((a, b) => {

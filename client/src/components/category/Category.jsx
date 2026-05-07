@@ -104,11 +104,15 @@ export default function Category({ banner, category }) {
                 p => !category || p.category === category
             );
 
+            // Search in both name and description fields for autocomplete
+            const searchFields = ['name', 'description'];
+
             const suggestions = getAutocompleteSuggestions(
                 categoryProducts, 
                 searchQuery, 
                 10, 
-                2
+                2,
+                searchFields
             );
 
             setAutocompleteSuggestions(suggestions);

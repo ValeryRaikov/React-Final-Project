@@ -126,20 +126,35 @@ const getStatistics = async (req, res) => {
         ]);
 
         // Most liked products (top 5)
-        const mostLiked = await Product.find()
-            .select('id name category image newPrice likes')
-            .lean()
-            .sort({ 'likes': -1 })
-            .limit(5);
-
-        const mostLikedProducts = mostLiked.map(p => ({
-            id: p.id,
-            name: p.name,
-            category: p.category,
-            image: p.image,
-            price: p.newPrice,
-            likes: p.likes.length
-        }));
+        const mostLikedProducts = await Product.aggregate([
+            {
+                $addFields: {
+                    likesCount: {
+                        $size: {
+                            $ifNull: ['$likes', []]
+                        }
+                    }
+                }
+            },
+            {
+                $sort: {
+                    likesCount: -1
+                }
+            },
+            {
+                $limit: 5
+            },
+            {
+                $project: {
+                    id: 1,
+                    name: 1,
+                    category: 1,
+                    image: 1,
+                    price: '$newPrice',
+                    likes: '$likesCount'
+                }
+            }
+        ]);
 
         // Most commented products (top 5)
         const mostCommented = await Product.aggregate([

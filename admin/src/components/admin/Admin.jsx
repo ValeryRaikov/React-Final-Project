@@ -21,6 +21,7 @@ import AddUser from '../services/users/add-user/AddUser';
 import ListUser from '../services/users/list-user/ListUser';
 import EditUser from '../services/users/edit-user/EditUser';
 import DeleteUser from '../services/users/delete-user/DeleteUser';
+import ListOrders from '../services/orders/list-orders/ListOrders';
 
 export default function Admin() {
 
@@ -56,6 +57,7 @@ export default function Admin() {
                     <Route path="/list-users" element={<ListUser />} />
                     <Route path="/edit-user/:userId" element={<EditUser />} />
                     <Route path="/delete-user/:userId" element={<DeleteUser />} />
+                    <Route path="/completed-orders" element={<ListOrders />} />
                 </Route>
                 <Route path='/*' element={<NotFound />} />
             </Routes>

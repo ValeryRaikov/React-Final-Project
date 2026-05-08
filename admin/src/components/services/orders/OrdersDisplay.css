@@ -1,0 +1,86 @@
+@import url('/styles/base.css');
+
+.list-orders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 700px;
+    max-height: none;
+    padding: 10px 50px;
+    margin: 30px;
+    border-radius: 6px;
+}
+
+.list-orders h1 {
+    margin: 20px 0;
+    font-size: 32px;
+    color: #3d3d3d;
+}
+
+.list-orders-format-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr 1.5fr 1.5fr;
+    gap: 15px;
+    text-align: center;
+    width: 100%;
+    padding: 20px 0;
+    color: #454545;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e2e2;
+}
+
+.list-orders-all-orders {
+    flex-grow: 1; 
+    width: 100%;
+}
+
+.list-orders-format {
+    align-items: center;
+    font-weight: 500;
+    padding: 10px 0;
+}
+
+.list-orders-format:hover {
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.order-id {
+    font-weight: 600;
+    color: #0f7e09;
+}
+
+.customer-name {
+    text-align: left;
+    padding-left: 10px;
+}
+
+.items-count {
+    color: #555;
+}
+
+.total-price {
+    font-weight: 600;
+    color: #333;
+}
+
+.order-date {
+    color: #777;
+    font-size: 14px;
+}
+
+.loading-message,
+.no-orders-message {
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+    padding-top: 25px;
+    color: #666;
+}
+
+.error-message {
+    font-size: 25px;
+    padding-top: 25px;
+    color: #ff0000;
+}

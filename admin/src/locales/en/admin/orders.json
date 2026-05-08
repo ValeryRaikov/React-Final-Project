@@ -1,0 +1,13 @@
+{
+  "item": "item",
+  "items": "items",
+  "unknownCustomer": "Unknown Customer",
+  "completedOrders": "Completed Orders",
+  "loading": "Loading orders...",
+  "noOrders": "No completed orders found.",
+  "orderId": "Order ID",
+  "customer": "Customer",
+  "itemsLabel": "Items",
+  "totalPrice": "Total Price",
+  "date": "Date"
+}

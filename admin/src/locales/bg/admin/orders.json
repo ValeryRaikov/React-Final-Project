@@ -1,0 +1,13 @@
+{
+  "item": "продукт",
+  "items": "продукта",
+  "unknownCustomer": "Непознат клиент",
+  "completedOrders": "Завършени поръчки",
+  "loading": "Зареждане на поръчки...",
+  "noOrders": "Няма завършени поръчки.",
+  "orderId": "ID на поръчка",
+  "customer": "Клиент",
+  "itemsLabel": "Продукти",
+  "totalPrice": "Обща цена",
+  "date": "Дата"
+}

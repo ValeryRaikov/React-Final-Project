@@ -2,17 +2,18 @@
 
 .sidebar {
     position: sticky;
+    top: 85px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding-top: 30px;
     padding-bottom: 30px;
-    margin-top: 85px;
     gap: 16px;
     width: 100%;
     max-width: 250px;
-    height: 75vh;
+    min-height: auto;
+    max-height: none;
     background-color: #ededed;
+    border-radius: 8px;
 }
 
 .sidebar-title {
@@ -29,9 +30,10 @@
     justify-content: center;
     gap: 10px;
     margin: 0 20px;
-    padding: 10px;
+    padding: 12px;
     border-radius: 6px;
     background-color: #fff;
+    transition: background-color 0.2s ease;
 }
 
 .sidebar-item:hover {

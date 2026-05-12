@@ -115,7 +115,7 @@ export default function DescriptionBox({
 
     // Check if the user has already commented to disable comment box and show appropriate message
     const hasCommented = localComments.some(
-        c => c.user?.toString() === user?.id
+        c => c.user && String(c.user._id || c.user) === String(user?.id)
     );
 
     return (
@@ -189,7 +189,7 @@ export default function DescriptionBox({
                                                             {formatDate(c.createdAt)}
                                                         </span>
                                                     </div>
-                                                    {user && c.user === user.id && (
+                                                    {user && c.user && String(c.user._id || c.user) === String(user.id) && (
                                                         <button
                                                             className="delete-btn"
                                                             onClick={() => handleDeleteComment(c._id)}

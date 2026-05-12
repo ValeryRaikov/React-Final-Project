@@ -74,7 +74,7 @@ const getAllProducts = async (req, res) => {
 const getProduct = async (req, res) => {
     try {
         const product = await Product.findOne({ id: req.params.id })
-            .populate('comments.user', 'username');
+            .populate('comments.user', '_id name');
 
         if (!product) {
             return res.status(404).json({ error: 'Product not found' });

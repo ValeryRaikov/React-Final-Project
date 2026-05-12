@@ -1,3 +1,5 @@
+// modles/Promocode.js - Mongoose schema for promotional codes
+
 import mongoose from 'mongoose';
 
 const promocodeSchema = new mongoose.Schema({
@@ -16,7 +18,7 @@ const promocodeSchema = new mongoose.Schema({
     },
     expiresAt: {
         type: Date,
-        default: () => Date.now() + 30 * 24 * 60 * 60 * 1000
+        default: () => Date.now() + 30 * 24 * 60 * 60 * 1000 // Default expiration time of 30 days from creation
     }
 },{ timestamps: true });
 

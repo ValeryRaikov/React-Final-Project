@@ -1,6 +1,9 @@
+// utils/googleAuth.js - Utility functions for Google OAuth2 authentication
+
 import { OAuth2Client } from 'google-auth-library';
 import axios from 'axios';
 
+// Initialize Google OAuth2 client
 const client = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
@@ -17,6 +20,7 @@ export const verifyGoogleCode = async (code) => {
         });
 
         const payload = ticket.getPayload();
+
         return {
             success: true,
             data: {
@@ -28,6 +32,7 @@ export const verifyGoogleCode = async (code) => {
         };
     } catch (error) {
         console.error('Google token verification error:', error);
+
         return {
             success: false,
             error: error.message,
@@ -35,7 +40,7 @@ export const verifyGoogleCode = async (code) => {
     }
 };
 
-// Alternative: Verify Google ID Token directly (if using implicit flow)
+// Alternative: Verify Google ID Token directly (from frontend)
 export const verifyGoogleIdToken = async (idToken) => {
     try {
         const ticket = await client.verifyIdToken({
@@ -44,6 +49,7 @@ export const verifyGoogleIdToken = async (idToken) => {
         });
 
         const payload = ticket.getPayload();
+
         return {
             success: true,
             data: {
@@ -55,6 +61,7 @@ export const verifyGoogleIdToken = async (idToken) => {
         };
     } catch (error) {
         console.error('Google ID token verification error:', error);
+
         return {
             success: false,
             error: error.message,

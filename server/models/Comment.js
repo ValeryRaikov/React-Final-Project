@@ -1,6 +1,7 @@
+// models/Comment.js - Mongoose schema for product comments, including user reference and timestamps
+
 import mongoose from 'mongoose';
 
-// Schema for comments related to products in MongoDB
 const CommentSchema = new mongoose.Schema({
     user: { 
         type: mongoose.Schema.Types.ObjectId, 

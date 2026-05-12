@@ -1,3 +1,5 @@
+// routes/uploadRoutes.js - Route for handling product image uploads
+
 import { Router } from 'express';
 import upload from '../utils/multer.js';
 

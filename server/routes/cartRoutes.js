@@ -1,3 +1,5 @@
+// routes/cartRoutes.js - Routes for cart operations (add, remove, get cart contents)
+
 import { Router } from 'express';
 import auth from '../middleware/clientAuthMiddleware.js';
 import * as c from '../controllers/cartController.js';

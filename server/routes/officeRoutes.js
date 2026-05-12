@@ -1,3 +1,5 @@
+// routes/officeRoutes.js - Routes for getting office locations
+
 import express from 'express';
 import Office from '../models/Office.js';
 import * as c from '../controllers/officeController.js';

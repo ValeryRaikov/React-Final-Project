@@ -1,3 +1,5 @@
+// routes/paymentRoutes.js - Routes for payment processing (mock payment, checkout session creation)
+
 import { Router } from 'express';
 import auth from '../middleware/clientAuthMiddleware.js';
 import { createCheckoutSession, confirmPayment } from '../controllers/paymentController.js';

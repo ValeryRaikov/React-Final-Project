@@ -1,15 +1,19 @@
+// controllers/paymentController.js - Controller for handling payment-related API requests, including creating checkout sessions and confirming payments (mock implementation)
+
 import User from '../models/User.js';
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
-// import nodemailer from 'nodemailer';
+// import nodemailer from 'nodemailer'; (OMITTED - using console.log instead for mock email)
 
-// CREATE CHECKOUT SESSION
+// 1. Create checkout session (mock implementation)
 const createCheckoutSession = async (req, res) => {
     const CLIENT_URL = req.headers.origin;
     
     try {
+        // Get user and cart data from DB
         const user = await User.findById(req.user.id);
 
+        // Validate cart data
         if (!user.cartData || user.cartData.length === 0) {
             return res.status(400).json({ error: 'Cart is empty' });
         }
@@ -17,6 +21,7 @@ const createCheckoutSession = async (req, res) => {
         // Fetch real products from DB
         const productIds = user.cartData.map(item => item.productId);
 
+        // Calculate subtotal by matching cart items with product prices
         const products = await Product.find({
             id: { $in: productIds }
         });
@@ -39,11 +44,9 @@ const createCheckoutSession = async (req, res) => {
 
         const sessionId = `sess_${Date.now()}`;
 
-        // FIX THIS!!!
         res.json({
             url: `${CLIENT_URL}/mock-checkout?sessionId=${sessionId}&amount=${total.toFixed(2)}` 
         });
-
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
@@ -67,6 +70,7 @@ const confirmPayment = async (req, res) => {
 
         let total = 0;
 
+        // Create order items by matching cart items with product details and calculating total price
         const orderItems = user.cartData.map(cartItem => {
             const product = products.find(p => p.id === cartItem.productId);
             if (!product) return null;
@@ -101,7 +105,7 @@ const confirmPayment = async (req, res) => {
         user.cartData = [];
         await user.save();
 
-        // Send email
+        // Send email (OMITTED - using console.log instead for mock email)
         // const transporter = nodemailer.createTransport({
         //     service: 'gmail',
         //     auth: {
@@ -120,13 +124,13 @@ const confirmPayment = async (req, res) => {
         //         <p>Thank you for your purchase!</p>
         //     `
         // });
+
         console.log(' MOCK EMAIL SENT');
         console.log('To:', user.email);
         console.log('Subject: Order Confirmed');
         console.log('Body: Your payment was successful.');
 
         res.json({ success: true });
-
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Payment failed' });

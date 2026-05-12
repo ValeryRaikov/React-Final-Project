@@ -1,3 +1,5 @@
+// middleware/corsMiddleware.js - CORS configuration for Express server
+
 import cors from 'cors';
 
 // CORS middleware configuration
@@ -6,9 +8,11 @@ export default cors({
         // Parse allowed origins from environment variable
         const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:5174').split(',');
         
+        // Allow requests with no origin (like mobile apps or curl) or if the origin is in the allowed list
         if (!origin || allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
+        
         callback(new Error('Not allowed by CORS'));
     },
     credentials: true,

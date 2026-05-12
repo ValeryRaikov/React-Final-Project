@@ -1,13 +1,18 @@
+// utils/validators.js - Validation functions for user input
+
 import { nameRegex, emailRegex, passwordRegex } from './regex.js';
 
+// Validate name
 export const isValidName = (name) => {
     return nameRegex.test(name);
 };
 
+// Validate email (format)
 export const isValidEmail = (email) => {
     return emailRegex.test(email);
 };
 
+// Validate password (at least 8 characters, includes uppercase, lowercase, number, and special character)
 export const isValidPassword = (password) => {
     return passwordRegex.test(password);
 };

@@ -1,3 +1,5 @@
+// routes/savedItemsRoutes.js - Routes for managing user's saved items (add/remove/get)
+
 import { Router } from 'express';
 import auth from '../middleware/clientAuthMiddleware.js';
 import * as s from '../controllers/savedItemsController.js';

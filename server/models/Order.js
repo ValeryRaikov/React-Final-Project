@@ -1,3 +1,5 @@
+// models/Order.js - Mongoose schema for orders, including user reference, items, total price, and status
+
 import mongoose from 'mongoose';
 import orderItemSchema from './OrderItem.js';
 
@@ -14,7 +16,7 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'paid', 'cancelled'],
+        enum: ['pending', 'paid', 'cancelled'], // Define possible order statuses
         default: 'paid'
     },
     createdAt: {

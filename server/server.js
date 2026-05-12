@@ -1,3 +1,5 @@
+// server.js - Main entry point for the Express server, sets up middleware, routes, and starts the server
+
 import 'dotenv/config';
 import express from 'express';
 import { connectDB } from './config/db.js';
@@ -37,12 +39,12 @@ app.use('/', officeRoutes);
 app.use('/', paymentRoutes);
 app.use('/', orderRoutes);
 
-// Root
+// Root - simple test endpoint
 app.get('/', (req, res) => {
     res.send('Express App is running');
 });
 
-// Start server
+// Start server - connect to DB first, then listen
 const start = async () => {
     await connectDB();
     

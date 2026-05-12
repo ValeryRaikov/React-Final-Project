@@ -1,9 +1,12 @@
+// controllers/adminUserController.js - Controller functions for managing admin and operator users, including creating, reading, updating, and deleting users with role-based access control
+
 import Admin from '../models/Admin.js';
 import { isValidEmail, isValidPassword } from '../utils/validators.js';
 
-// Create a new admin/operator
+// Create a new admin/operator - only superadmin can create users
 const addUser = async (req, res) => {
     try {
+        // Extract input
         const { name, email, password, role } = req.body;
         const currentUserRole = req.user?.role;
 
@@ -66,6 +69,7 @@ const addUser = async (req, res) => {
 
         await newUser.save();
 
+        // Return created user info (excluding password)
         res.json({
             success: true,
             message: 'User created successfully',
@@ -86,6 +90,7 @@ const addUser = async (req, res) => {
 // Get all users (admins and operators)
 const getAllUsers = async (req, res) => {
     try {
+        // Get current user's role from request (set by auth middleware)
         const currentUserRole = req.user?.role;
 
         // Operators cannot view users
@@ -96,8 +101,10 @@ const getAllUsers = async (req, res) => {
             });
         }
 
+        // Fetch all users, excluding passwords, sorted by creation date
         const users = await Admin.find({}, '-password').sort({ date: -1 });
 
+        // Return user list
         res.json({
             success: true,
             data: users.map(u => ({
@@ -118,8 +125,10 @@ const getAllUsers = async (req, res) => {
 // Get a single user by ID
 const getUser = async (req, res) => {
     try {
+        // Fetch user by ID, excluding password
         const user = await Admin.findById(req.params.id, '-password');
 
+        // If user not found, return 404
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -127,6 +136,7 @@ const getUser = async (req, res) => {
             });
         }
 
+        // Return user info
         res.json({
             success: true,
             data: {
@@ -186,7 +196,9 @@ const updateUser = async (req, res) => {
         }
 
         // Update fields
-        if (name) userToUpdate.name = name.trim();
+        if (name) 
+            userToUpdate.name = name.trim();
+
         if (email) {
             if (!isValidEmail(email)) {
                 return res.status(400).json({
@@ -201,6 +213,7 @@ const updateUser = async (req, res) => {
                 _id: { $ne: userId }
             });
 
+            // If email is taken by another user, return error
             if (existingUser) {
                 return res.status(400).json({
                     success: false,
@@ -221,11 +234,17 @@ const updateUser = async (req, res) => {
             userToUpdate.password = password;
         }
 
-        if (role) userToUpdate.role = role;
-        if (isActive !== undefined) userToUpdate.isActive = isActive;
+        // Only update role and isActive if they are provided in the request
+        if (role) 
+            userToUpdate.role = role;
+
+        // Only update isActive if it's explicitly provided (true or false)
+        if (isActive !== undefined) 
+            userToUpdate.isActive = isActive;
 
         await userToUpdate.save();
 
+        // Return updated user info (excluding password)
         res.json({
             success: true,
             message: 'User updated successfully',
@@ -286,6 +305,7 @@ const deleteUser = async (req, res) => {
         // Check if there's at least one other superadmin
         if (userToDelete.role === 'superadmin') {
             const superadminCount = await Admin.countDocuments({ role: 'superadmin' });
+
             if (superadminCount <= 1) {
                 return res.status(400).json({
                     success: false,
@@ -296,6 +316,7 @@ const deleteUser = async (req, res) => {
 
         await Admin.findByIdAndDelete(userId);
 
+        // Return success message
         res.json({
             success: true,
             message: 'User deleted successfully'

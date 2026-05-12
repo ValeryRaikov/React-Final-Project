@@ -1,3 +1,5 @@
+// controllers/savedItemsController.js - handles adding, removing, and retrieving saved items for authenticated users
+
 import User from '../models/User.js';
 
 // Add an item to saved items
@@ -24,6 +26,7 @@ const addToSavedItems = async (req, res) => {
             return res.status(400).json({ error: 'Item already saved' });
         }
 
+        // Add new item to saved items array
         user.savedItems.push({
             productId: itemId
         });
@@ -48,6 +51,7 @@ const removeFromSavedItems = async (req, res) => {
             return res.status(400).json({ error: 'Invalid itemId' });
         }
 
+        // Find index of item to remove
         const itemIndex = user.savedItems.findIndex(
             item => item.productId === itemId
         );
@@ -56,6 +60,7 @@ const removeFromSavedItems = async (req, res) => {
             return res.status(400).json({ error: 'Item not in saved items' });
         }
 
+        // Remove item from saved items array
         user.savedItems.splice(itemIndex, 1);
 
         await user.save();

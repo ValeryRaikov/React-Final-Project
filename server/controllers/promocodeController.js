@@ -1,9 +1,13 @@
+// controllers/promocodeController.js - handles promo code application and management (CRUD) for admin
+
 import Promocode from '../models/Promocode.js';
 
+// Apply a promo code to calculate discounted total
 const applyPromo = async (req, res) => {
     try {
         const { code, subtotal } = req.body;
 
+        // Validate input
         if (!code || !subtotal) {
             return res.status(400).json({
                 valid: false,
@@ -17,6 +21,7 @@ const applyPromo = async (req, res) => {
             active: true
         });
 
+        // Check if promo code exists and is active
         if (!promo) {
             return res.status(400).json({
                 valid: false,
@@ -50,11 +55,12 @@ const applyPromo = async (req, res) => {
     }
 };
 
-// CREATE promocode
+// Create promocode
 const createPromocode = async (req, res) => {
     try {
         const { code, discount, expiresAt } = req.body;
 
+        // Validate input
         if (!code || !discount) {
             return res.status(400).json({
                 success: false,
@@ -62,6 +68,7 @@ const createPromocode = async (req, res) => {
             });
         }
 
+        // Check if code already exists
         const existing = await Promocode.findOne({ code });
 
         if (existing) {
@@ -71,6 +78,7 @@ const createPromocode = async (req, res) => {
             });
         }
 
+        // Validate discount value
         if (discount <= 0 || discount > 1) {
             return res.status(400).json({
                 success: false,
@@ -78,6 +86,7 @@ const createPromocode = async (req, res) => {
             });
         }
 
+        // Create and save the new promocode
         const promocode = new Promocode({
             code: code.toUpperCase().trim(),
             discount,
@@ -99,7 +108,7 @@ const createPromocode = async (req, res) => {
 };
 
 
-// GET ALL promocodes
+// Get all promocodes
 const getPromocodes = async (req, res) => {
     try {
         const promocodes = await Promocode.find().sort({ createdAt: -1 });
@@ -115,7 +124,7 @@ const getPromocodes = async (req, res) => {
 };
 
 
-// UPDATE promocode
+// Update promocode
 const updatePromocode = async (req, res) => {
     try {
         const { id } = req.params;
@@ -123,6 +132,7 @@ const updatePromocode = async (req, res) => {
 
         const promocode = await Promocode.findById(id);
 
+        // Check if promocode exists
         if (!promocode) {
             return res.status(404).json({
                 success: false,
@@ -130,6 +140,7 @@ const updatePromocode = async (req, res) => {
             });
         }
 
+        // Update fields if provided
         if (code) 
             promocode.code = code.toUpperCase().trim();
 
@@ -167,13 +178,14 @@ const updatePromocode = async (req, res) => {
 };
 
 
-// DELETE promocode
+// Delete promocode
 const deletePromocode = async (req, res) => {
     try {
         const { id } = req.params;
 
         const promocode = await Promocode.findByIdAndDelete(id);
 
+        // Check if promocode existed and was deleted
         if (!promocode) {
             return res.status(404).json({
                 success: false,

@@ -1,3 +1,5 @@
+// utils/multer.js - Multer configuration for handling file uploads (product images)
+
 import multer from 'multer';
 import path from 'path';
 

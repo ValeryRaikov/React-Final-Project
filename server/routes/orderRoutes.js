@@ -1,3 +1,5 @@
+// routes/orderRoutes.js - Routes for viewing user orders
+
 import { Router } from 'express';
 import auth from '../middleware/clientAuthMiddleware.js';
 import { getUserOrders } from '../controllers/orderController.js';

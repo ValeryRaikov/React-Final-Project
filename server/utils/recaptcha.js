@@ -1,11 +1,12 @@
+// utils/recaptcha.js - Utility functions for verifying Google reCAPTCHA tokens
+
 import axios from 'axios';
+import dotenv from 'dotenv/config';
 
-const RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
-
-// Verify reCAPTCHA v2 token
+// Verify reCAPTCHA v2 token - returns an object with success status and any error messages
 export const verifyRecaptcha = async (token) => {
     try {
-        const response = await axios.post(RECAPTCHA_VERIFY_URL, null, {
+        const response = await axios.post(process.env.RECAPTCHA_VERIFY_URL, null, {
             params: {
                 secret: process.env.RECAPTCHA_SECRET_KEY,
                 response: token,
@@ -38,6 +39,7 @@ export const verifyRecaptcha = async (token) => {
         }
     } catch (error) {
         console.error('reCAPTCHA verification error:', error);
+        
         return {
             success: false,
             errors: [error.message],

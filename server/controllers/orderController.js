@@ -1,10 +1,14 @@
+// controllers/orderController.js - Controller for handling order-related API requests, including fetching user orders and completed orders for admin/operator/superadmin
+
 import Order from '../models/Order.js';
 import User from '../models/User.js';
 
+// Fetch orders for the authenticated user
 export const getUserOrders = async (req, res) => {
     try {
+        // Get all orders for the logged-in user, sorted by most recent
         const orders = await Order.find({ userId: req.user.id })
-            .sort({ createdAt: -1 }); // newest first
+            .sort({ createdAt: -1 });
 
         res.json({
             success: true,
@@ -16,10 +20,9 @@ export const getUserOrders = async (req, res) => {
     }
 };
 
-/**
- * Fetch all paid orders (admin/operator/superadmin only)
- * Includes user details for each order
- */
+
+// Fetch all paid orders (admin/operator/superadmin only)
+// Includes user details for each order
 export const getCompletedOrders = async (req, res) => {
     try {
         // Get all completed orders and populate user details

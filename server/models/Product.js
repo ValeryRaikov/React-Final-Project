@@ -1,7 +1,8 @@
+// models/Product.js - Mongoose schema for products, including fields for name, description, price, category, and comments
+
 import mongoose from 'mongoose';
 import CommentSchema from './Comment.js';
 
-// Schema for products in MongoDB
 const ProductSchema = new mongoose.Schema({
     id: Number,
     name: { 
@@ -19,12 +20,12 @@ const ProductSchema = new mongoose.Schema({
     },
     category: { 
         type: String,
-        enum: ['men', 'women', 'kids'],
+        enum: ['men', 'women', 'kids'], // Define possible categories
         required: true
     },
     subcategory: {
         type: String,
-        enum: ['shirts', 'pants', 'dresses', 'tops', 'jackets', 'shoes'],
+        enum: ['shirts', 'pants', 'dresses', 'tops', 'jackets', 'shoes'], // Define possible subcategories
         required: true
     },
     newPrice: { 
@@ -44,15 +45,15 @@ const ProductSchema = new mongoose.Schema({
         default: true
     },
     likes: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [mongoose.Schema.Types.ObjectId], // Array of user IDs who liked the product
         default: []
     },
     comments: {
-        type: [CommentSchema],
+        type: [CommentSchema], // Array of comments using the CommentSchema
         default: []
     },
     officeIds: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [mongoose.Schema.Types.ObjectId], // Array of office IDs where the product is available
         ref: 'Office',
         default: []
     }

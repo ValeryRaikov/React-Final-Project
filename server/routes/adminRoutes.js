@@ -1,3 +1,5 @@
+// routes/adminRoutes.js - Routes for admin-related operations (login, statistics, etc.)
+
 import { Router } from 'express';
 import { adminLogin, verifyToken, getStatistics } from '../controllers/adminController.js';
 import { getCompletedOrders } from '../controllers/orderController.js';

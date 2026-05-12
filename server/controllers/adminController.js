@@ -1,3 +1,5 @@
+// controllers/adminController.js - Handles admin authentication and statistics retrieval
+
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
@@ -10,6 +12,7 @@ import { isValidEmail, isValidPassword } from '../utils/validators.js';
 const adminLogin = async (req, res) => {
     const { email, password } = req.body;
 
+    // Basic validation
     if (!email || !password) {
         return res.status(400).json({
             success: false,
@@ -17,6 +20,7 @@ const adminLogin = async (req, res) => {
         });
     }
 
+    // Validate email and password format
     if (!isValidEmail(email)) {
         return res.status(400).json({
             success: false,
@@ -31,8 +35,10 @@ const adminLogin = async (req, res) => {
         });
     }
 
+    // Find admin by email (case-insensitive)
     const admin = await Admin.findOne({ email: email.toLowerCase().trim() });
 
+    // Check if admin exists
     if (!admin) {
         return res.status(401).json({
             success: false,
@@ -40,6 +46,7 @@ const adminLogin = async (req, res) => {
         });
     }
 
+    // Check if account is active
     if (!admin.isActive) {
         return res.status(403).json({
             success: false,
@@ -47,8 +54,10 @@ const adminLogin = async (req, res) => {
         });
     }
 
+    // Verify password
     const isMatch = await admin.matchPassword(password);
 
+    // If password does not match, return error
     if (!isMatch) {
         return res.status(401).json({
             success: false,
@@ -56,12 +65,14 @@ const adminLogin = async (req, res) => {
         });
     }
 
+    // Generate JWT token
     const token = jwt.sign(
         { user: { id: admin._id, username: admin.name, role: admin.role || 'admin' } },
         process.env.JWT_SECRET_ADMIN,
         { expiresIn: "12h" }
     );
 
+    // Return success response with token and admin info
     res.json({
         success: true,
         message: 'Login successful',
@@ -75,9 +86,20 @@ const adminLogin = async (req, res) => {
     });
 };
 
+// Verify JWT token and return admin info
 const verifyToken = async (req, res) => {
+    // The auth middleware will have already verified the token and set req.user
     const admin = await Admin.findById(req.user.id); 
 
+    // If admin not found, return error
+    if (!admin) {
+        return res.status(404).json({
+            success: false,
+            message: 'Admin not found'
+        });
+    }
+
+    // Return admin info
     res.json({
         success: true,
         user: {
@@ -89,7 +111,7 @@ const verifyToken = async (req, res) => {
     });
 };
 
-// Get admin statistics
+// Get admin statistics - total customers, products, orders, income, etc.
 const getStatistics = async (req, res) => {
     try {
         // Total customers
@@ -229,10 +251,10 @@ const getStatistics = async (req, res) => {
             { $sort: { count: -1 } }
         ]);
 
-        // TOTAL ORDERS
+        // Total orders
         const totalOrders = await Order.countDocuments();
 
-        // TOTAL INCOME
+        // Total income from paid orders
         const totalIncomeAgg = await Order.aggregate([
             {
                 $group: {
@@ -244,7 +266,7 @@ const getStatistics = async (req, res) => {
 
         const totalIncome = totalIncomeAgg[0]?.total || 0;
 
-        // USER WITH MOST ORDERS
+        // Users with most orders
         const topUserAgg = await Order.aggregate([
             {
                 $group: {
@@ -266,6 +288,7 @@ const getStatistics = async (req, res) => {
             };
         }
 
+        // Return all statistics in response
         res.json({
             success: true,
             statistics: {
@@ -284,7 +307,6 @@ const getStatistics = async (req, res) => {
                 topUser
             }
         });
-
     } catch (err) {
         console.error('Get statistics error:', err);
         res.status(500).json({ error: 'Server error' });

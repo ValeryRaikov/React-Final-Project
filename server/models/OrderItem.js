@@ -1,3 +1,5 @@
+// models/OrderItem.js - Mongoose schema for individual items in an order, including product details and quantity
+
 import mongoose from 'mongoose';
 
 const orderItemSchema = new mongoose.Schema({

@@ -1,5 +1,8 @@
+// controllers/officeController.js - Controller for handling office-related API requests, including fetching office data from the database
+
 import Office from '../models/Office.js';
 
+// Fetch all offices from the database and return as JSON response
 export const getOffices = async (req, res) => {
     try {
         const offices = await Office.find();

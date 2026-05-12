@@ -1,3 +1,5 @@
+// routes/adminUserRoutes.js - Routes for admin user management (CRUD operations on users)
+
 import { Router } from 'express';
 import { authenticateJWT } from '../middleware/adminAuthMiddleware.js';
 import { canManageUser } from '../middleware/roleAuthMiddleware.js';

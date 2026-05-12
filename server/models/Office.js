@@ -1,6 +1,7 @@
+// models/Office.js - Mongoose schema for office locations, including name, coordinates, and open status
+
 import mongoose from 'mongoose';
 
-// Schema for office locations in MongoDB
 const officeSchema = new mongoose.Schema({
     name: { 
         type: String, 

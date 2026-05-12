@@ -1,13 +1,18 @@
+// controllers/productController.js - Controller for handling product-related API requests, including CRUD operations, likes/dislikes, comments, and fetching products for different sections (new collection, popular
+
 import Product from '../models/Product.js';
 import User from '../models/User.js';
 
 // Create a new product
 const addProduct = async (req, res) => {
+    // Generate new product ID by finding the max existing ID and adding 1
     const products = await Product.find({});
     const id = products.length ? products.slice(-1)[0].id + 1 : 1;
 
+    // Handle officeIds and set availability based on whether any offices are selected
     const officeIds = req.body.officeIds || [];
     
+    // Create new product with provided data and generated ID
     const product = new Product({ 
         id, 
         ...req.body, 
@@ -16,6 +21,7 @@ const addProduct = async (req, res) => {
         // Automatically set available: true if any offices selected, false if none
         available: officeIds.length > 0
     });
+
     await product.save();
 
     res.json({ success: true, name: req.body.name });
@@ -31,10 +37,12 @@ const updateProduct = async (req, res) => {
         available: officeIds.length > 0
     };
     
+    // If officeIds is provided, ensure it's included in the update data
     await Product.findOneAndUpdate(
         { id: req.params.id },
         { $set: updateData }
     );
+
     res.json({ success: true, name: req.body.name });
 };
 
@@ -46,8 +54,10 @@ const deleteProduct = async (req, res) => {
 
 // Get all products with sorting options
 const getAllProducts = async (req, res) => {
+    // Default sorting by ID ascending
     const sortOption = req.query.sort || 'id-asc';
 
+    // Map of sorting options to MongoDB sort objects
     const sortMap = {
         'newPrice-desc': { newPrice: -1 },
         'newPrice-asc': { newPrice: 1 },
@@ -55,6 +65,7 @@ const getAllProducts = async (req, res) => {
         'id-asc': { _id: 1 },
     };
 
+    // Fetch products with the specified sorting option (default to ID ascending if invalid option provided)
     const products = await Product.find({}).sort(sortMap[sortOption]);
     res.send(products);
 };
@@ -94,9 +105,16 @@ const likeProduct = async (req, res) => {
         const userIdStr = String(req.user.id);
         const isAlreadyLiked = product.likes.some(id => id.toString() === userIdStr);
         
+        // Only add like if the user hasn't already liked the product
         if (!isAlreadyLiked) {
             product.likes.push(req.user.id);
             await product.save();
+
+            // use atomic update to avoid version conflicts and ensure like is added correctly even with concurrent requests
+            // await Product.updateOne(
+            //     { id: req.params.id },
+            //     { $addToSet: { likes: req.user.id } }
+            // );
         }
 
         res.json({ likes: product.likes.length });
@@ -116,7 +134,10 @@ const dislikeProduct = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
+        // Convert req.user.id to string for comparison
         const userIdStr = String(req.user.id);
+
+        // Remove the user's like if it exists
         product.likes = product.likes.filter(
             userId => userId.toString() !== userIdStr
         );
@@ -146,9 +167,12 @@ const addComment = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
-        const alreadyCommented = product.comments.some(
-            c => c.user.toString() === req.user.id
-        );
+        // Check if the user has already commented on this product
+        // Safely handle null user references from deleted accounts
+        const alreadyCommented = product.comments.some(c => {
+            const commentUserId = c.user?._id || c.user;
+            return commentUserId?.toString() === req.user.id;
+        });
 
         if (alreadyCommented) {
             return res.status(400).json({ error: 'You have already commented on this product.' });
@@ -161,6 +185,7 @@ const addComment = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
+        // Create new comment object
         const newComment = {
             user: user._id,
             username: user.name,
@@ -190,13 +215,15 @@ const deleteComment = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
+        // Find the comment by ID
         const comment = product.comments.id(commentId);
 
         if (!comment) {
             return res.status(404).json({ error: 'Comment not found' });
         }
 
-        if (comment.user.toString() !== req.user.id) {
+        // Safely handle null user references from deleted accounts
+        if (!comment.user || comment.user.toString() !== req.user.id) {
             return res.status(403).json({ error: 'Not authorized' });
         }
 
@@ -211,13 +238,13 @@ const deleteComment = async (req, res) => {
     }
 };
 
-// Get new collection products
+// Get new collection products - we take the last 8 products added
 const newCollection = async (req, res) => {
-    const products = await Product.find({});
-    res.send(products.slice(1).slice(-8));
+    const products = await Product.find({}).sort({ createdAt: -1 });
+    res.send(products.slice(0, 8));
 };
 
-// Get popular in women
+// Get women popular products
 const popularWomen = async (req, res) => {
     const products = await Product.find({ category: 'women' });
     res.send(products.slice(0, 4));
@@ -238,7 +265,7 @@ const trackProductView = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
-        // Use atomic findByIdAndUpdate with aggregation pipeline to avoid version conflicts
+        // Use atomic findByIdAndUpdate with aggregation pipeline to avoid version conflicts and ensure recentlyViewed is updated correctly even with concurrent requests
         await User.findByIdAndUpdate(
             req.user.id,
             [
@@ -279,6 +306,7 @@ const trackProductView = async (req, res) => {
 const getRecentlyViewed = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
+        
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }

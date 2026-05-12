@@ -1,8 +1,9 @@
+// models/Admin.js - Mongoose schema for Admin users, including validation and password hashing
+
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import { emailRegex, passwordRegex } from '../utils/regex.js';
 
-// Schema for Admin model in MongoDB
 const adminSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -12,16 +13,16 @@ const adminSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        match: [emailRegex, 'Invalid email format']
+        match: [emailRegex, 'Invalid email format'] // Ensure email is in valid format
     },
     password: {
         type: String,
         required: true,
-        match: [passwordRegex, 'Invalid password format']
+        match: [passwordRegex, 'Invalid password format'] // Ensure password meets complexity requirements
     },
     role: {
         type: String,
-        enum: ['superadmin', 'admin', 'operator'],
+        enum: ['superadmin', 'admin', 'operator'], // Define possible roles
         default: 'admin'
     },
     isActive: {

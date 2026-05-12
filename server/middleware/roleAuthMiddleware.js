@@ -1,3 +1,6 @@
+// middleware/roleAuthMiddleware.js - Middleware to check user roles for authorization
+
+// This middleware will be used to protect routes that require specific roles (e.g. admin, superadmin)
 export const requireRole = (allowedRoles) => {
     return (req, res, next) => {
         const userRole = req.user?.role;
@@ -13,6 +16,7 @@ export const requireRole = (allowedRoles) => {
     };
 };
 
+// Middleware to check if the user can manage another user (admin can manage admins/operators, superadmin can manage everyone)
 export const canManageUser = (req, res, next) => {
     const currentUserRole = req.user?.role;
     const targetUserId = req.params.id;

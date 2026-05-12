@@ -10,14 +10,15 @@ import './SavedItems.css';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function SavedItems() {
+    // Access necessary state and functions from contexts
     const { allProducts, savedItems, addToCart } = useContext(ShopContext);
     const { isAuthenticated } = useContext(AuthContext);
     const { addNotification } = useNotification();
     const { t } = useTranslation(['pages', 'products', 'forms']);
-
     // Filter products that are in saved items
     const savedProducts = allProducts.filter(product => savedItems[product.id]);
 
+    // Handle adding a saved item to the cart
     const handleAddToCart = async (productId) => {
         try {
             await addToCart(productId);

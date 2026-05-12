@@ -19,21 +19,25 @@ export default function DescriptionBox({
     date,
     comments = [],
 }) {
+    //Get user info from token to determine if they can comment and to show delete button for their own comments
     const { isAuthenticated } = useContext(AuthContext);
+    // Notification context for showing success/error messages
     const { addNotification } = useNotification();
     const { t } = useTranslation(['products', 'forms']);
-
     const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState('description');
     const [commentText, setCommentText] = useState('');
     const [localComments, setLocalComments] = useState(comments);
 
+    // Decode token to get user info on component mount
     useEffect(() => {
         const token = localStorage.getItem('auth-token');
+
         if (token) {
             try {
                 const decoded = jwtDecode(token);
 
+                // Set user info in state (id and username) for use in comment functionality
                 setUser({
                     id: decoded.user.id,
                     username: decoded.user.name   
@@ -44,11 +48,12 @@ export default function DescriptionBox({
         }
     }, []);
 
+    // Update local comments state if comments prop changes (e.g. after adding/deleting a comment)
     useEffect(() => {
         setLocalComments(comments);
     }, [comments]);
 
-    // Add comment
+    // Add new comment
     const handleAddComment = async () => {
         if (!commentText.trim()) 
             return;
@@ -98,6 +103,7 @@ export default function DescriptionBox({
         }
     };
 
+    // Format date to DD/MM/YYYY
     const formatDate = (date) => {
         const d = new Date(date);
         const day = String(d.getDate()).padStart(2, '0');
@@ -107,6 +113,7 @@ export default function DescriptionBox({
         return `${day}/${month}/${year}`;
     };
 
+    // Check if the user has already commented to disable comment box and show appropriate message
     const hasCommented = localComments.some(
         c => c.user?.toString() === user?.id
     );

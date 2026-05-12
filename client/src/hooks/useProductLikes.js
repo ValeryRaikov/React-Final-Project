@@ -1,3 +1,5 @@
+// hooks/useProductLikes.js - Custom hook to manage product likes and dislikes
+
 import { useState, useEffect } from 'react';
 import { useNotification } from '../context/NotificationContext';
 import { jwtDecode } from 'jwt-decode';
@@ -8,12 +10,13 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 export default function useProductLikes(productId, isAuthenticated) {
     const { addNotification } = useNotification();
     const { t } = useTranslation(['errors', 'products']);
-
     const [likes, setLikes] = useState(0);
     const [isliked, setIsLiked] = useState(false);
 
+    // Load initial likes and whether the user has liked the product
     useEffect(() => {
-        if (!productId) return;
+        if (!productId) 
+            return;
 
         (async () => {
             try {
@@ -31,6 +34,7 @@ export default function useProductLikes(productId, isAuthenticated) {
 
                 const token = localStorage.getItem('auth-token');
 
+                // If user is authenticated, check if they have liked the product
                 if (token) {
                     try {
                         const decoded = jwtDecode(token);

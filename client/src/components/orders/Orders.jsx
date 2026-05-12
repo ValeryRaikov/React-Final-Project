@@ -12,6 +12,7 @@ export default function Orders() {
     const navigate = useNavigate();
     const { t } = useTranslation('order');
 
+    // Fetch user's orders on component mount
     useEffect(() => {
         const fetchOrders = async () => {
             try {

@@ -13,14 +13,17 @@ import saved_icon from '../assets/saved_icon.png';
 import profile_icon from '../assets/profile_icon.png';
 
 export default function Navbar() {
+    // AuthContext to check if user is authenticated and handle logout functionality
     const { isAuthenticated, handleLogout } = useContext(AuthContext);
+    // ShopContext to clear cart and saved items on logout, and to get total counts for cart and saved items to display in the navbar
     const { clearCart, clearSavedItems, getTotalCartItems, getTotalSavedItems } = useContext(ShopContext);
     const { t } = useTranslation(['navigation', 'products']);
+    // LanguageContext to manage current language and provide a toggle for switching languages in the navbar
     const { currentLanguage, changeLanguage } = useLanguage();
-
     const navigate = useNavigate();
     const [menu, setMenu] = useState('shop');
 
+    // Logout handler that clears authentication token, user session, cart, and saved items, then redirects to the homepage
     const logoutHandler = () => {
         localStorage.removeItem('auth-token');
         handleLogout();

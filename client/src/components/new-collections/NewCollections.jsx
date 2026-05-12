@@ -14,9 +14,10 @@ export default function NewCollections() {
     const [newProducts, setNewProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation(['homepage', 'errors']);
-
+    // Notification context to display error messages if fetching new products fails
     const { addNotification } = useNotification();
 
+    // Fetch new products from the backend when the component mounts, and handle loading state and errors
     useEffect(() => {
         (async () => {
             setLoading(true);

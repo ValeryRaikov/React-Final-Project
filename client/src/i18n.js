@@ -1,3 +1,5 @@
+// i18n.js - Internationalization setup for the client application - using i18next and react-i18next to manage translations and language switching across the shop interface, including product listings, cart, navigation, and more. 
+
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 

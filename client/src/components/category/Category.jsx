@@ -23,6 +23,7 @@ const DEFAULT_FILTERS = {
 };
 
 export default function Category({ banner, category }) {
+    // Access products and related state from ShopContext
     const { allProducts } = useContext(ShopContext);
     const { t } = useTranslation(['pages', 'products']);
 
@@ -43,10 +44,12 @@ export default function Category({ banner, category }) {
 
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-    // FILTER + SORT
-    const sortedProducts = useMemo(() => {
-        if (!allProducts.length) return [];
+    // Filter and sort products based on current filters and sort option
+    const sortedProducts = useMemo(() => { // useMemo to avoid unnecessary recalculations
+        if (!allProducts.length) 
+            return [];
 
+        // First filter products based on all criteria, then sort the filtered results
         const filtered = filterProducts(allProducts, {
             category,
             searchQuery,
@@ -71,7 +74,7 @@ export default function Category({ banner, category }) {
         sortOption
     ]);
 
-    // Fetch offices
+    // Fetch offices 
     useEffect(() => {
         const fetchOffices = async () => {
             try {
@@ -86,7 +89,7 @@ export default function Category({ banner, category }) {
         fetchOffices();
     }, []);
 
-    // Autocomplete suggestions
+    // Autocomplete suggestions based on search query and category
     useEffect(() => {
         if (isExactMatch) {
             setShowAutocomplete(false);
@@ -107,6 +110,7 @@ export default function Category({ banner, category }) {
             // Search in both name and description fields for autocomplete
             const searchFields = ['name', 'description'];
 
+            // Get autocomplete suggestions using fuzzy search utility
             const suggestions = getAutocompleteSuggestions(
                 categoryProducts, 
                 searchQuery, 

@@ -11,20 +11,19 @@ import profile_icon from '../assets/profile_icon.png';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Profile() {
+    // Access authentication and notification contexts, translation function, and navigation function
     const { handleLogout } = useContext(AuthContext);
     const { addNotification } = useNotification();
     const { t } = useTranslation(['forms', 'errors']);
-
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [user, setUser] = useState(null);
     const [passwords, setPasswords] = useState({
         oldPassword: '',
         newPassword: '',
     });
-
     const navigate = useNavigate();
 
-    // Fetch profile
+    // Fetch profile data on component mount
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -70,6 +69,7 @@ export default function Profile() {
 
                 addNotification(t('forms:passwordUpdated'), 'success');
 
+                // Log the user out after password change for security
                 localStorage.removeItem('auth-token'); 
                 handleLogout();                        
                 navigate('/login');                    

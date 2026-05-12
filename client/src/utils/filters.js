@@ -1,3 +1,5 @@
+// filters.js - Utility function to filter products based on various criteria
+
 import { fuzzySearchProducts } from './fuzzySearch.js';
 
 export const filterProducts = (products, filters) => {
@@ -21,12 +23,12 @@ export const filterProducts = (products, filters) => {
     // Apply fuzzy search if search query exists
     if (search) {
         if (isExactMatch) {
-            // 🔴 STRICT MATCH ONLY
+            // Strict match only on product name
             filtered = products.filter(p =>
                 p.name.toLowerCase() === search
             );
         } else {
-            // 🔴 NORMAL FUZZY SEARCH
+            // Normal fuzzy search across name and description
             filtered = fuzzySearchProducts(products, searchQuery, ['name', 'description'], 2);
         }
     }

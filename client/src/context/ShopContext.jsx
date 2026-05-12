@@ -1,11 +1,15 @@
+// context/ShopContext.jsx - Provides shopping-related state and functions to the app using React Context API
+
 import { useState, useEffect, createContext, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "./AuthContext";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
+// Create a context for shop management 
 export const ShopContext = createContext(null);
 
+// ShopContextProvider component to wrap the app and provide shopping-related state and functions
 export default function ShopContextProvider(props) {
     const [allProducts, setAllProducts] = useState([]);
     const [savedItems, setSavedItems] = useState({});
@@ -18,6 +22,7 @@ export default function ShopContextProvider(props) {
         handleSessionExpired,
     } = useContext(AuthContext);
 
+    // Load all products and user-specific cart/saved items on component mount and when authentication status changes
     useEffect(() => {
         (async () => {
             try {
@@ -106,26 +111,31 @@ export default function ShopContextProvider(props) {
         })();
     }, [isAuthenticated]);
 
+    // When allProducts are loaded, initialize cartItems state with product IDs and 0 quantity
     useEffect(() => {
         if (allProducts.length > 0) {
             setCartItems(getDefaultCart());
         }
     }, [allProducts]);
 
+    // Function to clear cart items (used on session expiration)
     const clearCart = () => { 
         setCartItems({});
     };
 
+    // Function to clear saved items (used on session expiration)
     const clearSavedItems = () => {
         setSavedItems({});
     };
 
+    // Handle session expiration by clearing cart/saved items and invoking the session expired handler from AuthContext
     const handleSessionExpiredResponse = () => {
         clearCart();
         clearSavedItems();
         handleSessionExpired();
     };
 
+    // Function to get default cart object with all product IDs set to 0 quantity
     const getDefaultCart = () => {
         let cart = {}
         for (let product of allProducts) {
@@ -135,8 +145,10 @@ export default function ShopContextProvider(props) {
         return cart;
     }
 
+    // State to manage cart items, initialized with default cart structure
     const [cartItems, setCartItems] = useState(getDefaultCart());
 
+    // Function to add an item to the cart, with authentication check and optimistic UI update
     const addToCart = async (itemId) => {
         if (!isAuthenticated) {
             showModal(t('errors:loginRequiredTitle'), (
@@ -152,8 +164,10 @@ export default function ShopContextProvider(props) {
             return;
         }
 
+        // Optimistic UI update - immediately update cart state before confirming with backend [OLD]
         // setCartItems(prev => ({...prev, [itemId]: prev[itemId] + 1}));
 
+        // Optimistic UI update - immediately update cart state before confirming with backend
         setCartItems(prev => ({
             ...prev,
             [itemId]: (prev[itemId] || 0) + 1
@@ -186,13 +200,16 @@ export default function ShopContextProvider(props) {
         }
     }
 
+    // Function to remove one quantity of an item from the cart, with authentication check and optimistic UI update
     const removeFromCart = async (itemId) => {
         if (!isAuthenticated) {
             return;
         }
 
+        // Optimistic UI update - immediately update cart state before confirming with backend [OLD]
         // setCartItems(prev => ({...prev, [itemId]: prev[itemId] - 1}));
 
+        // Optimistic UI update - immediately update cart state before confirming with backend
         setCartItems(prev => ({
             ...prev,
             [itemId]: Math.max((prev[itemId] || 0) - 1, 0)
@@ -225,6 +242,7 @@ export default function ShopContextProvider(props) {
         }
     }
 
+    // Function to remove an item entirely from the cart, with authentication check and optimistic UI update
     const removeEntirelyFromCart = async (itemId) => {
         if (!isAuthenticated) return;
 
@@ -258,6 +276,7 @@ export default function ShopContextProvider(props) {
         }
     };
 
+    // Function to calculate total cart amount by summing the price of each item multiplied by its quantity
     const getTotalCartAmount = () => {
         let totalAmount = 0;
 
@@ -275,6 +294,7 @@ export default function ShopContextProvider(props) {
         return totalAmount;
     }
 
+    // Function to calculate total number of items in the cart by summing the quantities of all items
     const getTotalCartItems = () => {
         let totalItems = 0;
         for (const item in cartItems) {
@@ -285,6 +305,7 @@ export default function ShopContextProvider(props) {
         return totalItems;
     }
 
+    // Function to toggle an item in the saved items list, with authentication check and optimistic UI update
     const toggleSaved = async (itemId) => {
         if (!isAuthenticated) {
             showModal(t('errors:loginRequiredTitle'), (
@@ -300,6 +321,7 @@ export default function ShopContextProvider(props) {
             return;
         }
 
+        // Check if the item is currently saved to determine whether to add or remove it from the saved items list
         const isSavedItem = !!savedItems[itemId];
 
         // Optimistic update
@@ -354,16 +376,20 @@ export default function ShopContextProvider(props) {
         }
     };
 
+    // Function to check if an item is in the saved items list
     const isSaved = (itemId) => {
         return !!savedItems[itemId];
     };
 
+    // Function to calculate total number of saved items by counting the keys in the savedItems object
     const getTotalSavedItems = () => {
         let totalSaved = 0;
+
         for (const item in savedItems) {
             if (savedItems[item])
                 totalSaved += 1;
         }
+
         return totalSaved;
     }
 
@@ -383,6 +409,7 @@ export default function ShopContextProvider(props) {
         getTotalSavedItems,
     }), [allProducts, cartItems, savedItems]);
 
+    // Provide the shopping-related state and functions to the app through the ShopContext.Provider
     return (
         <ShopContext.Provider value={contextValue} >
             {props.children}

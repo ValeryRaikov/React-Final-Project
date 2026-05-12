@@ -1,7 +1,4 @@
-/**
- * Fuzzy Search Utility
- * Implements Levenshtein distance and fuzzy matching for client-side search
- */
+// fuzzySearch.js - Utility functions for fuzzy searching products on the client side: Implements Levenshtein distance and fuzzy matching for client-side search
 
 /**
  * Calculate Levenshtein distance between two strings
@@ -14,9 +11,12 @@ export const levenshteinDistance = (str1, str2) => {
     const a = str1.toLowerCase();
     const b = str2.toLowerCase();
 
-    if (a === b) return 0;
-    if (a.length === 0) return b.length;
-    if (b.length === 0) return a.length;
+    if (a === b) 
+        return 0;
+    if (a.length === 0) 
+        return b.length;
+    if (b.length === 0) 
+        return a.length;
 
     const matrix = Array(b.length + 1)
         .fill(null)
@@ -86,7 +86,7 @@ export const fuzzyMatchScore = (query, target, maxDistance = 2) => {
                 continue;
             }
 
-            // 🔴 Key fix: dynamic tolerance instead of fixed maxDistance
+            // Key fix: dynamic tolerance instead of fixed maxDistance
             const dynamicMaxDist = Math.max(2, Math.floor(tWord.length * 0.3));
 
             const distance = levenshteinDistance(qWord, tWord);
@@ -131,7 +131,9 @@ export const fuzzySearchProducts = (
             // Calculate best score across all search fields
             for (const field of searchFields) {
                 const fieldValue = product[field];
-                if (!fieldValue) continue;
+
+                if (!fieldValue) 
+                    continue;
 
                 const score = fuzzyMatchScore(queryTrimmed, fieldValue, maxDistance);
                 maxScore = Math.max(maxScore, score);
@@ -193,7 +195,9 @@ export const getAutocompleteSuggestions = (
         .filter(item => item.score > 0)
         .sort((a, b) => {
             // Sort by score, then by name length (shorter is better for autocomplete)
-            if (b.score !== a.score) return b.score - a.score;
+            if (b.score !== a.score) 
+                return b.score - a.score;
+            
             return a.product.name.length - b.product.name.length;
         })
         .slice(0, limit)

@@ -8,6 +8,7 @@ import remove_icon from '../assets/cart_cross_icon.png';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function CartItem() {
+    // Access cart state and actions from ShopContext
     const { 
         allProducts, 
         cartItems, 
@@ -16,22 +17,24 @@ export default function CartItem() {
         addToCart, 
         getTotalCartAmount 
     } = useContext(ShopContext);
-
     const { t } = useTranslation(['cart', 'errors', 'forms']);
+    // Access notification function from NotificationContext
     const { addNotification } = useNotification();
-
     const [promocode, setPromocode] = useState('');
     const [discount, setDiscount] = useState(1);
     const [totalPrice, setTotalPrice] = useState(getTotalCartAmount());
 
+    // Recalculate total price whenever discount or cart amount changes
     useEffect(() => {
         setTotalPrice(getTotalCartAmount() * discount);
     }, [discount, getTotalCartAmount]);
 
+    // Handle changes to the promocode input
     const handlePromocodeChange = (e) => {
         setPromocode(e.target.value);
     };
 
+    // Handle promocode submission
     const handlePromocodeSubmit = async () => {
         try {
             const res = await fetch(`${BASE_URL}/apply`, {
@@ -65,6 +68,7 @@ export default function CartItem() {
         }
     };
 
+    // Handle checkout process
     const handleCheckout = async () => {
         try {
             const res = await fetch(`${BASE_URL}/create-checkout-session`, {

@@ -20,11 +20,11 @@ const defaultCenter = {
 
 function Offices() {
     const { t } = useTranslation(['pages']);
+    // State to hold the list of offices and the selected office for InfoWindow
     const { isLoaded } = useJsApiLoader({
         id: mapOptions.googleMapApiKey,
         googleMapsApiKey: mapOptions.googleMapApiKey,
     });
-
     const [map, setMap] = useState(null);
     const [offices, setOffices] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -75,8 +75,9 @@ function Offices() {
         }
     }, [map, offices]);
 
+    // Callback for when the map loads, sets the map instance and fits bounds to offices
     const onLoad = useCallback((mapInstance) => {
-        console.log('Map loaded, offices count:', offices.length);
+        // console.log('Map loaded, offices count:', offices.length);
         setMap(mapInstance);
         
         if (offices.length === 0) {
@@ -162,4 +163,5 @@ function Offices() {
     );
 }
 
+// React.memo to prevent unnecessary re-renders of the Offices component when props/state haven't changed
 export default React.memo(Offices);

@@ -12,17 +12,16 @@ import './Registration.css';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Registration() {
+    // Access authentication and notification contexts, translation function, and navigation function
     const { handleLogin } = useContext(AuthContext);
     const { addNotification } = useNotification();
     const { t } = useTranslation(['navigation', 'forms', 'errors', 'others']);
-
     const navigate = useNavigate();
+    // Ref for reCAPTCHA component
     const recaptchaRef = useRef();
-
     const [mode, setMode] = useState('login');
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -32,6 +31,7 @@ export default function Registration() {
 
     const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
+    // Handle input changes for form fields
     const changeHandler = (e) => {
         setFormData({
             ...formData,
@@ -43,14 +43,18 @@ export default function Registration() {
     };
 
     // Google Sign-In Handler
+    // Use the useGoogleLogin hook to handle Google OAuth login flow
     const googleLogin = useGoogleLogin({
         onSuccess: async (codeResponse) => {
             setIsLoading(true);
+
             try {
                 const recaptchaToken = recaptchaRef.current?.getValue();
+
                 if (!recaptchaToken) {
                     addNotification(t('forms:recaptchaRequired'), 'error');
                     setIsLoading(false);
+
                     return;
                 }
 
@@ -72,6 +76,7 @@ export default function Registration() {
                         result.errors || t('forms:googleSigninError'),
                         'error'
                     );
+
                     return;
                 }
 
@@ -93,8 +98,10 @@ export default function Registration() {
         flow: 'auth-code',
     });
 
+    // Validate form inputs and reCAPTCHA before submitting login/signup requests
     const validateForm = () => {
         const recaptchaToken = recaptchaRef.current?.getValue();
+
         if (!recaptchaToken) {
             addNotification(t('forms:recaptchaRequired'), 'error');
             return false;
@@ -123,11 +130,15 @@ export default function Registration() {
         return recaptchaToken;
     };
 
+    // Handle login form submission
     const login = async () => {
         const recaptchaToken = validateForm();
-        if (!recaptchaToken) return;
+
+        if (!recaptchaToken) 
+            return;
 
         setIsLoading(true);
+
         try {
             const response = await fetch(`${BASE_URL}/login`, {
                 method: 'POST',
@@ -148,7 +159,9 @@ export default function Registration() {
                     result.errors || t('errors:loginFailed'),
                     'error'
                 );
+
                 recaptchaRef.current?.reset();
+
                 return;
             }
 
@@ -164,11 +177,15 @@ export default function Registration() {
         }
     };
 
+    // Handle signup form submission
     const signup = async () => {
         const recaptchaToken = validateForm();
-        if (!recaptchaToken) return;
+
+        if (!recaptchaToken) 
+            return;
 
         setIsLoading(true);
+
         try {
             const response = await fetch(`${BASE_URL}/signup`, {
                 method: 'POST',
@@ -189,7 +206,9 @@ export default function Registration() {
                     result.errors || t('errors:signupFailed'),
                     'error'
                 );
+
                 recaptchaRef.current?.reset();
+                
                 return;
             }
 

@@ -2,6 +2,7 @@ import './NotificationContainer.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faExclamationTriangle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
+// NotificationContainer component to display a list of notifications with appropriate icons based on their type (success, warning, error)
 export default function NotificationContainer({ notifications }) {
     const getIcon = (type) => {
         switch (type) {

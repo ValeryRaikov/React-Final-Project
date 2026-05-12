@@ -16,24 +16,30 @@ export default function Item({
     available,
     officeIds,
 }) {
+    // Save functionality using ShopContext to toggle saved state and check if item is already saved
     const { toggleSaved, isSaved } = useContext(ShopContext);
+    // AuthContext to check if user is authenticated before allowing them to save items
     const { isAuthenticated } = useContext(AuthContext);
+    // Notification context for showing success/error messages
     const { addNotification } = useNotification();
     const { t } = useTranslation(['products', 'forms', 'errors']);
+    // Check if item is saved to determine which icon to show and tooltip text
     const saved = isSaved(id);
-
     const shopCount = officeIds?.length || 0;
     const shopText = shopCount === 1 ? t('products:shop') : t('products:shops');
 
+    // Handle click on save icon to toggle saved state, show notifications, and prevent click from propagating to item link
     const handleSaveClick = async (e) => {
         e.stopPropagation();
         e.preventDefault();
         
+        // If user is not authenticated, show error notification and do not allow saving
         if (!isAuthenticated) {
             addNotification(t('errors:pleaseLoginToSaveItems'), 'error');
             return;
         }
 
+        // Store current saved state to determine which notification to show after toggling
         const wasSaved = saved;
 
         try {

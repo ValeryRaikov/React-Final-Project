@@ -8,10 +8,12 @@ import './MockCheckout.css';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function MockCheckout() {
+    // React Router hooks for accessing query parameters and navigation
     const [params] = useSearchParams();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    // Form state for shipping details
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -21,11 +23,13 @@ export default function MockCheckout() {
         phone: '',
         comment: '',
     });
-
     const { t } = useTranslation('order');
+    // Get the total amount from query parameters to display on the checkout page
     const amount = params.get('amount');
+    // ShopContext to clear the cart after successful payment
     const { clearCart } = useContext(ShopContext);
 
+    // Handle changes to form inputs and update formData state accordingly
     const handleChange = (e) => {
         setFormData(prev => ({
             ...prev,
@@ -33,6 +37,7 @@ export default function MockCheckout() {
         }));
     };
 
+    // Validate form fields to ensure all required information is provided before allowing payment
     const isFormValid = () => {
         return (
             formData.firstName.trim() &&
@@ -44,6 +49,7 @@ export default function MockCheckout() {
         );
     };
 
+    // Handle the payment process by sending shipping details to the backend, clearing the cart, and navigating to success page on completion
     const handlePay = async () => {
         if (!isFormValid()) {
             setError('Please fill all required fields');

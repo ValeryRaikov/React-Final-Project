@@ -1,3 +1,5 @@
+// sorting.js - Utility function to sort products based on different criteria
+
 export const sortProducts = (products, option) => {
     return [...products].sort((a, b) => {
         if (option === 'id-asc') 

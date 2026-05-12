@@ -17,6 +17,7 @@ export default function Popular() {
 
     const { addNotification } = useNotification();
 
+    // Fetch popular products in women category on component mount
     useEffect(() => {
         (async () => {
             setLoading(true);

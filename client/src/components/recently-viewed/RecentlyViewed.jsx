@@ -10,6 +10,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function RecentlyViewed() {
     const [products, setProducts] = useState([]);
+    // Access authentication context
     const { isAuthenticated } = useContext(AuthContext);
     const { t } = useTranslation(['homepage']);
 
@@ -32,6 +33,7 @@ export default function RecentlyViewed() {
                     } 
                 } catch (error) {
                     console.error('Error fetching recently viewed products:', error);
+                    
                     // Fallback to localStorage on error
                     // const stored = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
                     // setProducts(stored);

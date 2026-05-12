@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function Hero() {
     const { t } = useTranslation('homepage');
+    
     return (
         <div className="hero">
             <div className="hero-left">

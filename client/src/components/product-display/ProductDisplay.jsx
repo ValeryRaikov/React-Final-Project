@@ -22,21 +22,22 @@ export default function ProductDisplay({
     available,
     officeIds,
 }) {
+    // Access cart and saved items functions from ShopContext, authentication status from AuthContext, and notification function from NotificationContext
     const { addToCart, toggleSaved, isSaved } = useContext(ShopContext);
     const { isAuthenticated } = useContext(AuthContext);
     const { addNotification } = useNotification();
     const { t } = useTranslation(['products', 'errors', 'others']);
+    // Use custom hook to manage product likes and dislikes
     const { 
         likes,
         likeProduct, 
         dislikeProduct, 
     } = useProductLikes(id, isAuthenticated);
-
     const [offices, setOffices] = useState([]);
     const saved = isSaved(id);
 
+    // Track product view for authenticated users
     useEffect(() => {
-        // Track product view for authenticated users
         if (isAuthenticated) {
             const trackView = async () => {
                 try {
@@ -61,7 +62,7 @@ export default function ProductDisplay({
 
             trackView();
         } else {
-            // For non-authenticated users, use localStorage as fallback
+            // For non-authenticated users, use localStorage as fallback [OLD]
             // const stored = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
             // const filtered = stored.filter(p => p.id !== id);
             //
@@ -74,6 +75,7 @@ export default function ProductDisplay({
         }
     }, [id, name, image, newPrice, oldPrice, category, subcategory, available, officeIds, isAuthenticated]);
 
+    // Fetch office details
     useEffect(() => {
         const fetchOffices = async () => {
             try {
@@ -107,6 +109,7 @@ export default function ProductDisplay({
     
     // console.log('Available offices:', availableOffices);
 
+    // Handle add to cart action, checking availability and authentication status
     const handleAddToCart = () => {
         if (isAuthenticated) {
             if (!available) {
@@ -121,6 +124,7 @@ export default function ProductDisplay({
         }
     };
 
+    // Handle toggle saved action, showing appropriate notifications based on whether the product was added or removed from saved items
     const handleToggleSaved = async () => {
         if (!isAuthenticated) {
             await toggleSaved(id);

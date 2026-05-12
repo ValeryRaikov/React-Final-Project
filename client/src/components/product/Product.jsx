@@ -10,13 +10,14 @@ import DescriptionBox from "../description-box/DescriptionBox";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Product() {
+    // Get productId from URL params, notification function from context, and translation function from i18n
     const { productId } = useParams();
     const { addNotification } = useNotification();
     const { t } = useTranslation(['pages', 'errors']);
-
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Fetch product details on component mount or when productId changes
     useEffect(() => {
         const fetchProduct = async () => {
             try {

@@ -6,15 +6,16 @@ import { useTranslation } from 'react-i18next';
 import './EditPromocode.css';
 
 export default function EditPromocode() {
+    // Get promocode ID from URL parameters and navigation function
     const { promocodeId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation(['promocodes', 'others', 'common']);
-
     const [formData, setFormData] = useState({ code: '', discount: '', expiresAt: '' });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
+    // Fetch promocode details on component mount
     useEffect(() => {
         if (!promocodeId || promocodeId === 'undefined') {
             setError(t('promocodes:invalidPromocodeId'));
@@ -25,6 +26,7 @@ export default function EditPromocode() {
         fetchPromocode();
     }, [promocodeId]);
 
+    // Function to fetch promocode details from the server
     const fetchPromocode = async () => {
         try {
             const res = await fetch(`${BASE_URL}/all-promocodes`);
@@ -50,8 +52,10 @@ export default function EditPromocode() {
         }
     };
 
+    // Handler for form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         try {
             const discountPercent = parseFloat(formData.discount);
 

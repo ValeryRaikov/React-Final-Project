@@ -9,7 +9,9 @@ import { errMsg, BASE_URL } from '../../utils';
 import '../UserForm.css';
 
 export default function EditUser() {
+    // Get authentication status and admin info from context
     const { isAuthenticated, admin } = useContext(AuthContext);
+    // Get userId from URL params and navigation function
     const { userId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation(['admins', 'auth', 'others']);
@@ -24,6 +26,7 @@ export default function EditUser() {
     const [successMessage, setSuccessMessage] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Fetch user details on component mount
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -55,6 +58,7 @@ export default function EditUser() {
         })();
     }, [userId]);
 
+    // Function to check if the current admin can edit the user based on roles and restrictions
     const changeHandler = (e) => {
         const { name, value, type, checked } = e.target;
         setUser({
@@ -63,6 +67,7 @@ export default function EditUser() {
         });
     };
 
+    // Function to check if the current admin can edit the user based on roles and restrictions
     const canEditUser = () => {
         if (!admin) 
             return false;
@@ -83,6 +88,7 @@ export default function EditUser() {
         return false;
     };
 
+    // Function to check if the current admin can change the user's role based on restrictions
     const canChangeRole = () => {
         if (!admin) 
             return false;
@@ -95,6 +101,7 @@ export default function EditUser() {
         return canEditUser();
     };
 
+    // Handler for submitting the form to update the user details
     const submitHandler = async (e) => {
         e.preventDefault();
 

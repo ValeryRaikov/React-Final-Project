@@ -11,6 +11,7 @@ export default function Statistics() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Fetch statistics data from the backend when the component mounts
     useEffect(() => {
         const fetchStatistics = async () => {
             try {

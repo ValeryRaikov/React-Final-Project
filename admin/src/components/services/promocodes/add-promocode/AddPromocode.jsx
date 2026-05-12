@@ -8,20 +8,20 @@ import './AddPromocode.css';
 export default function AddPromocode() {
     const navigate = useNavigate();
     const { t } = useTranslation('promocodes');
-
     const [formData, setFormData] = useState({
         code: '',
         discount: '',
         expiresAt: ''
     });
-
     const [message, setMessage] = useState(null);
     const [isSuccess, setIsSuccess] = useState(false);
 
+    // Handler for form input changes
     const changeHandler = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Handler for form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 

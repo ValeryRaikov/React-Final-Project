@@ -8,16 +8,16 @@ import './Login.css';
 
 export default function Login() {
     const navigate = useNavigate();
+    // Get the login function from AuthContext to update authentication state on successful login
     const { login } = useContext(AuthContext);          
     const [error, setError] = useState('');
-
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
-
     const { t } = useTranslation('auth');
 
+    // Validate form inputs before submitting
     const validateForm = () => {
         if (formData.email.trim() === '') {
             setError(t('emailRequired'));
@@ -32,6 +32,7 @@ export default function Login() {
         return true;
     };
 
+    // Handle input changes and update form data state
     const changeHandler = (e) => {
         setFormData({
             ...formData,
@@ -39,6 +40,7 @@ export default function Login() {
         });
     };
 
+    // Handle form submission for admin login
     const submitHandler = async (e) => {
         e.preventDefault();
 

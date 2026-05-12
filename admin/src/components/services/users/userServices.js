@@ -1,7 +1,11 @@
+// userServices.js - API service functions for user management in the admin panel
+
 import { errMsg, BASE_URL } from './utils';
 
+// Helper function to get auth token from localStorage
 const getAuthToken = () => localStorage.getItem('auth-token');
 
+// Helper function to handle API responses and errors
 const handleResponse = async (response) => {
     if (response.status === 401) {
         throw new Error('Session expired. Please login again.');

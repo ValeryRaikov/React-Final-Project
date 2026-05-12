@@ -9,7 +9,9 @@ import { errMsg, BASE_URL } from '../../utils';
 import '../ProductForm.css';
 
 export default function EditProduct() {
+    // Get authentication status from context
     const { isAuthenticated } = useContext(AuthContext);
+    // Get product ID from URL params and navigation function from react-router-dom
     const { productId } = useParams(); 
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
@@ -30,6 +32,7 @@ export default function EditProduct() {
     const [successMessage, setSuccessMessage] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Fetch product details and offices on component mount
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -65,6 +68,7 @@ export default function EditProduct() {
         })();
     }, [productId]);
 
+    // Handler for form submission
     const submitHandler = async (e) => {
         e.preventDefault();
 
@@ -113,10 +117,12 @@ export default function EditProduct() {
         }
     }
 
+    // Handler for image file input change
     const imageHandler = (e) => {
         setImage(e.target.files[0]);
     };
 
+    // Handler for form input changes
     const changeHandler = async (e) => {
         setProduct((prevProduct) => ({
             ...prevProduct,
@@ -124,6 +130,7 @@ export default function EditProduct() {
         }));
     };
 
+    // Handler for office checkbox changes
     const handleOfficeChange = (officeId) => {
         setSelectedOffices((prev) => {
             if (prev.includes(officeId)) {

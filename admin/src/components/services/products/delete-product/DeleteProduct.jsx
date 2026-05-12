@@ -9,7 +9,9 @@ import { errMsg, BASE_URL } from '../../utils';
 import '../ProductForm.css';
 
 export default function DeleteProduct() {
+    // Get authentication status from context
     const { isAuthenticated } = useContext(AuthContext);
+    // Get product ID from URL params and navigation function from react-router-dom
     const { productId } = useParams();
     const navigate = useNavigate();
     const [offices, setOffices] = useState([]);
@@ -28,6 +30,7 @@ export default function DeleteProduct() {
     const [successMessage, setSuccessMessage] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Fetch product details and offices on component mount
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -59,6 +62,7 @@ export default function DeleteProduct() {
         })();
     }, [productId]);
 
+    // Handler for deleting the product
     const deleteHandler = async (e) => {
         e.preventDefault();
         setLoading(true);

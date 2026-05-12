@@ -9,6 +9,7 @@ import './Navbar.css';
 import nav_logo from '../assets/nav-logo.svg';
 
 export default function Navbar() {
+    // Get authentication status and logout function from context
     const { isAuthenticated, logout } = useContext(AuthContext);
     const { t } = useTranslation('auth');
     const { currentLanguage, changeLanguage } = useLanguage();

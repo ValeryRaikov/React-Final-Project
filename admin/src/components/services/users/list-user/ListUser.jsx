@@ -9,6 +9,7 @@ import { errMsg, BASE_URL } from '../../utils';
 import '../UserDisplay.css';
 
 export default function ListUser() {
+    // Get authentication status and admin info from context
     const { isAuthenticated, admin } = useContext(AuthContext);
     const [allUsers, setAllUsers] = useState([]);
     const [error, setError] = useState(null);
@@ -16,6 +17,7 @@ export default function ListUser() {
     const navigate = useNavigate();
     const { t } = useTranslation(['admins', 'auth', 'common', 'others']);
 
+    // Fetch all users on component mount
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -47,14 +49,17 @@ export default function ListUser() {
         })();
     }, []);
 
+    // Handlers for navigating to edit and delete user pages
     const editClickHandler = (id) => {
         navigate(`/edit-user/${id}`);
     };
 
+    // Handler for navigating to delete user page
     const deleteClickHandler = (id) => {
         navigate(`/delete-user/${id}`);
     };
 
+    // Function to get CSS class for role badge based on user role
     const getRoleBadgeClass = (role) => {
         switch (role) {
             case 'superadmin':
@@ -68,6 +73,7 @@ export default function ListUser() {
         }
     };
 
+    // Function to check if the current admin can manage (edit/delete) the user based on roles and restrictions
     const canManageUser = (user) => {
         if (!admin) 
             return false;

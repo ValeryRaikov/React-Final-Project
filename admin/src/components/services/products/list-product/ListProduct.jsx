@@ -10,6 +10,7 @@ import { errMsg, BASE_URL } from '../../utils';
 import '../ProductDisplay.css';
 
 export default function ListProduct() {
+    // Get authentication status from context
     const { isAuthenticated } = useContext(AuthContext);
     const [allProducts, setAllProducts] = useState([]);
     const [error, setError] = useState(null);
@@ -17,6 +18,7 @@ export default function ListProduct() {
     const navigate = useNavigate();
     const { t } = useTranslation(['products', 'others']);
 
+    // Fetch all products on component mount
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -40,10 +42,12 @@ export default function ListProduct() {
         })();
     }, []);
 
+    // Handler for edit button click - navigates to edit product page
     const editClickHandler = (id) => {
         navigate(`/update-product/${id}`);
     }
 
+    // Handler for delete button click - navigates to delete product page
     const deleteClickHandler = (id) => {
         navigate(`/remove-product/${id}`);
     }

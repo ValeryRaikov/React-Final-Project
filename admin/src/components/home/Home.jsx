@@ -7,6 +7,7 @@ import './Home.css';
 
 export default function Home() {
     const { t } = useTranslation('others');
+    // Get authentication status from context
     const { isAuthenticated } = useContext(AuthContext);
     const navigate = useNavigate();
 

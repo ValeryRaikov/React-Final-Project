@@ -1,3 +1,5 @@
+// i18n.js - Internationalization setup for admin panel using react-i18next
+
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 

@@ -6,14 +6,17 @@ import { useTranslation } from 'react-i18next';
 import './DeletePromocode.css';
 
 export default function DeletePromocode() {
+    // Get promocode ID from URL parameters and navigation function
     const { promocodeId } = useParams();
     const navigate = useNavigate();
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState(null);
     const { t } = useTranslation('promocodes');
 
+    // Handler for delete confirmation button click
     const handleDelete = async () => {
         setDeleting(true);
+
         try {
             const res = await fetch(`${BASE_URL}/promocode/${promocodeId}`, {
                 method: 'DELETE'
@@ -29,6 +32,7 @@ export default function DeletePromocode() {
         }
     };
 
+    // Handler for cancel button click - navigates back to promocode list
     const handleCancel = () => {
         navigate('/list-promocodes');
     };

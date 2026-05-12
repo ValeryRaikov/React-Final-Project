@@ -9,12 +9,14 @@ import { errMsg, BASE_URL } from '../../utils';
 import '../OrdersDisplay.css';
 
 export default function ListOrders() {
+    // Get authentication status from context
     const { isAuthenticated } = useContext(AuthContext);
     const [completedOrders, setCompletedOrders] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation('orders');
 
+    // Fetch completed orders on component mount
     useEffect(() => {
         (async () => {
             setLoading(true);

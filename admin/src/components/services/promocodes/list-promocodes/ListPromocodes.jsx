@@ -15,6 +15,7 @@ export default function ListPromocodes() {
         fetchPromocodes();
     }, []);
 
+    // Function to fetch promocodes from the server
     const fetchPromocodes = async () => {
         try {
             const res = await fetch(`${BASE_URL}/all-promocodes`);

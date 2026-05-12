@@ -9,7 +9,9 @@ import { errMsg, BASE_URL } from '../../utils';
 import '../UserForm.css';
 
 export default function DeleteUser() {
+    // Get authentication status and admin info from context
     const { isAuthenticated, admin } = useContext(AuthContext);
+    // Get userId from URL params and navigation function
     const { userId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation(['admins', 'auth']);
@@ -22,6 +24,7 @@ export default function DeleteUser() {
     const [successMessage, setSuccessMessage] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Fetch user details on component mount
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -53,6 +56,7 @@ export default function DeleteUser() {
         })();
     }, [userId]);
 
+    // Function to check if the current admin can delete the user based on roles and restrictions
     const canDeleteUser = () => {
         if (!admin) 
             return false;
@@ -77,6 +81,7 @@ export default function DeleteUser() {
         return false;
     };
 
+    // Handler for deleting the user when the form is submitted
     const deleteHandler = async (e) => {
         e.preventDefault();
         setLoading(true);

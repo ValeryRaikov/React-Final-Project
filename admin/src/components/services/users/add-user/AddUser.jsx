@@ -8,6 +8,7 @@ import { errMsg, BASE_URL } from '../../utils';
 import '../UserForm.css';
 
 export default function AddUser() {
+    // Get authentication status and admin details from context
     const { isAuthenticated, admin } = useContext(AuthContext);
     const { t } = useTranslation(['admins', 'auth', 'others']);
     const [userDetails, setUserDetails] = useState({
@@ -20,6 +21,7 @@ export default function AddUser() {
     const [successMessage, setSuccessMessage] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    // Handler for form input changes
     const changeHandler = (e) => {
         setUserDetails({
             ...userDetails,
@@ -27,6 +29,7 @@ export default function AddUser() {
         });
     };
 
+    // Function to clear the form after successful user creation
     const clearForm = () => {
         setUserDetails({
             name: '',
@@ -36,6 +39,7 @@ export default function AddUser() {
         });
     };
 
+    // Function to handle form submission and create a new user
     const addUser = async (e) => {
         e.preventDefault();
 

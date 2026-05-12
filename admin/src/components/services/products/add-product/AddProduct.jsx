@@ -8,12 +8,14 @@ import '../ProductForm.css';
 import upload_area from '../../../assets/upload_area.svg';
 
 export default function AddProduct() {
+    // Get authentication status from context
     const { isAuthenticated } = useContext(AuthContext);
     const [image, setImage] = useState(null);
     const [offices, setOffices] = useState([]);
     const [selectedOffices, setSelectedOffices] = useState([]);
     const [loadingOffices, setLoadingOffices] = useState(true);
     const { t } = useTranslation(['products', 'common', 'others']);
+    // Form state for product detailss
     const [productDetails, setProductDetails] = useState({
         name: '',
         description: '',
@@ -47,10 +49,12 @@ export default function AddProduct() {
         fetchOffices();
     }, []);
 
+    // Handler for image file input change
     const imageHandler = (e) => {
         setImage(e.target.files[0]);
     };
 
+    // Generic change handler for text inputs and selects
     const changeHandler = (e) => {
         setProductDetails({
             ...productDetails,
@@ -58,6 +62,7 @@ export default function AddProduct() {
         });
     };
 
+    // Handler for office checkbox changes
     const handleOfficeChange = (officeId) => {
         setSelectedOffices((prev) => {
             if (prev.includes(officeId)) {
@@ -68,6 +73,7 @@ export default function AddProduct() {
         });
     };
 
+    // Clear form after successful submission
     const clearForm = () => {
         setProductDetails({
             name: '',
@@ -82,6 +88,7 @@ export default function AddProduct() {
         setSelectedOffices([]);
     };
 
+    // Handler for form submission
     const addProduct = async (e) => {
         e.preventDefault(); 
 

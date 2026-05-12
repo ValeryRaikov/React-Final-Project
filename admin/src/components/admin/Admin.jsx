@@ -24,7 +24,7 @@ import DeleteUser from '../services/users/delete-user/DeleteUser';
 import ListOrders from '../services/orders/list-orders/ListOrders';
 
 export default function Admin() {
-
+    // Component to redirect from /admin to /admin-home
     function RedirectToAdmin() {
         const navigate = useNavigate();
     

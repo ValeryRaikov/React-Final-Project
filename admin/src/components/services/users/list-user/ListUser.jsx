@@ -1,8 +1,11 @@
 import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
+import ActionButton from '../../../action-buttons/ActionButton';
 import Warning from '../../../warning/Warning';
 
 import { errMsg, BASE_URL } from '../../utils';
@@ -122,8 +125,8 @@ export default function ListUser() {
                             <p>{t('admins:email')}</p>
                             <p>{t('admins:role')}</p>
                             <p>{t('admins:status')}</p>
-                            <p>{t('common:edit')}</p>
-                            <p>{t('common:delete')}</p>
+                            <p>{t('others:edit')}</p>
+                            <p>{t('others:delete')}</p>
                         </div>
                         <div className="list-user-all-users">
                             <hr />
@@ -146,18 +149,21 @@ export default function ListUser() {
                                                 {user.isActive ? t('admins:active') : t('admins:inactive')}
                                             </span>
                                         </p>
-                                        <p 
-                                            className={canManageUser(user) ? 'edit-btn' : 'edit-btn disabled'}
-                                            onClick={() => canManageUser(user) && editClickHandler(user._id)}
-                                        >
-                                            {t('common:edit')}
-                                        </p>
-                                        <p 
-                                            className={canManageUser(user) ? 'delete-btn' : 'delete-btn disabled'}
-                                            onClick={() => canManageUser(user) && deleteClickHandler(user._id)}
-                                        >
-                                            {t('common:delete')}
-                                        </p>
+                                        <ActionButton
+                                            variant="edit"
+                                            title={t('others:edit')}
+                                            disabled={!canManageUser(user)}
+                                            icon={<FontAwesomeIcon icon={faPencilAlt} />}
+                                            onClick={() => editClickHandler(user._id)}
+                                        />
+
+                                        <ActionButton
+                                            variant="delete"
+                                            title={t('others:delete')}
+                                            disabled={!canManageUser(user)}
+                                            icon={<FontAwesomeIcon icon={faTrash} />}
+                                            onClick={() => deleteClickHandler(user._id)}
+                                        />
                                     </div>
                                 ))
                                 : <p className="no-users-message">{t('admins:noUsersAvailable')}</p>

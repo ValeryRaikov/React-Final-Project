@@ -64,8 +64,8 @@ export default function ListProduct() {
                         <p>{t('products:price')}</p>
                         <p>{t('products:offerPrice')}</p>
                         <p>{t('products:category')}</p>
-                        <p>{t('products:edit')}</p>
-                        <p>{t('products:delete')}</p>
+                        <p>{t('others:edit')}</p>
+                        <p>{t('others:delete')}</p>
                     </div>
                     <div className="list-product-all-products">
                         <hr />

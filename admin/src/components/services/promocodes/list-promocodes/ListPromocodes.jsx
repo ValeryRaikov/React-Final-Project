@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { BASE_URL, multiplierToPercentage } from '../../utils';
 import { useTranslation } from 'react-i18next';
+import ActionButton from '../../../action-buttons/ActionButton';
 
 import './ListPromocodes.css';
 
@@ -9,7 +12,7 @@ export default function ListPromocodes() {
     const [promocodes, setPromocodes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { t } = useTranslation(['promocodes', 'common']);
+    const { t } = useTranslation(['promocodes', 'common', 'others']);
 
     useEffect(() => {
         fetchPromocodes();
@@ -46,7 +49,8 @@ export default function ListPromocodes() {
                 <p>{t('promocodes:code')}</p>
                 <p>{t('promocodes:discountColumn')}</p>
                 <p>{t('promocodes:expiresAtColumn')}</p>
-                <p>{t('promocodes:actions')}</p>
+                <p>{t('others:edit')}</p>
+                <p>{t('others:delete')}</p>
             </div>
 
             <div className="list-promocode-all-items">
@@ -58,10 +62,21 @@ export default function ListPromocodes() {
                             <p>{promo.code}</p>
                             <p>{multiplierToPercentage(promo.discount)}%</p> 
                             <p>{promo.expiresAt ? new Date(promo.expiresAt).toLocaleDateString() : 'No expiry'}</p>
-                            <div className="actions">
-                                <Link to={`/update-promocode/${promo._id}`} className="edit-btn">{t('common:edit')}</Link>
-                                <Link to={`/remove-promocode/${promo._id}`} className="delete-btn">{t('common:remove')}</Link>
-                            </div>
+                            <ActionButton
+                                type="link"
+                                to={`/update-promocode/${promo._id}`}
+                                variant="edit"
+                                title={t('others:edit')}
+                                icon={<FontAwesomeIcon icon={faPencilAlt} />}
+                            />
+
+                            <ActionButton
+                                type="link"
+                                to={`/remove-promocode/${promo._id}`}
+                                variant="delete"
+                                title={t('others:delete')}
+                                icon={<FontAwesomeIcon icon={faTrash} />}
+                            />
                         </div>
                     ))
                 )}

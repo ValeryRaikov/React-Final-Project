@@ -30,7 +30,5 @@
   "productDeleted": "Product deleted successfully!",
   "noProducts": "No products available.",
   "oldTitle": "Title",
-  "newTitle": "Title",
-  "edit": "Update",
-  "delete": "Delete"
+  "newTitle": "Title"
 }

@@ -13,7 +13,7 @@
 
 .list-promocode-format {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 1.5fr 0.7fr 1fr 0.7fr 0.7fr;
     gap: 10px;
     text-align: center;
     align-items: center;
@@ -25,15 +25,9 @@
     background-color: #f9f9f9;
 }
 
-.actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
 .list-promocode-format-main {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     gap: 10px;
     text-align: center;
     width: 100%;
@@ -65,47 +59,4 @@
     font-size: 25px;
     padding-top: 25px;
     color: #ff0000;
-}
-
-.edit-btn {
-    font-size: 18px;
-    background-color: #0f7e09;
-    color: #fff;
-    border: none;
-    padding: 10px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    text-decoration: none;
-    display: inline-block;
-    width: 80px;
-    text-align: center;
-}
-
-.edit-btn:hover {
-    background-color: #005b00;
-}
-
-.delete-btn {
-    font-size: 18px;
-    background-color: #ff0000;
-    color: #fff;
-    border: none;
-    padding: 10px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    width: 80px;
-    text-align: center;
-}
-
-.delete-btn:hover {
-    background-color: #940000;
-}
-
-.list-promocode-format .edit-btn,
-.list-promocode-format .delete-btn {
-    margin: 0 5px;
 }

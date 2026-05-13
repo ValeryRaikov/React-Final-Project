@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { AuthContext } from '../../context/AuthContext';
@@ -21,7 +21,8 @@ export default function Navbar() {
     // LanguageContext to manage current language and provide a toggle for switching languages in the navbar
     const { currentLanguage, changeLanguage } = useLanguage();
     const navigate = useNavigate();
-    const [menu, setMenu] = useState('shop');
+    const location = useLocation();
+    const pathname = location.pathname;
 
     // Logout handler that clears authentication token, user session, cart, and saved items, then redirects to the homepage
     const logoutHandler = () => {
@@ -55,27 +56,37 @@ export default function Navbar() {
                     <p>Shopify</p>
             </div>
             <ul className='nav-menu'>
-                <li onClick={() => setMenu('shop')}>
-                    <Link style={{textDecoration: 'none'}} to='/'>{t('navigation:shop')}</Link>
-                    {menu === 'shop' ? <hr /> : <></>}
+                <li className={pathname === '/' ? 'active-nav-link' : ''}>
+                    <Link style={{textDecoration: 'none'}} to='/'>
+                        {t('navigation:shop')}
+                    </Link>
+                    {pathname === '/' && <hr />}
                 </li>
-                <li onClick={() => setMenu('men')}>
-                    <Link style={{textDecoration: 'none'}} to='/men'>{t('products:men')}</Link>
-                    {menu === 'men' ? <hr /> : <></>}
+                <li className={pathname === '/men' ? 'active-nav-link' : ''}>
+                    <Link style={{textDecoration: 'none'}} to='/men'>
+                        {t('products:men')}
+                    </Link>
+                    {pathname === '/men' && <hr />}
                 </li>
-                <li onClick={() => setMenu('women')}>
-                    <Link style={{textDecoration: 'none'}} to='/women'>{t('products:women')}</Link>
-                    {menu === 'women' ? <hr /> : <></>}
+                <li className={pathname === '/women' ? 'active-nav-link' : ''}>
+                    <Link style={{textDecoration: 'none'}} to='/women'>
+                        {t('products:women')}
+                    </Link>
+                    {pathname === '/women' && <hr />}
                 </li>
-                <li onClick={() => setMenu('kids')}>
-                    <Link style={{textDecoration: 'none'}} to='/kids'>{t('products:kids')}</Link>
-                    {menu === 'kids' ? <hr /> : <></>}
+                <li className={pathname === '/kids' ? 'active-nav-link' : ''}>
+                    <Link style={{textDecoration: 'none'}} to='/kids'>
+                        {t('products:kids')}
+                    </Link>
+                    {pathname === '/kids' && <hr />}
                 </li>
             </ul>
             <div className="nav-login-cart">
-                <li onClick={() => setMenu('about')}>
-                    <Link style={{textDecoration: 'none'}} to='/about'>{t('navigation:about')}</Link>
-                    {menu === 'about' ? <hr /> : <></>}
+                <li className={pathname === '/about' ? 'active-nav-link' : ''}>
+                    <Link style={{textDecoration: 'none'}} to='/about'>
+                        {t('navigation:about')}
+                    </Link>
+                    {pathname === '/about' && <hr />}
                 </li>
                 
                 {localStorage.getItem('auth-token')

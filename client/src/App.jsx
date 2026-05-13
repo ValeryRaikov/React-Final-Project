@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 
 import Navbar from './components/navbar/Navbar';
@@ -27,6 +28,11 @@ import Orders from './components/orders/Orders';
 function App() {
     const location = useLocation();
     const isAboutPage = location.pathname.startsWith('/about');
+
+    // Scroll to top when location (page) changes
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
 
      return (
         <>

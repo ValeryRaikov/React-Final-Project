@@ -7,7 +7,7 @@ import { getAutocompleteSuggestions } from '../../utils/fuzzySearch.js';
 
 import './Category.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faFilter, faSort, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faFilter, faSort, faChevronDown, faCrown } from '@fortawesome/free-solid-svg-icons';
 
 import Item from '../item/Item';
 import LoadingSpinner from '../loading-spinner/LoadingSpinner';
@@ -73,6 +73,23 @@ export default function Category({ banner, category }) {
         minPrice,
         sortOption
     ]);
+
+    // Calculate best picks for the category based on number of likes (for a "Best Picks" section)
+    const bestPicks = useMemo(() => {
+        if (!allProducts.length)
+            return [];
+
+        // Get products in the category, sort by likes, and take top 4 for best picks section
+        return allProducts
+            .filter(p => p.category === category)
+            .sort((a, b) => {
+                const likesA = a.likes?.length || 0;
+                const likesB = b.likes?.length || 0;
+
+                return likesB - likesA;
+            })
+            .slice(0, 4);
+    }, [allProducts, category]);
 
     // Fetch offices 
     useEffect(() => {
@@ -285,6 +302,26 @@ export default function Category({ banner, category }) {
                     {sortedProducts.map(item => (
                         <Item key={item.id} {...item} />
                     ))}
+                </div>
+            )}
+            {bestPicks.length > 0 && (
+                <div className="best-picks-section">
+                    <div className="best-picks-header">
+                        <div className="best-picks-title">
+                            <FontAwesomeIcon 
+                                icon={faCrown} 
+                                className="best-picks-icon" 
+                            />
+                            <h2>{t('pages:bestPicks')}</h2>
+                        </div>
+                        <p>{t('pages:bestPicksSubtitle')}</p>
+                    </div>
+
+                    <div className="category-products">
+                        {bestPicks.map(item => (
+                            <Item key={item.id} {...item} />
+                        ))}
+                    </div>
                 </div>
             )}
             <div className="category-loadmore">

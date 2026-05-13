@@ -73,7 +73,7 @@ export default function Registration() {
 
                 if (!response.ok || !result.success) {
                     addNotification(
-                        result.errors || t('forms:googleSigninError'),
+                        t('forms:googleSigninError'),
                         'error'
                     );
 
@@ -156,7 +156,7 @@ export default function Registration() {
 
             if (!response.ok || !result.success) {
                 addNotification(
-                    result.errors || t('errors:loginFailed'),
+                    t('errors:loginFailed'),
                     'error'
                 );
 
@@ -203,7 +203,7 @@ export default function Registration() {
 
             if (!response.ok || !result.success) {
                 addNotification(
-                    result.errors || t('errors:signupFailed'),
+                    t('errors:signupFailed'),
                     'error'
                 );
 

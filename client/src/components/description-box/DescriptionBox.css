@@ -94,6 +94,17 @@
     background-color: #e63939;
 }
 
+.comment-box button:disabled,
+.disabled-comment-btn {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: all;
+}
+
+.comment-box button:disabled * {
+    cursor: not-allowed;
+}
+
 .comments-list {
     margin-top: 20px;
     display: flex;

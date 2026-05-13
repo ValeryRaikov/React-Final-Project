@@ -34,7 +34,7 @@ export default function Popular() {
 
                 setPopularProducts(result);
             } catch (err) {
-                addNotification(err.message, 'error');
+                addNotification(t('errors:somethingWentWrong'), 'error');
             } finally {
                 setLoading(false);
             }

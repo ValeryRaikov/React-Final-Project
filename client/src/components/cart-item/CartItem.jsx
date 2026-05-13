@@ -57,7 +57,7 @@ export default function CartItem() {
             } else {
                 setDiscount(1);
                 setPromocode('');
-                addNotification(data.message || t('errors:invalidPromoCode'), 'error');
+                addNotification(t('errors:invalidPromoCode'), 'error');
             }
 
         } catch (error) {

@@ -41,8 +41,22 @@ export default function Orders() {
     if (loading) 
         return <p className="orders-loading">{t('loadingOrders')}</p>;
 
-    if (!orders.length) 
-        return <p className="orders-empty">{t('noOrders')}</p>;
+    if (!orders.length) {
+        return (
+            <div className="orders-empty-container">
+                <p className="orders-empty-icon">📦</p>
+                <h2 className="orders-empty-title">
+                    {t('noOrders')}
+                </h2>
+                <button
+                    className="go-back-btn"
+                    onClick={() => navigate('/')}
+                >
+                    {t('goShopping')}
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="orders">

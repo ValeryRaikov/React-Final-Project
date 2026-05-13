@@ -4,6 +4,8 @@ import { ShopContext } from '../../context/ShopContext';
 import { AuthContext } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import useProductLikes  from '../../hooks/useProductLikes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart, faCartShopping, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 
 import './ProductDisplay.css';
 import star_icon from '../assets/star_icon.png';
@@ -225,6 +227,7 @@ export default function ProductDisplay({
                 <div className="display-right-btn-box">
                     <div className="action-buttons">
                         <button className="add-btn" onClick={handleAddToCart}>
+                            <FontAwesomeIcon icon={faCartShopping} />
                             {t('products:addBtn')}
                         </button>
 
@@ -232,15 +235,21 @@ export default function ProductDisplay({
                             className={`save-btn ${saved ? 'saved' : ''}`}
                             onClick={handleToggleSaved}
                         >
-                            {saved ? '❤️ ' + t('products:saved') : '🤍 ' + t('products:saveBtn')}
+                            <FontAwesomeIcon icon={faHeart} />
+                            {saved ? t('products:saved') : t('products:saveBtn')}
                         </button>
                     </div>
 
                     <div className="display-right-likes">
                         {isAuthenticated && 
                             <div className="likes-btn-box">
-                                <button className="like-btn" onClick={likeProduct}>{t('products:likeBtn')}</button>
-                                <button className="dislike-btn" onClick={dislikeProduct}>{t('products:dislikeBtn')}</button>
+                                <button className="like-btn" onClick={likeProduct}>
+                                    <FontAwesomeIcon icon={faThumbsUp} />
+                                </button>
+
+                                <button className="dislike-btn" onClick={dislikeProduct}>
+                                    <FontAwesomeIcon icon={faThumbsDown} />
+                                </button>
                             </div>
                         }
                     </div>

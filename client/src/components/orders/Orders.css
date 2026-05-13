@@ -53,10 +53,37 @@
     font-weight: bold;
 }
 
-.orders-loading,
-.orders-empty {
+.orders-loading {
     text-align: center;
     margin-top: 40px;
+}
+
+.orders-empty-container {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.orders-empty-icon {
+    font-size: 80px;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.orders-empty-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #222;
+    margin: 0;
+}
+
+.orders-empty-container .go-back-btn {
+    margin-top: 10px;
 }
 
 .go-back-btn {
@@ -76,3 +103,4 @@
 .go-back-btn:hover {
     background-color: #e63939;
 }
+

@@ -233,6 +233,50 @@
     color: #787878;
     font-size: 18px;
     font-weight: 500;
+    cursor: not-allowed;
+}
+
+.best-picks-section {
+    margin-top: 80px;
+    padding: 40px 0 10px 0;
+    border-top: 1px solid #eaeaea;
+    background: radial-gradient(circle at 5.3% 17.2%, rgb(255, 208, 253) 0%, rgb(255, 237, 216) 90%);
+}
+
+.best-picks-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.best-picks-header h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.best-picks-header p {
+    font-size: 18px;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.best-picks-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.best-picks-icon {
+    font-size: 48px;
+    color: #d4a017;
+}
+
+.best-picks-title h2 {
+    margin: 0;
 }
 
 .error-message {

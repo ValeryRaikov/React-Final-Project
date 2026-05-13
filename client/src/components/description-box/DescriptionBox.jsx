@@ -172,7 +172,11 @@ export default function DescriptionBox({
                                         onChange={(e) => setCommentText(e.target.value)}
                                         placeholder={t('forms:writeComment')}
                                     />
-                                    <button onClick={handleAddComment} disabled={hasCommented}>
+                                    <button 
+                                        onClick={handleAddComment} 
+                                        disabled={hasCommented}
+                                        className={hasCommented ? 'disabled-comment-btn' : ''}
+                                    >
                                         {t('forms:addComment')}
                                     </button>
                                 </div>
